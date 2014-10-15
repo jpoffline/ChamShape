@@ -37,25 +37,31 @@ int main(int argc, char* argv[]) {
 	// Check that the output directory exists; if not, code will create it
     checkdirexists(outDIR);
 	
-	// Print top-matter (run info)
-	printtopmatter();
+	// Do a quick sanity check
+	bool isok = checksanity();
+	
+	if(isok){
+		// Print top-matter (run info)
+		printtopmatter();
 
-	// Run the solvers:
+		// Run the solvers:
 	 
-	// (0) set the initial conditions
-	// argument = phi_bg
-	initialconditions(1.0/sqrt(obj_rhobg));
+		// (0) set the initial conditions
+		// argument = phi_bg
+		initialconditions(1.0/sqrt(obj_rhobg));
 	
-	// (1) solve 
-	solve();	
+		// (1) solve 
+		solve();	
 	
-	cout << "Completed" << endl;
+		cout << "Completed" << endl;
 	
-	// Stop timing
-    myTimer.stop();
-	// Send final time to be printed, along with a polite message	
-	printfinalmessage(myTimer.elapsed().wall / 1e6);
-	
+		// Stop timing
+	    myTimer.stop();
+		// Send final time to be printed, along with a polite message	
+		printfinalmessage(myTimer.elapsed().wall / 1e6);
+	}
+	else
+		cout << "imax and/or jmax not chosen sensibly" << endl;
 	
 } // END main
 

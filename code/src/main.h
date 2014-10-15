@@ -100,3 +100,12 @@ void printfinalmessage(double te){
 	cout << endl;
 	
 } // END printfinalmessage()
+
+bool checksanity(){
+	
+	if(imax < itot && jmax < jtot)
+		return true;
+	else
+		return false;
+	
+}

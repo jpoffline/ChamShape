@@ -7,7 +7,7 @@
 
 double solve(){
 	
-	double energy,energy_phi,energy_grav,oldenergy;
+	double error_phi=0.0,error_grav=0.0,olderror_phi,olderror_grav;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
     double x,y;
 	int    ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
@@ -19,8 +19,10 @@ double solve(){
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
+	// SoR parameter used to relax Poisson equation
+	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
-	ofstream timehist,filedump;  
+	ofstream timehist,filedump,filexdump;  
 	
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
@@ -36,8 +38,8 @@ double solve(){
 	timehist.open(filename);
 	
 	
-	// zero integrated energy
-	energy=0.0;
+	
+	
 	
     // Begin evolution
     for(int t=0;t<ttot;t++){
@@ -49,19 +51,31 @@ double solve(){
 		// If outputting to file, setup that file
 		if(( (t%filedumpfreq==0 || t==ttot-1) && dumptofile) || t==ttot-1){
 			dump=true;
-			filename=outDIR+filePREFIX+"_"+to_string(trail+filenum)+".dat";
+			
+			// open up full 2D-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_final.dat";
+			else
+				filename=outDIR+filePREFIX+"_"+to_string(trail+filenum)+".dat";
+			
 			filedump.open(filename);
+			
+			// open up x-field files
+			if(t==ttot-1)
+				filename = outDIR+filePREFIX+"_x_final.dat";
+			else
+				filename=outDIR+filePREFIX+"_x_"+to_string(trail+filenum)+".dat";
+			filexdump.open(filename);
 		} 
 	
 	
 		
 		// dump current energy into the old energy 
-		oldenergy=energy;
+		olderror_phi=error_phi;
+		olderror_grav=error_grav;
 		// zero the integrated energy
-		energy_phi=0.0;
-		energy_grav=0.0;
+		error_phi=0.0;
+		error_grav=0.0;
 		// Begin run over space
         for(int i=iminb;i<imaxb;i++){
             
@@ -92,24 +106,30 @@ double solve(){
 					lap = (-fld[tt][c][ip2][j]+16.0*phi_ip1-30.0*phi+16.0*phi_im1-fld[tt][c][im2][j])/12.0/h2
 						+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
 				
-					// The updating algorithms
+					// The updating algorithms, also computes an error measurement
 					if(c==0){
 						// Gradient flow for the chameleon scalar
 						eom=lap-getdpot(phi)-getmattdensity(x,y)/M;
-						energy_phi=energy_phi+eom*h2;
+						error_phi=error_phi+eom*h2;
 						fld[tp][c][i][j]=ht*eom+phi;							
 					}
+					
 					if(c==1){
 						eom=lap+getmattdensity(x,y);
-						// Gauss-Seidel updating algorithm for gravitational potential
-						fld[tp][c][i][j]=0.25*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]+fld[tp][c][i][jm1]+h2*getmattdensity(x,y));
-		                energy_grav=energy_grav+(fld[tp][c][i][j] - fld[tt][c][i][j])*h2;
+						// SoR updating algorithm for gravitational potential
+						// Second order accuracy
+						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
+												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
+												+fld[tp][c][i][jm1]+h2*getmattdensity(x,y));
+
+						dfdx=(phi_ip1-phi_im1)/2.0/h;
+						dfdy=(phi_jp1-phi_jm1)/2.0/h;
+					    error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
-					
 					
 					
 				}
-
+				
 						
 				// Dump to file
 				if(dump){
@@ -120,18 +140,27 @@ double solve(){
 						// |F| 						
 						fd[c]=sqrt(dfdx*dfdx+dfdy*dfdy);
 					}
-
+					
 					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 					filedump << " " << getmattdensity(x,y) << " " << eom << " " << fd[0] << " " << fd[1] << endl;
+					
 
+					if(y==0){
+						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
+						filexdump << " " << getmattdensity(x,y) << " " << eom << " " << fd[0] << " " << fd[1] << endl;
+					}	
 				}
-            
+				
+				
             } // end j-loop
+		
+			 
 		
 			// Print a newline to file
 			// Dump to file
 			if(dump)
 				filedump << endl;	
+		
 		
         } // end i-loop
 	
@@ -139,17 +168,22 @@ double solve(){
 		// Close the output file
         if(dump){
         	filedump.close();
+			filexdump.close();
 			dump=false;
 			filenum++;
         }
 	
 		// Dump timehistory
-		timehist << t*ht << " " << energy_phi << " " << energy_grav << endl;
-		// Dump to screen
-		if(t%screendumpfreq==0)
-			cout << t << "/"  << ttot << " " << energy_phi << " " << energy_grav << endl;
+		timehist << t*ht << " " << error_phi << " " << error_grav ;
+		timehist << " " << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << endl;
 		
-	
+		// Dump to screen
+		if(t%screendumpfreq==0){
+			cout << t << "/"  << ttot << " " << error_phi << " " << error_grav;
+			cout  << " " << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << endl;
+		}
+		// Rescale gravitational potential
+		// Note: Laplace's equation, nabla^2Phi = - rho, is invariant under Phi -> Phi + c1 x + c2 x^2
 	
     }// end t-loop
 
