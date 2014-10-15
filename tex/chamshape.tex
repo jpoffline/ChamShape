@@ -1,0 +1,97 @@
+\documentclass[a4paper, 12pt]{article}
+\NeedsTeXFormat{LaTeX2e}[1996/06/01]
+\usepackage[usenames]{color} 
+\usepackage{amsmath,amssymb}
+\numberwithin{equation}{section}
+\usepackage[top=2.5cm,left=3cm,right=3cm,bottom=3cm,foot=1cm,]{geometry}
+%\linespread{1.5}
+\usepackage[breaklinks, colorlinks, citecolor=blue]{hyperref}
+\usepackage{multirow,array,graphicx}
+\usepackage{sidecap,epstopdf,dcolumn}
+\usepackage{bm}% bold math
+\usepackage[font={small,it}]{caption}
+\usepackage[footnotesize]{subfigure}
+\usepackage[]{appendix}
+%%%% Make citations use [1-5] rather than [1, 2, 3, 4, 5]
+\usepackage[numbers, square, comma,  sort&compress]{natbib}
+%\renewcommand{\cite}{\citep}
+%%%% END
+%\usepackage{ulem}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
+
+
+\input{defs}
+
+
+\begin{document}
+
+
+\title{{\bf Shaping the chameleon}}
+\author{\sc{Jonathan A. Pearson\footnote{E-mail: \href{mailto:j.pearson@nottingham.ac.uk}{j.pearson@nottingham.ac.uk}}}\\ \\ \it{School of Physics \& Astronomy} \\ \it{University of Nottingham} \\ \it{Nottingham, NG7 2RD}}
+
+\date{\today}
+
+
+
+\maketitle
+\begin{abstract}
+In conservation with Clare Burrage, Ed Copeland, James...
+\end{abstract}
+\clearpage
+
+\tableofcontents   
+
+
+\section{Introduction}
+\section{The model}
+The equations are
+\bse
+\bea
+\label{eq:cham-eom}
+\nabla^2\phi = -\frac{\Lambda^5}{\phi^2} + \frac{\rho}{M},
+\eea
+\bea
+\label{eq:laplaceseqn}
+\nabla^2\Phi = - \rho
+\eea
+\ese
+We compute the forces due to the chameleon and gravitational scalars by taking their gradients:
+\bea
+\label{eq:forces}
+\rbm{F}_{(\phi)} = \nabla\phi,\qquad
+\rbm{F}_{(\Phi)} = \nabla\Phi
+\eea
+\section{Numerical methods}
+\begin{itemize}
+\item Solve (\ref{eq:cham-eom}) via gradient flow; finite difference derivatives discretized to fourth order accuracy.
+\item Solve (\ref{eq:laplaceseqn}) via SoR; discretized to second order accuracy.
+\item The forces (\ref{eq:forces}) are computed with finite difference derivatives discretized to fourth order
+\end{itemize}
+\addcontentsline{toc}{section}{Acknowledgements}
+
+\section*{Acknowledgements}
+
+\appendix
+\section{Schemes}
+\textbf{\textit{SoR}}
+\bea
+Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^{n+1}_{i-1,j} + Q^n_{i,j+1} + Q^{n+1}_{i,j-1} + h^2\rho \right]
+\eea
+
+\textbf{\textit{Fourth order finite difference derivatives}}
+\bea
+\pd{Q}{x} \approx \frac{-Q_{i+2} + 8 Q_{i+1} - 8 Q_{i-1} + Q_{i-2}}{12h}
+\eea
+\bea
+\pd{^2Q}{x^2} \approx \frac{-Q_{i+2} + 16 Q_{i+1} - 30 Q_i + 16 Q_{i-1} - Q_{i-2}}{12h^2}
+\eea
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{JHEP}
+\footnotesize{
+\bibliography{refs}
+}
+\end{document}
