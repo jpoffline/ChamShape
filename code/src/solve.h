@@ -89,6 +89,7 @@ double solve(){
 					// Get phi at this location for easier reading
 	                phi=fld[tt][c][i][j];
 				
+					// Frequently used "forward" and "backward" values of phi
 					phi_ip1=fld[tt][c][ip1][j];
 					phi_im1=fld[tt][c][im1][j];
 					phi_jp1=fld[tt][c][i][jp1];
