@@ -26,6 +26,7 @@ const double PI=4.0*atan(1.0);
 ////////////////////////////////////////////////
 // The field definition
 double      fld[2][nflds][itot][jtot];
+double		matterdensity[itot][jtot];
 ////////////////////////////////////////////////
 
 // Some useful auxiliary functions
@@ -101,11 +102,13 @@ void printfinalmessage(double te){
 	
 } // END printfinalmessage()
 
-bool checksanity(){
+int checksanity(){
 	
 	if(imax < itot && jmax < jtot)
-		return true;
+		return 1;
+	if(ht>h)
+		return 2;
 	else
-		return false;
+		return 0;
 	
 }

@@ -10,8 +10,7 @@ double solve(){
 	double error_phi=0.0,error_grav=0.0,olderror_phi,olderror_grav;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
     double x,y;
-	int    ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
-	int	   tt,tp;
+	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
     double h2=h*h;
 	bool   dump=false;
     int    filenum=0;
@@ -36,10 +35,6 @@ double solve(){
 	
 	// Open up timehistory file
 	timehist.open(filename);
-	
-	
-	
-	
 	
     // Begin evolution
     for(int t=0;t<ttot;t++){
@@ -109,19 +104,23 @@ double solve(){
 					// The updating algorithms, also computes an error measurement
 					if(c==0){
 						// Gradient flow for the chameleon scalar
-						eom=lap-getdpot(phi)-getmattdensity(x,y)/M;
+						eom=lap-getdpot(phi)-matterdensity[i][j]/M;
+						fld[tp][c][i][j]=ht*eom+phi;
+						
+						// The error measurement is phidot								
 						error_phi=error_phi+eom*h2;
-						fld[tp][c][i][j]=ht*eom+phi;							
+					
 					}
 					
 					if(c==1){
-						eom=lap+getmattdensity(x,y);
 						// SoR updating algorithm for gravitational potential
 						// Second order accuracy
 						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
 												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-												+fld[tp][c][i][jm1]+h2*getmattdensity(x,y));
-
+												+fld[tp][c][i][jm1]+h2*matterdensity[i][j]);
+						
+						// Compute derivatives to compute force
+						// for error measurement; uses second order for brevity
 						dfdx=(phi_ip1-phi_im1)/2.0/h;
 						dfdy=(phi_jp1-phi_jm1)/2.0/h;
 					    error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
@@ -142,12 +141,12 @@ double solve(){
 					}
 					
 					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-					filedump << " " << getmattdensity(x,y) << " " << eom << " " << fd[0] << " " << fd[1] << endl;
+					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 					
 
 					if(y==0){
 						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexdump << " " << getmattdensity(x,y) << " " << eom << " " << fd[0] << " " << fd[1] << endl;
+						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 					}	
 				}
 				

@@ -39,7 +39,7 @@ double		damp;				// Damping magnitude
 int			bctype;				
 int			pottype;
 int			inittype;			
-
+int			mattdisttype;
 int bl;
 double Lambda5, M, phi_bg;
 double objsize,objskindepth,objdensity, obj_rhobg;

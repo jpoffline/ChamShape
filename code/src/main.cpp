@@ -38,9 +38,9 @@ int main(int argc, char* argv[]) {
     checkdirexists(outDIR);
 	
 	// Do a quick sanity check
-	bool isok = checksanity();
+	int isok = checksanity();
 	
-	if(isok){
+	if(isok==0){
 		// Print top-matter (run info)
 		printtopmatter();
 
@@ -61,8 +61,11 @@ int main(int argc, char* argv[]) {
 		printfinalmessage(myTimer.elapsed().wall / 1e6);
 	}
 	else
-		cout << "imax and/or jmax not chosen sensibly" << endl;
-	
+		if(isok==1)
+			cout << "imax and/or jmax not chosen sensibly" << endl;
+		if(isok==2)
+			cout << "time-step size bigger than space step-size" << endl;
+		cout << "terminating" << endl;
 } // END main
 
 
