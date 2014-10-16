@@ -1,0 +1,53 @@
+function plotforce()
+    close all;
+    root='../';
+    
+    ndat=1;
+    ID{ndat} = '2'; ndat=ndat+1;
+    ID{ndat} = '5'; ndat=ndat+1;
+    ID{ndat} = '10'; ndat=ndat+1;
+    ID{ndat} = '20'; ndat=ndat+1;
+    
+    for dat=1:ndat-1
+        leglab{dat}=strcat('R =',ID{dat});
+    end;
+    
+    
+    plotxmax=25;
+    plotxmin=0;
+    fnp='file_x_final.dat';
+    cols={'r','b','k','m'};
+   R=1;
+    for dat=1:ndat-1
+        df=strcat(root,'R',ID{dat},'/',fnp);
+        data=load(df);
+        x=data(:,1);
+        R=str2num(ID{dat});
+        x=x-R;
+        phi=data(:,2);
+        fphi=data(:,5);
+        maxFORCE=max(fphi);
+        hold on;
+        subplot(1,2,1);
+        pl1{dat}=plot(x,fphi,'color',cols{dat});
+        xlim([plotxmin plotxmax]);
+        xlabel('$x-R$','interpreter','latex');
+        ylabel('$F_{\phi}$','interpreter','latex');
+        hold on;
+        subplot(1,2,2);
+        x=x+R;
+        plot(x,phi,'color',cols{dat});
+        xlim([plotxmin plotxmax]);
+        xlabel('$x$','interpreter','latex');
+        ylabel('$\phi$','interpreter','latex');
+        
+        fprintf('
+        
+    end;
+    
+  %  L = legend(leglab{1},leglab{2},leglab{3});
+    L = legend(ID{1},ID{2},ID{3});
+    hold off;
+    set(L,'location','southeast');
+    legend boxoff;
+   
