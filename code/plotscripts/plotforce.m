@@ -44,7 +44,7 @@ function plotforce()
         xlabel('$x$','interpreter','latex');
         ylabel('$\phi$','interpreter','latex');
         
-        fprintf('R = %s, Fmax = %f\n',ID{dat},maxFORCE);
+        fprintf('R = %s, Fmax = %f\n',ID{dat},10^maxFORCE);
         
     end;  
     

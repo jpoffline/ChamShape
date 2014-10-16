@@ -37,6 +37,7 @@ double setuparams(IniReader &init){
 	objskindepth = init.getiniDouble("objskindepth", 5.0, "Object");	
 	obj_rhobg = init.getiniDouble("obj_rhobg", 1.0, "Object");	
 	mattdisttype = init.getiniInt("mattdisttype", 1, "Object");	
+	elparam = init.getiniDouble("elparam", 1, "Object");	
 	
 	Lambda5 = init.getiniDouble("Lambda5", 5.0, "ChamModel");	
 	M = init.getiniDouble("M", 5.0, "ChamModel");	
