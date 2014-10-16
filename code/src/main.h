@@ -33,14 +33,14 @@ double		matterdensity[itot][jtot];
 
 
 // Function to check if a directory exists; if not it'll get created
-void checkdirexists(string dir){
+void checkdirexists(ostream& whereto, string dir){
     
     using namespace boost::filesystem;
     
     if (!exists(dir)) {
-        cout << endl;
-        cout << " --> Creating output directory" << endl;
-        cout << endl;
+        whereto << endl;
+        whereto << " --> Creating output directory" << endl;
+        whereto << endl;
         
         create_directory(dir);
     }
@@ -56,59 +56,89 @@ double unitrand(){
 } // END unitrand()
 
 // Print a welcome message
-void printwelcome(){
+void printwelcome(ostream& whereto){
 	
-	cout << endl;
-	cout << "------------------------------------------" << endl;
-	cout << "Simple code to solve for Chameleon shapes" << endl;
-	cout << "J. Pearson (Nottingham 2014)" << endl;
-	cout << "------------------------------------------" << endl;
-	cout << endl;
+	whereto << endl;
+	whereto << "------------------------------------------" << endl;
+	whereto << "Simple code to solve for Chameleon shapes" << endl;
+	whereto << "J. Pearson (Nottingham 2014)" << endl;
+	whereto << "------------------------------------------" << endl;
+	whereto << endl;
 	
 } // END printwelcome()
 
 
 // Print top matter -- mainly info about current run
-void printtopmatter(){
+void printtopmatter(ostream& whereto){
 	
-	cout << endl;
-	cout << "Simulation conditions/parameters:" << endl;
-	cout << "output dir: " << outDIR << endl;	
-	cout << "(imax, jmax) = (" << imax << ", " << jmax << ")" << endl;
-	cout << "(h, ht) = (" << h << ", " << ht << ")" << endl;
-	cout << "boundary layer = " << bl << " grid-points" << endl;
+	whereto << endl;
+	whereto << "Simulation conditions/parameters:" << endl;
+	whereto << "output dir: " << outDIR << endl;	
+	whereto << "(imax, jmax) = (" << imax << ", " << jmax << ")" << endl;
+	whereto << "(h, ht) = (" << h << ", " << ht << ")" << endl;
+	whereto << "boundary layer = " << bl << " grid-points" << endl;
 	
 	printinfo("Potential",pottype);	
 	printinfo("InitialConditions",inittype);
 		
-	cout << "Begin solving" << endl;
-	cout << endl;
+	whereto << "Begin solving" << endl;
+	whereto << endl;
 		
 } // END printtopmatter()
 
+void printobjectproperties(ostream& whereto){
+	
+	whereto << endl;
+	whereto << "Object parameters:" << endl;
+	whereto << "mattdisttype = " << mattdisttype;
+	if(mattdisttype == 1)
+		whereto << " (spherical)" <<endl;
+	else
+		whereto << endl;
+	whereto << "size = " << objsize << endl;
+	whereto << "density = " << objdensity << endl;
+	whereto << "skin depth = " << objskindepth << endl;
+	whereto << "bg density = " << obj_rhobg << endl;
+	whereto << endl;
+}
+
 // Print final message
-void printfinalmessage(double te){
+void printfinalmessage(ostream& whereto, double te){
 	
 	string tu="ms";
 	if(te>1e3){
 		te=te/1e3;
 		tu="sec";
 	}
-	cout << endl;
-	cout << "------------------------------------------" << endl;
-	cout << "Complete in " << te << tu << endl;
-	cout << "------------------------------------------" << endl;
-	cout << endl;
+	whereto << endl;
+	whereto << "------------------------------------------" << endl;
+	whereto << "Complete in " << te << tu << endl;
+	whereto << "------------------------------------------" << endl;
+	whereto << endl;
 	
 } // END printfinalmessage()
 
 int checksanity(){
 	
-	if(imax < itot && jmax < jtot)
+	if(imax > itot || jmax > jtot)
 		return 1;
 	if(ht>h)
 		return 2;
 	else
 		return 0;
 	
-}
+} // END checksanity()
+
+
+// Print info to logfile
+void printlog(){
+	
+	string filename = outDIR+filePREFIX+".log";
+	ofstream dumplog;
+	dumplog.open(filename);
+	printwelcome(dumplog);
+	printtopmatter(dumplog);
+	printobjectproperties(dumplog);
+	dumplog.close();
+	
+} // END printlog()

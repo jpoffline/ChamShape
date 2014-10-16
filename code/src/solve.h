@@ -174,8 +174,9 @@ double solve(){
         }
 	
 		// Dump timehistory
-		timehist << t*ht << " " << error_phi << " " << error_grav ;
-		timehist << " " << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << endl;
+		timehist << t*ht;
+		timehist << " " << error_phi << " " << (error_phi - olderror_phi)/ht;
+		timehist << " " <<  error_grav << " " << (error_grav - olderror_grav)/ht << endl;
 		
 		// Dump to screen
 		if(t%screendumpfreq==0){

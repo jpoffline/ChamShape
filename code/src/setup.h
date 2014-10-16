@@ -41,7 +41,7 @@ double setuparams(IniReader &init){
 	Lambda5 = init.getiniDouble("Lambda5", 5.0, "ChamModel");	
 	M = init.getiniDouble("M", 5.0, "ChamModel");	
 	phi_bg = init.getiniDouble("phi_bg", 5.0, "ChamModel");	
-	
+		
 	return 1.0;
 	
 } // END setuparams()

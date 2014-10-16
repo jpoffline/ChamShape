@@ -1,0 +1,22 @@
+
+------------------------------------------
+Simple code to solve for Chameleon shapes
+J. Pearson (Nottingham 2014)
+------------------------------------------
+
+
+Simulation conditions/parameters:
+output dir: R2/
+(imax, jmax) = (500, 500)
+(h, ht) = (0.5, 0.01)
+boundary layer = 4 grid-points
+Begin solving
+
+
+Object parameters:
+mattdisttype = 1 (spherical)
+size = 2
+density = 1
+skin depth = 0.5
+bg density = 0.1
+

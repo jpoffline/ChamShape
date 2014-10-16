@@ -32,17 +32,22 @@ int main(int argc, char* argv[]) {
 	setuparams(inifile);
 	
 	// Print welcome message to screen
-	printwelcome();
+	printwelcome(cout);
 		
 	// Check that the output directory exists; if not, code will create it
-    checkdirexists(outDIR);
+    checkdirexists(cout,outDIR);
 	
 	// Do a quick sanity check
 	int isok = checksanity();
 	
 	if(isok==0){
 		// Print top-matter (run info)
-		printtopmatter();
+		printtopmatter(cout);
+		
+		// Print properties of the object
+		printobjectproperties(cout);
+		// Print a logfile with all parameter info & simulation conditions
+		printlog();
 
 		// Run the solvers:
 	 
@@ -58,14 +63,16 @@ int main(int argc, char* argv[]) {
 		// Stop timing
 	    myTimer.stop();
 		// Send final time to be printed, along with a polite message	
-		printfinalmessage(myTimer.elapsed().wall / 1e6);
+		printfinalmessage(cout,myTimer.elapsed().wall / 1e6);
 	}
-	else
+	else{
 		if(isok==1)
 			cout << "imax and/or jmax not chosen sensibly" << endl;
 		if(isok==2)
 			cout << "time-step size bigger than space step-size" << endl;
 		cout << "terminating" << endl;
+		cout << endl;
+	}
 } // END main
 
 
