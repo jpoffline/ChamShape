@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 		// Print properties of the object
 		printobjectproperties(cout);
 		// Print a logfile with all parameter info & simulation conditions
-		printlog();
+		printlog("start",0.0,0.0);
 
 		// Run the solvers:
 	 
@@ -62,8 +62,11 @@ int main(int argc, char* argv[]) {
 	
 		// Stop timing
 	    myTimer.stop();
-		// Send final time to be printed, along with a polite message	
-		printfinalmessage(cout,myTimer.elapsed().wall / 1e6);
+		double te = myTimer.elapsed().wall / 1e6;
+		// Send elapsed time to be printed, along with a polite message	
+		printfinalmessage(cout,te);
+		// Print the elapsed time to log file
+		printlog("end",te,0.0);
 	}
 	else{
 		if(isok==1)

@@ -18,10 +18,11 @@ double solve(){
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
+	double phierrdens,graerrdens,maxFx=0.0,maxFy=0.0;
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
-	ofstream timehist,filedump,filexdump;  
+	ofstream timehist,filedump,filexdump,fileydump;  
 	
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
@@ -37,6 +38,9 @@ double solve(){
 	timehist.open(filename);
 	
     // Begin evolution
+	cout << endl;
+	cout << "Begin gradient flow" << endl;
+	cout << endl;
     for(int t=0;t<ttot;t++){
 	
         // Set the time-step counters for arrays
@@ -61,6 +65,14 @@ double solve(){
 			else
 				filename=outDIR+filePREFIX+"_x_"+to_string(trail+filenum)+".dat";
 			filexdump.open(filename);
+			
+			// open up y-field files
+			if(t==ttot-1)
+				filename = outDIR+filePREFIX+"_y_final.dat";
+			else
+				filename=outDIR+filePREFIX+"_y_"+to_string(trail+filenum)+".dat";
+			fileydump.open(filename);
+			
 		} 
 	
 	
@@ -95,6 +107,7 @@ double solve(){
 					phi_jp1=fld[tt][c][i][jp1];
 					phi_jm1=fld[tt][c][i][jm1];			
 			 
+					// Second order accurate laplacian
 					//lap=(phi_ip+phi_im+phi_jp+phi_jm-4.0*phi)/h2;
 				
 					// Fourth order accurate laplacian
@@ -103,18 +116,20 @@ double solve(){
 						+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
 				
 					// The updating algorithms, also computes an error measurement
+					
+					// Gradient flow for the chameleon scalar
 					if(c==0){
-						// Gradient flow for the chameleon scalar
+						
 						eom=lap-getdpot(phi)-matterdensity[i][j]/M;
 						fld[tp][c][i][j]=ht*eom+phi;
 						
 						// The error measurement is phidot								
 						error_phi=error_phi+eom*h2;
-					
+						phierrdens=eom;
 					}
-					
+					// SoR updating algorithm for gravitational potential
 					if(c==1){
-						// SoR updating algorithm for gravitational potential
+						
 						// Second order accuracy
 						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
 												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
@@ -142,13 +157,28 @@ double solve(){
 					}
 					
 					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
+					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
 					
 
 					if(y==0){
 						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
+						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+
+						// Find max force in x-direction
+						if(fd[0]>maxFx)
+							maxFx=fd[0];
+
 					}	
+					if(x==0){
+						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
+						fileydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+
+						// Find max force in y-direction
+						if(fd[0]>maxFy)
+							maxFy=fd[0];
+
+					}	
+
 				}
 				
 				
@@ -169,6 +199,7 @@ double solve(){
         if(dump){
         	filedump.close();
 			filexdump.close();
+			fileydump.close();
 			dump=false;
 			filenum++;
         }
@@ -191,6 +222,10 @@ double solve(){
 	// Close timehistory file
 	timehist.close();
 
+	cout << "max force in x-direction = " << maxFx << endl;
+	cout << "max force in y-direction = " << maxFy << endl;
+	printlog("maxFs",maxFx,maxFy);
+	
 	return 1.0;
 	
 } // END solve()

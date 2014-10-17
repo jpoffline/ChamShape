@@ -78,8 +78,8 @@ void printtopmatter(ostream& whereto){
 	whereto << "(h, ht) = (" << h << ", " << ht << ")" << endl;
 	whereto << "boundary layer = " << bl << " grid-points" << endl;
 	
-	printinfo("Potential",pottype);	
-	printinfo("InitialConditions",inittype);
+	printinfo(whereto,"Potential",pottype);	
+	printinfo(whereto,"InitialConditions",inittype);
 		
 	whereto << "Begin solving" << endl;
 	whereto << endl;
@@ -92,7 +92,11 @@ void printobjectproperties(ostream& whereto){
 	whereto << "Object parameters:" << endl;
 	whereto << "mattdisttype = " << mattdisttype;
 	if(mattdisttype == 1)
-		whereto << " (spherical)" <<endl;
+		whereto << " :: spherical" <<endl;
+	if(mattdisttype == 2){
+		whereto << " :: ellipse " << endl;
+		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
+	}
 	else
 		whereto << endl;
 	whereto << "size = " << objsize << endl;
@@ -131,14 +135,35 @@ int checksanity(){
 
 
 // Print info to logfile
-void printlog(){
+void printlog(string when, double v1,double v2){
 	
-	string filename = outDIR+filePREFIX+".log";
-	ofstream dumplog;
-	dumplog.open(filename);
-	printwelcome(dumplog);
-	printtopmatter(dumplog);
-	printobjectproperties(dumplog);
-	dumplog.close();
+	if(when=="start"){
+		string filename = outDIR+filePREFIX+".log";
+		ofstream dumplog;
+		dumplog.open(filename);
+		printwelcome(dumplog);
+		printtopmatter(dumplog);
+		printobjectproperties(dumplog);
+		dumplog.close();
+	}
+	
+	if(when=="maxFs"){
+		string filename = outDIR+filePREFIX+".log";
+		ofstream dumplog;
+		dumplog.open(filename,ios::app);
+		dumplog << endl;
+		dumplog << "Max force in x-direction = " << v1 << endl;
+		dumplog << "Max force in y-direction = " << v2 << endl;		
+		dumplog << endl;
+		dumplog.close();
+	}
+	
+	if(when=="end"){
+		string filename = outDIR+filePREFIX+".log";
+		ofstream dumplog;
+		dumplog.open(filename,ios::app);
+		printfinalmessage(dumplog, v1);
+		dumplog.close();
+	}
 	
 } // END printlog()

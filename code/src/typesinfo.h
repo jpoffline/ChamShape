@@ -9,7 +9,7 @@
 
 
 
-void printinfo(string type, int option){
+void printinfo(ostream& whereto, string type, int option){
 	
 	// Setup identifiers to use in switches
 	int typeID;
@@ -18,32 +18,32 @@ void printinfo(string type, int option){
 		typeID = 1;
 	if(type=="Potential")
 		typeID = 3;
-	cout << type << " = " << option << " :: ";
+	whereto << type << " = " << option << " :: ";
 	
 	switch(typeID){
 		 
 		case 1:
 			switch(option){
 				case 0: 
-					cout << "homogeneous field" << endl;
+					whereto << "homogeneous field" << endl;
 					break;
 				default:
-					cout << "cant find a description for " << type << endl;
+					whereto << "cant find a description for " << type << endl;
 					break;
 			}
 			break;
 		case 3:
 			switch(option){
 				case 1: 
-					cout << "Lambda/phi" << endl;
+					whereto << "Lambda5/phi" << endl;
 					break;
 				default:
-					cout << "cant find a description for " << type << endl;
+					whereto << "cant find a description for " << type << endl;
 					break;
 			}
 			break;
 		default:
-			cout << "dont know what " << type << " is" << endl;
+			whereto << "dont know what " << type << " is" << endl;
 			break;
 	}
 	
