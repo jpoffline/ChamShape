@@ -55,7 +55,7 @@ double solve(){
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_final.dat";
 			else
-				filename=outDIR+filePREFIX+"_"+to_string(trail+filenum)+".dat";
+				filename=outDIR+filePREFIX+"_"+Int2String(trail+filenum)+".dat";
 			
 			filedump.open(filename);
 			
@@ -63,14 +63,14 @@ double solve(){
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_x_final.dat";
 			else
-				filename=outDIR+filePREFIX+"_x_"+to_string(trail+filenum)+".dat";
+				filename=outDIR+filePREFIX+"_x_"+Int2String(trail+filenum)+".dat";
 			filexdump.open(filename);
 			
 			// open up y-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_y_final.dat";
 			else
-				filename=outDIR+filePREFIX+"_y_"+to_string(trail+filenum)+".dat";
+				filename=outDIR+filePREFIX+"_y_"+Int2String(trail+filenum)+".dat";
 			fileydump.open(filename);
 			
 		} 

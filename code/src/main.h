@@ -31,6 +31,11 @@ double		matterdensity[itot][jtot];
 
 // Some useful auxiliary functions
 
+string Int2String(int Number) {
+	
+    return static_cast<ostringstream*>( &(ostringstream() << Number) )->str();
+	
+}
 
 // Function to check if a directory exists; if not it'll get created
 void checkdirexists(ostream& whereto, string dir){
