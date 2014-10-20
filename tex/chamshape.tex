@@ -39,7 +39,7 @@
 
 \maketitle
 \begin{abstract}
-In conservation with Clare Burrage, Ed Copeland, James...
+In conservation with Clare Burrage, Ed Copeland, James Stevenson, Adam Moss...
 \end{abstract}
 \clearpage
 
@@ -47,19 +47,21 @@ In conservation with Clare Burrage, Ed Copeland, James...
 
 
 \section{Introduction}
+The idea is to understand the differences between the chameleon force and gravitational force for source objects with different shapes -- circles, ellipsoids, etc.
 \section{The model}
-The equations are
+In the static regime the chameleon scalar $\phi$ satisfies
 \bse
 \bea
 \label{eq:cham-eom}
 \nabla^2\phi = -\frac{\Lambda^5}{\phi^2} + \frac{\rho}{M},
 \eea
+and the gravitational potential $\Phi$ satisfies Laplace's equation,
 \bea
 \label{eq:laplaceseqn}
 \nabla^2\Phi = - \rho
 \eea
 \ese
-We compute the forces due to the chameleon and gravitational scalars by taking their gradients:
+We compute the forces due to the chameleon and gravitational scalars by taking the gradient of the relevant scalar:
 \bea
 \label{eq:forces}
 \rbm{F}_{(\phi)} = \nabla\phi,\qquad
@@ -71,13 +73,18 @@ We compute the forces due to the chameleon and gravitational scalars by taking t
 \item Solve (\ref{eq:laplaceseqn}) via SoR; discretized to second order accuracy.
 \item The forces (\ref{eq:forces}) are computed with finite difference derivatives discretized to fourth order
 \end{itemize}
+\subsection{Simulated annealing}
+We have a suggestion to obtain the optimal shape via simulated annealing. This would be implemented by first specifying some given matter distribution (e.g., a sphere), and computing the scalar and gravitational forces. A new shape is randomly proposed -- by switching ``on'' or ``off'' locations which are supposed to have matter. If the force discrepancies are greater for this new shape, it is kept, and the whole process is repeated until an optimal shape is obtained. One needs to be careful to only proposed connected objects.
+
+This strategy is relatively straight-forward, but computationally very intensive -- one way to help is to parallelise the code.
 \addcontentsline{toc}{section}{Acknowledgements}
 
 \section*{Acknowledgements}
 
 \appendix
 \section{Schemes}
-\textbf{\textit{SoR}}
+
+\textbf{\textit{SoR}} This is used to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the parameter $\omega$. The updating algorithm is
 \bea
 Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^{n+1}_{i-1,j} + Q^n_{i,j+1} + Q^{n+1}_{i,j-1} + h^2\rho \right]
 \eea
