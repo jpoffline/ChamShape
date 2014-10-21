@@ -1,7 +1,9 @@
 /*
+
 	Simple code to find chameleon shapes
 		J. Pearson (Nottingham 2014)
 		j.pearson@nottingham.ac.uk
+
 */
 
 // NOTES
@@ -17,7 +19,7 @@
 
 int main(int argc, char* argv[]) {
 
-	// Read the input parameters file, named "newparam.txt" by default.
+	// Read the input parameters file, named "params.ini" by default.
 	// If there is a command line argument, assume that it is the filename for the parameters file.
 	string inifileName;
 	if (argc > 1)
@@ -25,7 +27,6 @@ int main(int argc, char* argv[]) {
 	else
 		inifileName = "params.ini";
 
-	
 	
 	// Setup parameters
 	setuparams(inifileName);

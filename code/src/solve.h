@@ -18,7 +18,7 @@ double solve(){
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
-	double phierrdens,graerrdens,maxFx=0.0,maxFy=0.0;
+	double phierrdens,maxFx=0.0,maxFy=0.0;
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
@@ -39,7 +39,7 @@ double solve(){
 	
     // Begin evolution
 	cout << endl;
-	cout << "Begin gradient flow" << endl;
+	cout << "Begin gradient flow to find chameleon shapes" << endl;
 	cout << endl;
     for(int t=0;t<ttot;t++){
 	

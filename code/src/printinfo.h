@@ -1,54 +1,58 @@
+/*
+
+	function to print types info
+	... boundary conditions (fixed, periodic, etc)
+	... initial conditions (random, idealised, etc)
+	... equation of motion (damped, gradient flow, etc)
+
+*/
 
 
-#include <stdio.h>
-#include <string.h>
-#include <cmath>  
-#include <math.h>
-#include <time.h>
-#include <iostream>
-#include <fstream>
-#include <ctime>
-#include <sstream>
-#include <string>
-#include <stdlib.h>
-#include <sys/stat.h>   // For stat().
-
-using namespace std;
-
-using namespace std;
-const double PI=4.0*atan(1.0);
-
-#include "auxfunc.h"
-#include "options.h"
-#include "typesinfo.h"
-#include "myparamreader.h"
-
-////////////////////////////////////////////////
-// The field definition
-double      fld[2][nflds][itot][jtot];
-double		matterdensity[itot][jtot];
-////////////////////////////////////////////////
 
 
-void mycheckdir(ostream& whereto, string dir){
-	struct stat st;
-	if(stat(dir.c_str(),&st) == 0)
-	    whereto << "Output directory exists" << endl;
-	else{
-		whereto << endl;
-		whereto << "--> creating output directory" << endl;
-		string str = "mkdir " + dir;
-		system(str.c_str());
+void printinfo(ostream& whereto, string type, int option){
+	
+	// Setup identifiers to use in switches
+	int typeID;
+	
+	if(type == "InitialConditions")
+		typeID = 1;
+	if(type=="Potential")
+		typeID = 3;
+	whereto << type << " = " << option << " :: ";
+	
+	switch(typeID){
+		 
+		case 1:
+			switch(option){
+				case 0: 
+					whereto << "homogeneous field" << endl;
+					break;
+				default:
+					whereto << "cant find a description for " << type << endl;
+					break;
+			}
+			break;
+		case 3:
+			switch(option){
+				case 1: 
+					whereto << "Lambda5/phi" << endl;
+					break;
+				default:
+					whereto << "cant find a description for " << type << endl;
+					break;
+			}
+			break;
+		default:
+			whereto << "dont know what " << type << " is" << endl;
+			break;
 	}
+	
+	
 }
 
+// Routines to print messages
 
-// Function to return uniform random number on unit interval
-double unitrand(){
-	
-	return rand()/(double)RAND_MAX;
-	
-} // END unitrand()
 
 // Print a welcome message
 void printwelcome(ostream& whereto){
@@ -117,16 +121,7 @@ void printfinalmessage(ostream& whereto, double te){
 	
 } // END printfinalmessage()
 
-int checksanity(){
-	
-	if(imax > itot || jmax > jtot)
-		return 1;
-	if(ht>h)
-		return 2;
-	else
-		return 0;
-	
-} // END checksanity()
+
 
 
 // Print info to logfile

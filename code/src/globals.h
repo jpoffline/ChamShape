@@ -1,4 +1,4 @@
-// options.h
+// globals.h
 // All parameters here get set from params.ini
 
 //// -------------------------------- ////
@@ -40,9 +40,9 @@ int			bctype;
 int			pottype;
 int			inittype;			
 int			mattdisttype;
-int bl;
-double Lambda5, M, phi_bg;
-double objsize,objskindepth,objdensity, obj_rhobg;
-double elparam1,elparam2;
+int 		bl;
+double 		Lambda5, M, phi_bg;
+double 		objsize,objskindepth,objdensity, obj_rhobg;
+double 		elparam1,elparam2;
 
 /// EOF
