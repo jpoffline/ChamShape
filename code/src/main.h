@@ -7,50 +7,40 @@
 #include <time.h>
 #include <iostream>
 #include <fstream>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/timer/timer.hpp>
+#include <ctime>
 #include <sstream>
+#include <string>
+#include <stdlib.h>
+#include <sys/stat.h>   // For stat().
 
-using namespace boost::property_tree;
 using namespace std;
-//#include "inireader.h"
 
 using namespace std;
 const double PI=4.0*atan(1.0);
 
+#include "auxfunc.h"
 #include "options.h"
-#include "inireader.h"
 #include "typesinfo.h"
+#include "myparamreader.h"
+
 ////////////////////////////////////////////////
 // The field definition
 double      fld[2][nflds][itot][jtot];
 double		matterdensity[itot][jtot];
 ////////////////////////////////////////////////
 
-// Some useful auxiliary functions
 
-string Int2String(int Number) {
-	
-    return static_cast<ostringstream*>( &(ostringstream() << Number) )->str();
-	
+void mycheckdir(ostream& whereto, string dir){
+	struct stat st;
+	if(stat(dir.c_str(),&st) == 0)
+	    whereto << "Output directory exists" << endl;
+	else{
+		whereto << endl;
+		whereto << "--> creating output directory" << endl;
+		string str = "mkdir " + dir;
+		system(str.c_str());
+	}
 }
-
-// Function to check if a directory exists; if not it'll get created
-void checkdirexists(ostream& whereto, string dir){
-    
-    using namespace boost::filesystem;
-    
-    if (!exists(dir)) {
-        whereto << endl;
-        whereto << " --> Creating output directory" << endl;
-        whereto << endl;
-        
-        create_directory(dir);
-    }
-    
-} // END checkdirexists()
 
 
 // Function to return uniform random number on unit interval

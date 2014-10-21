@@ -1,6 +1,6 @@
 /*
-	Simple code to evolve domain wall networks
-		J. Pearson (Durham/Nottingham 2014)
+	Simple code to find chameleon shapes
+		J. Pearson (Nottingham 2014)
 		j.pearson@nottingham.ac.uk
 */
 
@@ -17,30 +17,33 @@
 
 int main(int argc, char* argv[]) {
 
-	// Read the input parameters file, named "params.ini" by default.
+	// Read the input parameters file, named "newparam.txt" by default.
 	// If there is a command line argument, assume that it is the filename for the parameters file.
-	IniReader inifile;
+	string inifileName;
 	if (argc > 1)
-		inifile.read(argv[1]);
+		inifileName = argv[1];
 	else
-		inifile.read("params.ini");
+		inifileName = "params.ini";
 
-	// Start timing!
-    boost::timer::cpu_timer myTimer;
+	
 	
 	// Setup parameters
-	setuparams(inifile);
+	setuparams(inifileName);
 	
 	// Print welcome message to screen
 	printwelcome(cout);
 		
 	// Check that the output directory exists; if not, code will create it
-    checkdirexists(cout,outDIR);
+    mycheckdir(cout,outDIR);
 	
 	// Do a quick sanity check
 	int isok = checksanity();
 	
 	if(isok==0){
+		
+		// Start timing!
+		clock_t startTime = clock();
+		
 		// Print top-matter (run info)
 		printtopmatter(cout);
 		
@@ -61,12 +64,14 @@ int main(int argc, char* argv[]) {
 		cout << "Completed" << endl;
 	
 		// Stop timing
-	    myTimer.stop();
-		double te = myTimer.elapsed().wall / 1e6;
+		clock_t endTime = clock();
+		// Compute elapsed time in ms
+		double timeInms = (endTime - startTime) / (double) CLOCKS_PER_SEC * 1000.0;
 		// Send elapsed time to be printed, along with a polite message	
-		printfinalmessage(cout,te);
+		printfinalmessage(cout,timeInms);
 		// Print the elapsed time to log file
-		printlog("end",te,0.0);
+		printlog("end",timeInms,0.0);
+		
 	}
 	else{
 		if(isok==1)

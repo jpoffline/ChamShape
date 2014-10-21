@@ -230,7 +230,7 @@ double solve(){
 
 	// Close timehistory file
 	timehist.close();
-
+	cout << endl;
 	cout << "max force in x-direction = " << maxFx << endl;
 	cout << "max force in y-direction = " << maxFy << endl;
 	printlog("maxFs",maxFx,maxFy);
