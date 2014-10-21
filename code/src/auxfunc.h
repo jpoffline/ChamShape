@@ -5,7 +5,7 @@
 
 */
 
-void mycheckdir(ostream& whereto, string dir){
+void checkdirexists(ostream& whereto, string dir){
 	struct stat st;
 	if(stat(dir.c_str(),&st) == 0)
 	    whereto << "> output directory exists" << endl;

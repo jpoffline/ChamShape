@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 	printwelcome(cout);
 		
 	// Check that the output directory exists; if not, code will create it
-    mycheckdir(cout,outDIR);
+    checkdirexists(cout,outDIR);
 	
 	// Do a quick sanity check
 	int isok = checksanity();
