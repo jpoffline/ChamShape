@@ -7,7 +7,7 @@
 
 double solve(){
 	
-	double error_phi=0.0,error_grav=0.0,olderror_phi,olderror_grav;
+	double error_phi=0.0,error_grav=0.0,olderror_phi,olderror_grav,error_cham_force;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
     double x,y;
 	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
@@ -80,9 +80,10 @@ double solve(){
 		// dump current energy into the old energy 
 		olderror_phi=error_phi;
 		olderror_grav=error_grav;
-		// zero the integrated energy
+		// zero the integrated errors
 		error_phi=0.0;
 		error_grav=0.0;
+		error_cham_force=0.0;
 		// Begin run over space
         for(int i=iminb;i<imaxb;i++){
             
@@ -126,7 +127,14 @@ double solve(){
 						// The error measurement is phidot								
 						error_phi=error_phi+eom*h2;
 						phierrdens=eom;
+						// Also compute error by computing time variation of the integral
+						// of the magnitude of the force density
+						dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
+						dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;		
+					    error_cham_force=error_cham_force+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+						
 					}
+					
 					// SoR updating algorithm for gravitational potential
 					if(c==1){
 						
@@ -140,6 +148,7 @@ double solve(){
 						dfdx=(phi_ip1-phi_im1)/2.0/h;
 						dfdy=(phi_jp1-phi_jm1)/2.0/h;
 					    error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+						
 					}
 					
 					
@@ -148,7 +157,7 @@ double solve(){
 						
 				// Dump to file
 				if(dump){
-					for(int c=0; c<nflds;c++){
+					for(int c=0;c<nflds;c++){
 						// Fourth order accurate first derivatives
 						dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
 						dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;					
@@ -184,7 +193,6 @@ double solve(){
 				
             } // end j-loop
 		
-			 
 		
 			// Print a newline to file
 			// Dump to file
@@ -205,14 +213,15 @@ double solve(){
         }
 	
 		// Dump timehistory
-		timehist << t*ht;
-		timehist << " " << error_phi << " " << (error_phi - olderror_phi)/ht;
-		timehist << " " <<  error_grav << " " << (error_grav - olderror_grav)/ht << endl;
+		timehist << t*ht << " ";
+		timehist << error_phi << " " << (error_phi - olderror_phi)/ht << " ";
+		timehist << error_grav << " " << (error_grav - olderror_grav)/ht << " ";
+		timehist << error_cham_force << endl;
 		
 		// Dump to screen
 		if(t%screendumpfreq==0){
-			cout << t << "/"  << ttot << " " << error_phi << " " << error_grav;
-			cout  << " " << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << endl;
+			cout << t << "/"  << ttot << " " << error_phi << " " << error_grav << " " ;
+			cout << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << " " << error_cham_force << endl;
 		}
 		// Rescale gravitational potential
 		// Note: Laplace's equation, nabla^2Phi = - rho, is invariant under Phi -> Phi + c1 x + c2 x^2

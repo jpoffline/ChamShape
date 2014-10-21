@@ -7,6 +7,7 @@ function makesurf(varargin)
     plot_sizeunits='inches';
     plot_width=4.5;
     plot_height=3.5;
+    axlim=20;
     
     DIR='../';
     infilename = strcat(DIR,name,'/file_',whichID,'.dat');
@@ -21,9 +22,9 @@ function makesurf(varargin)
     
     ID = 6;
     F = inputdata(:,ID);
-    
-    
-    
+    if ID==8
+        F = log10(abs(inputdata(:,ID)));
+    end;
     outfigname = strcat(name,'_',whichID,'.pdf'); 
     
     xlin = linspace(xmin, xmax, 1000);
@@ -39,9 +40,9 @@ function makesurf(varargin)
     xlabel('x');
     ylabel('y');
     
-    xlim([-30 30]);
-    ylim([-30 30]);
-    caxis([0 1.5])
+    xlim([-axlim axlim]);
+    ylim([-axlim axlim]);
+    caxis([0.5*max(F) max(F)])
     box on;
     
     
