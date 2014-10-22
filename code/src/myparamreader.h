@@ -2,8 +2,7 @@
 
 	myparamreader.h
 
-	At the moment, the reader carries on from its previous location
-	... this needs to be fixed
+	Treat Double, Int, Bool, String separately
 
 */
 
@@ -27,8 +26,12 @@ double getiniDouble(ifstream& inif, string namerequired, double deflt){
 			tempval = temp.substr(pos+1); 
 
 			if(names==namerequired){
+				// Once found, go back to the beginning of the file
+				inif.clear();
+				inif.seekg(0,ios::beg);
 				return String2Double(tempval);
 				notfound=false;
+				
 				break;
 			}
 		}
@@ -38,8 +41,7 @@ double getiniDouble(ifstream& inif, string namerequired, double deflt){
 	// Send default back if not found anything
 	return deflt;
 	
-}
-
+} // END getiniDouble()
 
 int getiniInt(ifstream& inif, string namerequired, int deflt){
 	
@@ -61,6 +63,9 @@ int getiniInt(ifstream& inif, string namerequired, int deflt){
 			tempval = temp.substr(pos+1); 
 
 			if(names==namerequired){
+				// Once found, go back to the beginning of the file
+				inif.clear();
+				inif.seekg(0,ios::beg);
 				return String2Int(tempval);
 				notfound=false;
 				break;
@@ -72,7 +77,7 @@ int getiniInt(ifstream& inif, string namerequired, int deflt){
 	// Send default back if not found anything
 	return deflt;
 	
-}
+} // END getiniInt()
 
 string getiniString(ifstream& inif, string namerequired, string deflt){
 	
@@ -94,6 +99,9 @@ string getiniString(ifstream& inif, string namerequired, string deflt){
 			tempval = temp.substr(pos+1); 
 
 			if(names==namerequired){
+				// Once found, go back to the beginning of the file
+				inif.clear();
+				inif.seekg(0,ios::beg);
 				return tempval;
 				notfound=false;
 				break;
@@ -105,8 +113,7 @@ string getiniString(ifstream& inif, string namerequired, string deflt){
 	// Send default back if not found anything
 	return deflt;
 	
-}
-
+} // END getiniString()
 
 bool getiniBool(ifstream& inif, string namerequired, bool deflt){
 	
@@ -133,7 +140,9 @@ bool getiniBool(ifstream& inif, string namerequired, bool deflt){
 					tempvalret=true;
 				if(tempval=="false")
 					tempvalret=false;
-				
+				// Once found, go back to the beginning of the file
+				inif.clear();
+				inif.seekg(0,ios::beg);
 				return tempvalret;
 				notfound=false;
 				break;
@@ -145,4 +154,4 @@ bool getiniBool(ifstream& inif, string namerequired, bool deflt){
 	// Send default back if not found anything
 	return deflt;
 	
-}
+} // END getiniBool()

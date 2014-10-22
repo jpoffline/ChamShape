@@ -1,6 +1,6 @@
 /*
 
-	evolver.h
+	solve.h
 
 */
 
@@ -234,7 +234,9 @@ double solve(){
 	cout << "max force in x-direction = " << maxFx << endl;
 	cout << "max force in y-direction = " << maxFy << endl;
 	printlog("maxFs",maxFx,maxFy);
-	
+	cout << endl;
+	cout << "Completed gradient flow" << endl;
+	cout << endl;	
 	return 1.0;
 	
 } // END solve()

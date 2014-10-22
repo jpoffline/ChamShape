@@ -49,10 +49,13 @@ void printinfo(ostream& whereto, string type, int option){
 	}
 	
 	
-}
+} // END printinfo()
 
-// Routines to print messages
+/*
 
+	Routines to print messages
+
+*/
 
 // Print a welcome message
 void printwelcome(ostream& whereto){
@@ -65,7 +68,6 @@ void printwelcome(ostream& whereto){
 	whereto << endl;
 	
 } // END printwelcome()
-
 
 // Print top matter -- mainly info about current run
 void printtopmatter(ostream& whereto){
@@ -88,7 +90,7 @@ void printtopmatter(ostream& whereto){
 void printobjectproperties(ostream& whereto){
 	
 	whereto << endl;
-	whereto << "Object parameters:" << endl;
+	whereto << "Source object parameters:" << endl;
 	whereto << "mattdisttype = " << mattdisttype;
 	if(mattdisttype == 1)
 		whereto << " :: spherical" <<endl;
@@ -120,9 +122,6 @@ void printfinalmessage(ostream& whereto, double te){
 	whereto << endl;
 	
 } // END printfinalmessage()
-
-
-
 
 // Print info to logfile
 void printlog(string when, double v1,double v2){
@@ -157,3 +156,15 @@ void printlog(string when, double v1,double v2){
 	}
 	
 } // END printlog()
+
+
+void printerror(ostream& whereto, int errID){
+	
+	if(errID==1)
+		whereto << "imax and/or jmax not chosen sensibly" << endl;
+	if(errID==2)
+		whereto << "time-step size bigger than space step-size" << endl;
+	whereto << "terminating" << endl;
+	whereto << endl;
+	
+} // END printerror()

@@ -3,7 +3,8 @@
 	ics.h
 
 	Contains initial conditions
-	Sets up up matter distribution and scalar fields.
+	Sets up matter distribution and scalar fields.
+
 */
 
 double initialconditions(double phi_bg){
@@ -12,6 +13,7 @@ double initialconditions(double phi_bg){
 		x=(i-0.5*imax)*h;
 		for(int j=0;j<jmax;j++){
 			y=(j-0.5*jmax)*h;
+			
 			if(mattdisttype==1)
 				// Spherical matter distribution
 				matterdensity[i][j] = obj_rhobg*(1+0.5*(objdensity/obj_rhobg-1.0)*(1.0-tanh((sqrt(x*x+y*y)-objsize)/objskindepth)));

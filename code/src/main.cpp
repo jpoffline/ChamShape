@@ -62,26 +62,19 @@ int main(int argc, char* argv[]) {
 		// (1) solve 
 		solve();	
 	
-		cout << "Completed" << endl;
-	
 		// Stop timing
 		clock_t endTime = clock();
 		// Compute elapsed time in ms
-		double timeInms = (endTime - startTime) / (double) CLOCKS_PER_SEC * 1000.0;
+		double timeinMS = (endTime - startTime) / (double) CLOCKS_PER_SEC * 1000.0;
 		// Send elapsed time to be printed, along with a polite message	
-		printfinalmessage(cout,timeInms);
+		printfinalmessage(cout,timeinMS);
 		// Print the elapsed time to log file
-		printlog("end",timeInms,0.0);
+		printlog("end",timeinMS,0.0);
 		
 	}
-	else{
-		if(isok==1)
-			cout << "imax and/or jmax not chosen sensibly" << endl;
-		if(isok==2)
-			cout << "time-step size bigger than space step-size" << endl;
-		cout << "terminating" << endl;
-		cout << endl;
-	}
+	else
+		printerror(cout,isok);
+		
 } // END main
 
 

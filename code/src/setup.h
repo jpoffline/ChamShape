@@ -4,12 +4,12 @@
 
 */
 
-double setuparams(string pfile){
+double setuparams(string paramFileName){
 	
 	// Obtain stream containing parameters file
 	
 	ifstream paramsfile;
-	paramsfile.open(pfile);
+	paramsfile.open(paramFileName);
 	
 	// Go read in relevant parts of the parameter file
 	// Structure: getiniTYPE(PARAMstream, PARAMname, DEFAULTvalue)
@@ -29,10 +29,10 @@ double setuparams(string pfile){
 	objsize = getiniDouble(paramsfile,"objsize", 5.0);	
 	objskindepth = getiniDouble(paramsfile,"objskindepth", 5.0);	
 	obj_rhobg = getiniDouble(paramsfile,"obj_rhobg", 1.0);	
-
+	
 	elparam1 = getiniDouble(paramsfile,"elparam1", 1);	
 	elparam2 = getiniDouble(paramsfile,"elparam2", 1);	
-		
+	
 	Lambda5 = getiniDouble(paramsfile,"Lambda5", 5.0);	
 	M = getiniDouble(paramsfile,"M", 5.0);	
 	phi_bg = getiniDouble(paramsfile,"phi_bg", 5.0);	
