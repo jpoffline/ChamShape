@@ -1,11 +1,9 @@
 *.dat
-*.pdf
 *.log
 code/makefile
-code/main.o
+*.o
 code/main
-tex/*.log
-tex/*.out
-tex/*.aux
-tex/*.toc
+*.out
+*.aux
+*.toc
 tex/*.gz
