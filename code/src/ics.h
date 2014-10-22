@@ -14,9 +14,14 @@ double initialconditions(double phi_bg){
 		for(int j=0;j<jmax;j++){
 			y=(j-0.5*jmax)*h;
 			
-			if(mattdisttype==1)
+			if(mattdisttype==1){
 				// Spherical matter distribution
-				matterdensity[i][j] = obj_rhobg*(1+0.5*(objdensity/obj_rhobg-1.0)*(1.0-tanh((sqrt(x*x+y*y)-objsize)/objskindepth)));
+				//matterdensity[i][j] = obj_rhobg*(1+0.5*(objdensity/obj_rhobg-1.0)*(1.0-tanh((sqrt(x*x+y*y)-objsize)/objskindepth)));
+			  if(abs(x) < sqrt(objsize*objsize-y*y))
+			     matterdensity[i][j]=objdensity;
+			  else
+			     matterdensity[i][j]=obj_rhobg;
+			}
 			if(mattdisttype==2){
 				//pec=(sqrt(x*x+(y+elparam)*(y+elparam))+sqrt(x*x+(y-elparam)*(y-elparam)))/2.0/elparam;
 				//matterdensity[i][j] = obj_rhobg*(1+0.5*(objdensity/obj_rhobg-1.0)*(1.0-tanh((pec-objsize)/objskindepth)));

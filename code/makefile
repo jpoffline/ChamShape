@@ -1,7 +1,7 @@
 OBJECTS = main.o
 INC = -Wall -I/usr/local/include
 
-CC = g++
+CC = g++ -std=c++0x
 
 all: main
 

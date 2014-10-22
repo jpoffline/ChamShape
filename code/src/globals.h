@@ -7,8 +7,8 @@
 // Note: these are used to construct the array "fld"... a user can specify smaller grid
 // in params.ini... but, larger will require these to be modified to encompass the larger
 // number of grid-points
-const int   itot=512;				// Number of grid-points in i-direction
-const int   jtot=512;				// Number of grid-points in j-direction
+const int   itot=1000;				// Number of grid-points in i-direction
+const int   jtot=1000;				// Number of grid-points in j-direction
 //// -------------------------------- ////
 //// -------------------------------- ////
 
