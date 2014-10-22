@@ -36,13 +36,16 @@ double setuparams(string paramFileName){
 	Lambda5 = getiniDouble(paramsfile,"Lambda5", 5.0);	
 	M = getiniDouble(paramsfile,"M", 5.0);	
 	phi_bg = getiniDouble(paramsfile,"phi_bg", 5.0);	
-	
+
+	rootoutDIR =  getiniString(paramsfile,"rootoutDIR", "output/");		
 	outDIR =  getiniString(paramsfile,"outDIR", "data/");		
 	screendumpfreq = getiniInt(paramsfile,"screendumpfreq", 20);	
 	filePREFIX = getiniString(paramsfile,"filePREFIX", "file");	
 	dumptofile = getiniBool(paramsfile,"dumptofile", true);		
 	filedumpfreq = getiniInt(paramsfile,"filedumpfreq", 1000);	
 	timehistoryproto = getiniString(paramsfile,"timehistoryproto", "timehistory");	
+	
+	outDIR=rootoutDIR+outDIR;
 		
 	paramsfile.close();
 		

@@ -4,3 +4,8 @@
 code/makefile
 code/main.o
 code/main
+tex/*.log
+tex/*.out
+tex/*.aux
+tex/*.toc
+tex/*.gz

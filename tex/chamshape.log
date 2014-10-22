@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.10.17)  17 OCT 2014 16:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.10.17)  22 OCT 2014 18:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -378,20 +378,20 @@ LaTeX Info: Redefining \cite on input line 694.
 (./chamshape.aux)
 \openout1 = `chamshape.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
 
 (/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -442,7 +442,7 @@ LaTeX Font Info:    ... okay on input line 30.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box30
-Package hyperref Info: Link coloring ON on input line 30.
+Package hyperref Info: Link coloring ON on input line 31.
 (/usr/local/texlive/2014/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -451,9 +451,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count129
 )
-LaTeX Info: Redefining \ref on input line 30.
-LaTeX Info: Redefining \pageref on input line 30.
-LaTeX Info: Redefining \nameref on input line 30.
+LaTeX Info: Redefining \ref on input line 31.
+LaTeX Info: Redefining \pageref on input line 31.
+LaTeX Info: Redefining \nameref on input line 31.
 
 (./chamshape.out) (./chamshape.out)
 \@outlinefile=\write3
@@ -487,69 +487,112 @@ LaTeX Info: Redefining \selectfont on input line 126.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfigure package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 41.
+LaTeX Font Info:    Try loading font information for U+msa on input line 42.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 41.
+LaTeX Font Info:    Try loading font information for U+msb on input line 42.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
-
-{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./cham
-shape.toc)
+)
+(./chamshape.toc)
 \tf@toc=\write4
 \openout4 = `chamshape.toc'.
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 72.
+ [1
+
+{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+<images/sp_lorho_force_final.pdf, id=118, 325.215pt x 252.945pt>
+File: images/sp_lorho_force_final.pdf Graphic file (type pdf)
+
+<use images/sp_lorho_force_final.pdf>
+Package pdftex.def Info: images/sp_lorho_force_final.pdf used on input line 103
+.
+(pdftex.def)             Requested size: 195.1305pt x 151.76816pt.
+
+<images/sp_lorho_fxy_force_final.pdf, id=119, 325.215pt x 252.945pt>
+File: images/sp_lorho_fxy_force_final.pdf Graphic file (type pdf)
+
+<use images/sp_lorho_fxy_force_final.pdf>
+Package pdftex.def Info: images/sp_lorho_fxy_force_final.pdf used on input line
+ 104.
+(pdftex.def)             Requested size: 195.1305pt x 151.76816pt.
+
+<images/el_lorho_force_final.pdf, id=123, 325.215pt x 252.945pt>
+File: images/el_lorho_force_final.pdf Graphic file (type pdf)
+
+<use images/el_lorho_force_final.pdf>
+Package pdftex.def Info: images/el_lorho_force_final.pdf used on input line 118
+.
+(pdftex.def)             Requested size: 195.1305pt x 151.76816pt.
+
+<images/el_lorho_fxy_force_final.pdf, id=124, 325.215pt x 252.945pt>
+File: images/el_lorho_fxy_force_final.pdf Graphic file (type pdf)
+
+<use images/el_lorho_fxy_force_final.pdf>
+Package pdftex.def Info: images/el_lorho_fxy_force_final.pdf used on input line
+ 119.
+(pdftex.def)             Requested size: 195.1305pt x 151.76816pt.
+
+<images/ep2_lorho_force_final.pdf, id=130, 325.215pt x 252.945pt>
+File: images/ep2_lorho_force_final.pdf Graphic file (type pdf)
+
+<use images/ep2_lorho_force_final.pdf>
+Package pdftex.def Info: images/ep2_lorho_force_final.pdf used on input line 12
+9.
+(pdftex.def)             Requested size: 195.1305pt x 151.76816pt.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 143.
+
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 72.
- [2
-
-]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 143.
+ [3 <./images/sp_lorho_force_final.pdf> <./images/sp_lorho_fxy_force_final.pdf>
+] [4 <./images/el_lorho_force_final.pdf> <./images/el_lorho_fxy_force_final.pdf
+> <./images/ep2_lorho_force_final.pdf>] [5]
 No file chamshape.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 104.
-[3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 104.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 201.
+[6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 201.
  (./chamshape.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 104.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 104.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 201.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 201.
 Package rerunfilecheck Info: File `chamshape.out' has not changed.
-(rerunfilecheck)             Checksum: FFB8F48F9A0DAB2BD9586EB73C33A1D0;358.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 104.
+(rerunfilecheck)             Checksum: 1E0235619D7F28335A7B675C07A64564;1043.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 201.
  ) 
 Here is how much of TeX's memory you used:
- 8487 strings out of 493117
- 124998 string characters out of 6135432
- 221320 words of memory out of 5000000
- 11792 multiletter control sequences out of 15000+600000
- 20802 words of font info for 76 fonts, out of 8000000 for 9000
+ 8569 strings out of 493117
+ 126687 string characters out of 6135432
+ 224787 words of memory out of 5000000
+ 11839 multiletter control sequences out of 15000+600000
+ 22650 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,13n,38p,548b,325s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,16n,38p,814b,397s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb
-></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
-></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></u
-sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/l
-ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loca
-l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local
-/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/t
-exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/tex
-live/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on chamshape.pdf (3 pages, 152802 bytes).
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb>
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
+/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></u
+sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
+/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/l
+ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loc
+al/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
+texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/tex
+live/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
+e/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/
+2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2
+014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on chamshape.pdf (6 pages, 417003 bytes).
 PDF statistics:
- 128 PDF objects out of 1000 (max. 8388607)
- 107 compressed objects within 2 object streams
- 18 named destinations out of 1000 (max. 500000)
- 57 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 271 PDF objects out of 1000 (max. 8388607)
+ 223 compressed objects within 3 object streams
+ 47 named destinations out of 1000 (max. 500000)
+ 154 words of extra memory for PDF output out of 10000 (max. 10000000)
 

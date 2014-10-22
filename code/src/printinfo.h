@@ -123,6 +123,7 @@ void printfinalmessage(ostream& whereto, double te){
 		te=te/1e3;
 		tu="sec";
 	}
+	whereto << "OutDIR: " << outDIR << endl;
 	whereto << endl;
 	whereto << "------------------------------------------" << endl;
 	whereto << "Complete in " << te << tu << endl;

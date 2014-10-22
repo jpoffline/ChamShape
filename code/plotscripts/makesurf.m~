@@ -10,6 +10,7 @@ function makesurf(varargin)
     plot_height=3.5;
     axlim=20;
     
+    
    
     % where is the root of all output files?
     rootdir='../output/';
@@ -40,8 +41,13 @@ function makesurf(varargin)
     if strcmp(whichID,'force')
         ID = 6;
     end;
- 
     datF = inputdata(:,ID);
+    
+    if ID==8
+        datF = log10(abs(inputdata(:,ID)));
+    end;
+    
+    
     
     xlin = linspace(xmin, xmax, 1000);
     ylin = linspace(ymin, ymax, 1000);

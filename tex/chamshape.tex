@@ -19,6 +19,7 @@
 %\usepackage{ulem}
 \setcounter{tocdepth}{3}
 \setcounter{secnumdepth}{3}
+\newcommand{\note}[1]{{\color{blue}[#1]}}
 
 
 \renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
@@ -41,13 +42,15 @@
 \begin{abstract}
 In conservation with Clare Burrage, Ed Copeland, James Stevenson, Adam Moss...
 \end{abstract}
-\clearpage
+%\clearpage
 
 \tableofcontents   
 
 
 \section{Introduction}
 The idea is to understand the differences between the chameleon force and gravitational force for source objects with different shapes -- circles, ellipsoids, etc.
+
+The idea is to build on the analytic results and understanding developed by Burrage, Copeland, and Stevenson -- they obtained analytic solutions to the equations whilst using some simplifying (and justified) assumptions. They obtained the fields surrounding an ellipsoid source. We intend to reproduce their results, and extend to other -- more complicated -- shapes.
 \section{The model}
 In the static regime the chameleon scalar $\phi$ satisfies
 \bse
@@ -61,41 +64,135 @@ and the gravitational potential $\Phi$ satisfies Laplace's equation,
 \nabla^2\Phi = - \rho
 \eea
 \ese
-We compute the forces due to the chameleon and gravitational scalars by taking the gradient of the relevant scalar:
+The forces due to the chameleon and gravitational scalars are computed by taking the gradient of the relevant scalar:
 \bea
 \label{eq:forces}
 \rbm{F}_{(\phi)} = \nabla\phi,\qquad
-\rbm{F}_{(\Phi)} = \nabla\Phi
+\rbm{F}_{(\Phi)} = \nabla\Phi.
 \eea
-\section{Numerical methods}
-\begin{itemize}
-\item Solve (\ref{eq:cham-eom}) via gradient flow; finite difference derivatives discretized to fourth order accuracy.
-\item Solve (\ref{eq:laplaceseqn}) via SoR; discretized to second order accuracy.
-\item The forces (\ref{eq:forces}) are computed with finite difference derivatives discretized to fourth order
-\end{itemize}
-\subsection{Simulated annealing}
-We have a suggestion to obtain the optimal shape via simulated annealing. This would be implemented by first specifying some given matter distribution (e.g., a sphere), and computing the scalar and gravitational forces. A new shape is randomly proposed -- by switching ``on'' or ``off'' locations which are supposed to have matter. If the force discrepancies are greater for this new shape, it is kept, and the whole process is repeated until an optimal shape is obtained. One needs to be careful to only proposed connected objects.
+We solve (\ref{eq:cham-eom}) using numerical methods outlined in Appendix \ref{sec:nummethods} for a given  source density function, $\rho(\rbm{x})$. 
+\subsection{Specification of the source density profile}
+We use a ``step-function'' to describe $\rho$, whereby the density has value $\rho_0$ in the interior of the source, and $\qsubrm{\rho}{bg}$ in the exterior of the source (this is supposed to represent the ambient, possibly cosmological, density). To be concrete, we set
+\bea
+\rho(\rbm{x}) = \left\{ \begin{array}{cc} \rho_0 & \mbox{inside}, \\ \qsubrm{\rho}{bg} & \mbox{outside}.\end{array}\right.
+\eea
+The spatial locations which are defined as ``inside'' and ``outside'' are those inside the given shape under consideration (circles, ellipses, etc).
+\subsection{Boundary conditions and parameter values}
+For boundary conditions we set 
+\bea
+\phi(\rbm{x}_{\infty}) = \qsubrm{\phi}{bg} = \sqrt{\frac{M\Lambda^5}{\qsubrm{\rho}{bg}}}.
+\eea
+This is the value of the scalar which minimizes the effective potential.
 
-This strategy is relatively straight-forward, but computationally very intensive -- one way to help is to parallelise the code.
+Typically we set
+\bea
+\label{paramvalues}
+\Lambda = 1, \qquad M = 10^3, \qquad \rho_0 = 12, \qquad \qsubrm{\rho}{bg} = 0.1.
+\eea
+This is the  hierarchy of scales required to obtain the screening solutions of interest. Note that we require a large density contrast, $\delta \defn \frac{\rho_0}{\qsubrm{\rho}{bg}}-1$, and large $M$.
+\section{Results}
+\subsection{Circular sources}
+Here we define the shape to be inside the circle
+\bea
+x^2 + y^2 =R^2.
+\eea
+See \fref{fig:circ}
+
+\begin{figure}[!t]
+      \begin{center}
+\subfigure[\, Force density (2D)  ]{\includegraphics[scale=0.6,angle=0]{images/sp_lorho_force_final.pdf}}
+\subfigure[\,  Force as function of distance from   origin ]{\includegraphics[scale=0.6,angle=0]{images/sp_lorho_fxy_force_final.pdf}}
+      \end{center}
+\caption{ The force due to the chameleon around a circular source. This source has size $R=4$. The other parameter values are those given in (\ref{paramvalues}).  Note that the force increases linearly from the origin, until some maximum is reached at the objects surface: the force then decreases as $r^{-2}$. \note{replace with converged versions}}\label{fig:circ}
+\end{figure}
+
+\subsection{Ellipsoidal sources}
+Here we define the shape to be inside the ellipse
+\bea
+\label{ellipse-eq}
+\left( \frac{x}{b}\right)^2 + \left( \frac{y}{a}\right)^2 = R^2
+\eea
+See \fref{fig:ellip}.
+\begin{figure}[!t]
+      \begin{center}
+\subfigure[\, Force density (2D) ]{\includegraphics[scale=0.6,angle=0]{images/el_lorho_force_final.pdf}}
+\subfigure[\, Force as function of distance from   origin ]{\includegraphics[scale=0.6,angle=0]{images/el_lorho_fxy_force_final.pdf}}
+      \end{center}
+\caption{ Force due to the chameleon around an ellipsoidal source. This source  has $a = 3.5, b = 1$, and $R=4$ as defined in (\ref{ellipse-eq}); the densities and all other parameters are the same as the source shown in \fref{fig:circ}. Here we observe that the force profiles along the $x$- and $y$-axes are rather different. The force at the object's surface at $y=0$ is lower than the force at the object's surface at $x=0$. Additionally, the force profile inside the object is markedly different along the two axes: along the $y$-axis the force profile is approximately linear, but along the $x$-axis it is parabolic. \note{replace with converged versions} }\label{fig:ellip}
+\end{figure}
+
+\subsection{Other shapes}
+\fref{fig:varioushapes}.
+
+\begin{figure}[!t]
+      \begin{center}
+\subfigure[\, Crossed ellipses ]{\includegraphics[scale=0.6,angle=0]{images/ep2_lorho_force_final.pdf}}
+      \end{center}
+\caption{ The force due to the chameleon around various sources. In (a) there are two ellipses at right-angles each with the same properties as those in \fref{fig:ellip}.  \note{replace with converged versions}}\label{fig:varioushapes}
+\end{figure}
+
 \addcontentsline{toc}{section}{Acknowledgements}
 
 \section*{Acknowledgements}
 
 \appendix
-\section{Schemes}
+\section{Numerical methods}
+\label{sec:nummethods}
+In summary, our numerical methodology is:
+\begin{itemize}
+\item Solve for the chameleon scalar (\ref{eq:cham-eom}) via gradient flow; finite difference derivatives discretized to fourth order accuracy.
+\item Solve Poisson's equation (\ref{eq:laplaceseqn}) via SoR; discretized to second order accuracy.
+\item The forces (\ref{eq:forces}) are computed with finite difference derivatives discretized to fourth order
+\end{itemize}
+In the remainder of this Appendix we shall explain the implementation of each of these methods.
 
-\textbf{\textit{SoR}} This is used to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the parameter $\omega$. The updating algorithm is
+\subsection{Gradient flow}
+The scalar field profile is obtained by solving the gradient flow equation:
+\bea
+\label{gfeqn}
+\dot{\phi} = \nabla^2\phi - \frac{\dd\qsubrm{V}{eff}}{\dd\phi}.
+\eea
+We discretize the time derivative in a very simple manner,
+\bea
+\dot{\phi} \approx \frac{\phi(t+1) - \phi(t)}{h_t}.
+\eea
+This can be used on the LHS of (\ref{gfeqn}) to yield an updating algorithm for the scalar; obviously, we also need a scheme to approximate the Laplacian: that is discussed in the next section. Note that we use a ``fictitious time-step'', $h_t$: this must be chosen to be much smaller than any  step-sizes in the spatial dimensions (else the problem is badly defined numerically).
+
+A ``solution'' to the static problem is obtained when $\dot{\phi}=0$. This is quantified by computing an error estimate
+\bea
+E_{\phi} \defn \int \dd^2x\, \dot{\phi},
+\eea
+and waiting until $E_{\phi}\ll \varepsilon$, where $\epsilon$ is supposed to be a very small number, before a solution is declared to have been found. We are also estimating the error on a solution by computing the evolution of the integral of the modulus of the force,
+\bea
+\qsuprm{E}{F}_{\phi} \defn \int \dd^2x\, \left| \rbm{F}_{(\phi)}\right|;
+\eea
+this quantity should be independant of time, and so we wait until $\dot{E}\qsuprm{}{F}_{\phi}\ll \varepsilon$ before declaring that a solution has been found.
+
+
+
+\subsection{Discretization schemes}
+Here we explain the discretization schemes used. Space is discretized onto a lattice with step-size $h$.
+
+\subsubsection{Fourth order finite difference derivatives}
+The first and second derivatives of a quantity $Q$, say, are approximated at a given location via a fourth-order accurate finite difference scheme according to
+\bea
+\pd{Q}{x} \approx \frac{-Q_{i+2} + 8 Q_{i+1} - 8 Q_{i-1} + Q_{i-2}}{12h},
+\eea
+\bea
+\pd{^2Q}{x^2} \approx \frac{-Q_{i+2} + 16 Q_{i+1} - 30 Q_i + 16 Q_{i-1} - Q_{i-2}}{12h^2}.
+\eea
+There are obvious equivalents for the $y$-derivatives.
+
+\subsubsection{SoR} 
+This is used to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the parameter $\omega$. The updating algorithm is
 \bea
 Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^{n+1}_{i-1,j} + Q^n_{i,j+1} + Q^{n+1}_{i,j-1} + h^2\rho \right]
 \eea
 
-\textbf{\textit{Fourth order finite difference derivatives}}
-\bea
-\pd{Q}{x} \approx \frac{-Q_{i+2} + 8 Q_{i+1} - 8 Q_{i-1} + Q_{i-2}}{12h}
-\eea
-\bea
-\pd{^2Q}{x^2} \approx \frac{-Q_{i+2} + 16 Q_{i+1} - 30 Q_i + 16 Q_{i-1} - Q_{i-2}}{12h^2}
-\eea
+\subsection{Simulated annealing}
+We have a suggestion to obtain the optimal shape via simulated annealing. This would be implemented by first specifying some given matter distribution (e.g., a sphere), and computing the scalar and gravitational forces. A new shape is randomly proposed -- by switching ``on'' or ``off'' locations which are supposed to have matter. If the force discrepancies are greater for this new shape, it is kept, and the whole process is repeated until an optimal shape is obtained. One needs to be careful to only proposed connected objects.
+
+This strategy is relatively straight-forward, but computationally very intensive -- one way to help is to parallelise the code.
 \addcontentsline{toc}{section}{References}
 \bibliographystyle{JHEP}
 \footnotesize{
