@@ -3,3 +3,4 @@
 *.log
 code/makefile
 code/main.o
+code/main
