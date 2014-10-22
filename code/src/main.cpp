@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 	 
 		// (0) set the initial conditions
 		// argument = phi_bg
-		initialconditions(1.0/sqrt(obj_rhobg));
+		initialconditions(sqrt(M*Lambda5/obj_rhobg));
 	
 		// (1) solve 
 		solve();	
