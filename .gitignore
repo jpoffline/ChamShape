@@ -2,4 +2,4 @@
 *.pdf
 *.log
 code/makefile
-code/*.o
+code/main.o
