@@ -98,13 +98,19 @@ void printobjectproperties(ostream& whereto){
 		whereto << " :: ellipse " << endl;
 		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
 	}
+	if(mattdisttype == 3){
+		whereto << " :: crossed ellipses " << endl;
+		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
+	}
 	else
 		whereto << endl;
+	
 	whereto << "size = " << objsize << endl;
 	whereto << "density = " << objdensity << endl;
 	whereto << "skin depth = " << objskindepth << endl;
 	whereto << "bg density = " << obj_rhobg << endl;
 	whereto << endl;
+	
 }
 
 // Print final message
@@ -156,7 +162,6 @@ void printlog(string when, double v1,double v2){
 	}
 	
 } // END printlog()
-
 
 void printerror(ostream& whereto, int errID){
 	

@@ -54,23 +54,29 @@ double solve(){
 			// open up full 2D-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_final.dat";
-			else
-				filename=outDIR+filePREFIX+"_"+Int2String(trail+filenum)+".dat";
+			else{
+				//filename=outDIR+filePREFIX+"_"+Int2String(trail+filenum)+".dat";
+				filename=outDIR+filePREFIX+"_uptodate.dat";				
+			}
 			
 			filedump.open(filename);
 			
 			// open up x-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_x_final.dat";
-			else
-				filename=outDIR+filePREFIX+"_x_"+Int2String(trail+filenum)+".dat";
+			else{
+//				filename=outDIR+filePREFIX+"_x_"+Int2String(trail+filenum)+".dat";
+				filename=outDIR+filePREFIX+"_x_uptodate.dat";	
+			}
 			filexdump.open(filename);
 			
 			// open up y-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_y_final.dat";
-			else
-				filename=outDIR+filePREFIX+"_y_"+Int2String(trail+filenum)+".dat";
+			else{
+//				filename=outDIR+filePREFIX+"_y_"+Int2String(trail+filenum)+".dat";
+				filename=outDIR+filePREFIX+"_y_uptodate.dat";
+			}
 			fileydump.open(filename);
 			
 		} 
