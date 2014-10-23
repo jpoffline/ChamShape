@@ -45,6 +45,7 @@ double setuparams(string paramFileName){
 	filedumpfreq = getiniInt(paramsfile,"filedumpfreq", 1000);	
 	timehistoryproto = getiniString(paramsfile,"timehistoryproto", "timehistory");	
 	
+	// Put the root dir onto the outDIR
 	outDIR=rootoutDIR+outDIR;
 		
 	paramsfile.close();
