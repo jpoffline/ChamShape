@@ -23,6 +23,7 @@ bool		dumptofile;				// Should we *ever* dump fields to file?
 int 		filedumpfreq;			// Frequency (in t-steps) to dump to file
 									// (gets reset if making a video)
 int			screendumpfreq;			// Frequency (in t-steps) to dump info to screen
+string 		rootoutDIR;
 string 		outDIR;					// Output directory
 string 		filePREFIX;				// Prefix of field/energy-files
 string		timehistoryproto; 		// Prefix of time-history file
