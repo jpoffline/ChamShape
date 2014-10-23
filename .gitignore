@@ -8,3 +8,4 @@ code/main
 *.toc
 tex/*.gz
 *~
+codes/plots/*.pdf
