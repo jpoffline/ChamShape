@@ -8,7 +8,7 @@ function makesurf(varargin)
     plot_sizeunits='inches';
     plot_width=4.5;
     plot_height=3.5;
-    axlim=20;
+   
     
    
     % where is the root of all output files?
@@ -33,14 +33,16 @@ function makesurf(varargin)
     xmax=max(x);
     ymin=xmin;
     ymax=xmax;
-    
+    axlim=xmax;
     if strcmp(whichID,'cham')
         ID = 3;
     end;
     if strcmp(whichID,'force')
         ID = 6;
     end;
- 
+    if strcmp(whichID,'phierr')
+        ID = 8;
+    end;
     datF = inputdata(:,ID);
     
     xlin = linspace(xmin, xmax, 1000);

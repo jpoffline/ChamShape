@@ -36,7 +36,7 @@ function plotxy(varargin)
     daty = load(datafy);
     x = datx(:,1);
     y = daty(:,1);
-    
+    axlim=max(x);
     if strcmp(whichID,'cham')
         ID = 2;
     end;
@@ -45,13 +45,17 @@ function plotxy(varargin)
         ID = 5;
     end;
     
+    if strcmp(whichID,'phierr')
+        ID = 7;
+    end;
+    
     ylab = whichID;
     
     fx = datx(:,ID);
     fy = daty(:,ID);
     
     plot(x,fx,y,fy);
-    xlim([0 30]);
+    xlim([0 axlim]);
     xlabel('distance');
     ylabel(ylab);
     legend('F(x, y = 0)','F(x = 0, y)');
