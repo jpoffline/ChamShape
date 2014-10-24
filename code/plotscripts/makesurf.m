@@ -1,6 +1,7 @@
 function makesurf(varargin)
 
     close all;
+    
     name = char(varargin(1));
     which = char(varargin(2));
     whichID = char(varargin(3));

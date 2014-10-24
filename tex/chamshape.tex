@@ -50,7 +50,7 @@ In conservation with Clare Burrage, Ed Copeland, James Stevenson, Adam Moss...
 \section{Introduction}
 The idea is to understand the differences between the chameleon force and gravitational force for source objects with different shapes -- circles, ellipsoids, etc.
 
-The idea is to build on the analytic results and understanding developed by Burrage, Copeland, and Stevenson -- they obtained analytic solutions to the equations whilst using some simplifying (and justified) assumptions. They obtained the fields surrounding an ellipsoid source. We intend to reproduce their results, and extend to other -- more complicated -- shapes.
+The idea is to build on the analytic results and understanding developed by Burrage, Copeland, and Stevenson -- they developed analytic solutions to the governing equations whilst using some simplifying (and justified) assumptions. They obtained the fields surrounding an ellipsoid source. We intend to reproduce their results, and extend to other -- more complicated -- shapes.
 \section{The model}
 In the static regime the chameleon scalar $\phi$ satisfies
 \bse
@@ -91,6 +91,7 @@ Typically we set
 \eea
 This is the  hierarchy of scales required to obtain the screening solutions of interest. Note that we require a large density contrast, $\delta \defn \frac{\rho_0}{\qsubrm{\rho}{bg}}-1$, and large $M$.
 \section{Results}
+It is important to note that we are working in 2D.
 \subsection{Circular sources}
 Here we define the shape to be inside the circle
 \bea
@@ -130,6 +131,15 @@ See \fref{fig:ellip}.
       \end{center}
 \caption{ The force due to the chameleon around various sources. In (a) there are two ellipses at right-angles each with the same properties as those in \fref{fig:ellip}.  \note{replace with converged versions}}\label{fig:varioushapes}
 \end{figure}
+
+\section{Using the \textit{cartoon} method to shape chameleons in 3D}
+Our codes use gradient flow to obtain the shape of the chameleon fields in 2D. This is an initial choice, born out of numerical simplicity (as well as being able to easily see everything that is going on). However, as discussed in Appendix \ref{poissonseqsoln}, the gravitational potential in 2D and 3D are rather different in nature: and so we want to be able to test whether force discrepancies in 2D are due to the chameleon, or because we are using 2D. 
+
+It is now to be remarked that whilst the numerical algorithms are simple to extend from 2D to 3D, the increase in computational resources is substantial. And so, we assume that the source in 3D is cylindrically symmetric, which allows us to obtain the chameleon profiles in a 2D slice of the object: this slice must be rotated forwards and backwards to capture the 3D-ness. One can also impose some periodic breaking of cylindrical symmetry. This is the essence of the \textit{cartoon} method. 
+
+The idea is to perform gradient flow in Cartesian coordinates in the $(x,y,z) = (x,0,z)$-plane, and then extrapolate the fields into the $y = \pm \Delta x$ planes using the assumed cylindrical symmetry. This strategy has been sucessfully used in the construction of cylindrically symmetric solitons, specifically cosmic vortons (of both global and gauged kind).
+
+\section{Discussion}
 
 \addcontentsline{toc}{section}{Acknowledgements}
 
@@ -193,6 +203,97 @@ Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^
 We have a suggestion to obtain the optimal shape via simulated annealing. This would be implemented by first specifying some given matter distribution (e.g., a sphere), and computing the scalar and gravitational forces. A new shape is randomly proposed -- by switching ``on'' or ``off'' locations which are supposed to have matter. If the force discrepancies are greater for this new shape, it is kept, and the whole process is repeated until an optimal shape is obtained. One needs to be careful to only proposed connected objects.
 
 This strategy is relatively straight-forward, but computationally very intensive -- one way to help is to parallelise the code.
+\section{Solving Poisson's equation for symmetric sources}
+\label{poissonseqsoln}
+Here we solve Poisson's equation, 
+\bea
+\nabla^2\Phi = - \rho /M,
+\eea
+for a source with constant density $\rho_0$ immersed in a medium with density $\qsubrm{\rho}{bg}$; the source has radius $R$.
+\subsection{Poisson's equation in 2D}
+Here we assume a 2D  circular source. Due to the symmetry of the source, the gravitational potential $\Phi = \Phi(r)$ only. Note that the Laplacian in 2D polars is
+\bea
+\nabla^2\Phi = \frac{1}{r}\frac{\dd}{\dd r}\left( r \frac{\dd\Phi}{\dd r}\right).
+\eea
+The solution is
+\bea
+\Phi(r) = -\frac{\rho}{4M}r^2 + A\ln r + B,
+\eea
+where $A$ and $B$ are integration constants; their values will be fixed by requiring continuity, smoothness, and regularity in various regimes. The radial component of the force (the only component, infact) is
+\bea
+F_r(r) =  \frac{\rho}{2M}r - \frac{A}{r}.
+\eea
+From hereon we will drop the ``$r$'' index from the force component.
+We are interested in obtaining the gravitational potential surrounding and within a circle of radius $R$, density $\rho_0$, immersed in a background density $\qsubrm{\rho}{bg}$. One requires $\qsubrm{A}{in}=0$ for regularity at the origin. By matching the forces at the surface $r=R$ one obtains the   expression for $\qsubrm{A}{out}$,
+\bse
+\bea
+\qsubrm{A}{out} = \frac{ \qsubrm{\rho}{bg}R^2}{2M}\left( 1 - \frac{\rho_0}{\qsubrm{\rho}{bg}}\right).
+\eea
+By matching the potentials, one also obtains
+\bea
+\qsubrm{B}{bg} = B_0 + \frac{R^2\qsubrm{\rho}{bg}}{4M}\left( 1- \frac{\rho_0}{\qsubrm{\rho}{bg}}\right)\left( 1 - 2\ln R\right).
+\eea
+\ese
+
+
+The potential inside and outside the object is given by
+\bse
+\label{poiss-soln-1}
+\bea
+\qsubrm{\Phi}{in}(r) = - \frac{\rho_0}{4M}r^2 + B_0,
+\eea
+\bea
+\qsubrm{\Phi}{out}(r) = - \frac{\qsubrm{\rho}{bg}}{4M}r^2 +  \frac{ \qsubrm{\rho}{bg}R^2}{2M}\left( 1 - \tfrac{\rho_0}{\qsubrm{\rho}{bg}}\right)\ln r + B_0+ \frac{R^2\qsubrm{\rho}{bg}}{4M}\left( 1- \tfrac{\rho_0}{\qsubrm{\rho}{bg}}\right)\left( 1 - 2\ln R\right),\nonumber\\
+\eea
+\ese
+and the force inside and outside are given by
+\bse
+\label{poiss-soln-2}
+\bea
+\qsubrm{F}{in}(r) = \frac{\rho_0}{2M}r,
+\eea
+\bea
+\qsubrm{F}{out}(r) =  \frac{\qsubrm{\rho}{bg}}{2M}r -   \frac{\qsubrm{\rho}{bg}R^2}{2M}{}{ }\left( 1 -\tfrac{ \rho_0}{\qsubrm{\rho}{bg}} \right) \frac{1}{r} .
+\eea
+\ese
+See \fref{fig:poisson_soln} for a plot of these solutions.
+\subsection{Poisson's equation in 3D}
+In 3D, for a spherically symmetric gravitational potential, the Laplacian reads
+\bea
+\nabla^2\Phi = \frac{1}{r^2}\frac{\dd}{\dd r}\left( r^2 \frac{\dd\Phi}{\dd r}\right).
+\eea
+The solution to Poisson's equation (again, with a constant source density $\rho$) is 
+\bea
+\Phi(r) = - \frac{\rho}{6M} r^2- \frac{A}{r}+ B,
+\eea
+in terms of two integration constants $A$ and $B$.   After requiring  continuity and regularity, the potential and force inside and out are given by
+\bse
+\label{poiss-soln-3}
+\bea
+\qsubrm{\Phi}{in}(r) = - \frac{\qsubrm{\rho}{in}}{6M} r^2 + \qsubrm{B}{in},
+\eea
+\bea
+\qsubrm{\Phi}{out}(r) = - \frac{\qsubrm{\rho}{out}}{6M} r^2+ \frac{\qsubrm{\rho}{out}R^3}{3M} \left(\tfrac{\qsubrm{\rho}{in} }{\qsubrm{\rho}{out}} -1\right) \frac{1}{r}+\frac{\qsubrm{\rho}{out}R^2}{2M} \left(1 - \tfrac{\qsubrm{\rho}{in}}{\qsubrm{\rho}{out}}\right)  +\qsubrm{B}{in},
+\eea
+\ese
+\bse
+\label{poiss-soln-4}
+\bea
+\qsubrm{F}{in} (r)=  \frac{\qsubrm{\rho}{in}}{3M} r,
+\eea
+\bea
+\qsubrm{F}{out}(r) = \frac{\qsubrm{\rho}{out}}{3M} r+\frac{\qsubrm{\rho}{out}R^3}{3M} \left(\tfrac{\qsubrm{\rho}{in} }{\qsubrm{\rho}{out}}-1 \right)  \frac{1}{r^2} .
+\eea
+\ese
+See \fref{fig:poisson_soln} for a plot of these solutions.
+
+\begin{figure}[!t]
+      \begin{center}
+{\includegraphics[scale=1.4,angle=0]{images/rhoin_10_comps}}
+      \end{center}
+\caption{ The gravitational potential (left) and force (right) for 2D and 3D circularly and spherically symmetric sources with constant density. These correspond to the solutions we presented in (\ref{poiss-soln-1},  \ref{poiss-soln-2},  \ref{poiss-soln-3},  \ref{poiss-soln-4}). }\label{fig:poisson_soln}
+\end{figure}
+
 \addcontentsline{toc}{section}{References}
 \bibliographystyle{JHEP}
 \footnotesize{

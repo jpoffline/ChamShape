@@ -1,0 +1,14 @@
+set term png
+set output  "plot2d.png"
+
+rhoin=10
+rhoout=0.01
+R=10
+M=100
+Bin=0
+set xr [0:3*R]
+set yr [-5:2]
+set xl "r"
+plot -rhoin*x*x/4/M+Bin t "Phi_in",\
+ -rhoout*x*x/4/M-rhoout*R*R/2/M*(rhoin/rhoout-1)*log(x)+Bin+R*R*rhoout/4/M*(1-rhoin/rhoout)*(1-2*log(R)) t "Phi_out"
+

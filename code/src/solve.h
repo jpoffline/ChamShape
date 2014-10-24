@@ -220,8 +220,8 @@ double solve(){
 	
 		// Dump timehistory
 		timehist << t*ht << " ";
-		timehist << error_phi << " " << (error_phi - olderror_phi)/ht << " ";
-		timehist << error_grav << " " << (error_grav - olderror_grav)/ht << " ";
+		timehist << abs(error_phi) << " " << (error_phi - olderror_phi)/ht << " ";
+		timehist << abs(error_grav) << " " << (error_grav - olderror_grav)/ht << " ";
 		timehist << error_cham_force << endl;
 		
 		// Dump to screen

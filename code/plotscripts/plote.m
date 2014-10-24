@@ -1,5 +1,7 @@
 function plote(varargin)
 
+    close all;
+
     fprintf('Plotting error estimates\n');
 
     % where is the root of all output files?
@@ -32,7 +34,7 @@ function plote(varargin)
     subplot(1,3,1);
     plot(t,e_phi);
     xlabel('time')
-    ylabel('$10^3\,E_{\phi}$','interpreter','latex');
+    ylabel('$10^3\,|E_{\phi}|$','interpreter','latex');
     subplot(1,3,2);
     plot(t,e_phiDot);
     xlabel('time')

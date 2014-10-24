@@ -1,6 +1,8 @@
 function plotb(varargin)
 
-    fprintf('Plotting the surface and x- and y-axes plots');
+    close all;
+
+    fprintf('Plotting the surface and x- and y-axes plots\n');
 
     % pull off of input the "name"... folder name for run
     name = char(varargin(1));
@@ -9,7 +11,7 @@ function plotb(varargin)
     % what type of thing to plot? force or cham
     whichID = char(varargin(3));
     
-    plotxy(name,which.whichID);
+    plotxy(name,which,whichID);
     makesurf(name,which,whichID);
     
-    fprintf('Done');
+    fprintf('Done\n');

@@ -1,0 +1,13 @@
+set term png
+set output  "plot.png"
+
+rhoin=10
+rhoout=0.01
+R=10
+M=100
+Bin=0
+set xr [0:3*R]
+set yr [-5:2]
+set xl "r"
+plot -rhoin*x*x/6/M+Bin t "Phi_in", -rhoout*x*x/6/M+rhoout*R*R*R/3/M*(rhoin/rhoout-1)/x+rhoout*R*R/2/M*(1-rhoin/rhoout)+Bin t "Phi_out"
+
