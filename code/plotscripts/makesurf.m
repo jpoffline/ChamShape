@@ -34,17 +34,22 @@ function makesurf(varargin)
     xmax=max(x);
     ymin=xmin;
     ymax=xmax;
-    axlim=xmax;
+    axlim=20;
+    scale=1.0;
     if strcmp(whichID,'cham')
         ID = 3;
     end;
-    if strcmp(whichID,'force')
+    if strcmp(whichID,'chamforce')
         ID = 6;
+    end;
+    if strcmp(whichID,'gravforce')
+        ID = 7;
+        scale=1000;
     end;
     if strcmp(whichID,'phierr')
         ID = 8;
     end;
-    datF = inputdata(:,ID);
+    datF = inputdata(:,ID)/scale;
     
     xlin = linspace(xmin, xmax, 1000);
     ylin = linspace(ymin, ymax, 1000);

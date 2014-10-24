@@ -3,9 +3,10 @@
 code/makefile
 *.o
 code/main
+code/output/
 *.out
 *.aux
 *.toc
 tex/*.gz
 *~
-codes/plots/*.pdf
+code/plots/*.pdf

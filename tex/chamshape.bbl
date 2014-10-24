@@ -1,0 +1,14 @@
+\providecommand{\href}[2]{#2}\begingroup\raggedright\begin{thebibliography}{1}
+
+\bibitem{Alcubierre:1999ab}
+M.~Alcubierre, S.~Brandt, B.~Bruegmann, D.~Holz, E.~Seidel, {\em et.~al.}, {\it
+  {Symmetry without symmetry: Numerical simulation of axisymmetric systems
+  using Cartesian grids}},  {\em Int.J.Mod.Phys.} {\bf D10} (2001) 273--290,
+  [\href{http://xxx.lanl.gov/abs/gr-qc/9908012}{{\tt gr-qc/9908012}}].
+
+\bibitem{Battye:2008mm}
+R.~A. Battye and P.~M. Sutcliffe, {\it {Vorton construction and dynamics}},
+  {\em Nucl.Phys.} {\bf B814} (2009) 180--194,
+  [\href{http://xxx.lanl.gov/abs/0812.3239}{{\tt arXiv:0812.3239}}].
+
+\end{thebibliography}\endgroup

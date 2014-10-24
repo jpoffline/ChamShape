@@ -1,12 +1,16 @@
 function plotpots
     close all;
     
-    B0=0;
-    rhoin=10;
-    rhoout=0.01;
-    M=1000;
-    R=5;
-    rmax=5*R;
+    % Parameters
+    
+    rhoin = 12; % object density 
+    rhoout = 0.1; % background density
+    M = 1000; % mass-scale
+    R = 4; % source size
+    B0 = 0;
+    rmax=15*R; % maximum radius to plot
+    
+    
     rin=[0:0.1:R];
     rout=[R:0.1:rmax];
     nrs=size(rin);
@@ -35,21 +39,21 @@ function plotpots
     end;
     
     subplot(1,2,1);
-    plot(rin,phiIN_2D,'k',rin,phiIN_3D,'r');
+    plot(rin,phiIN_2D,'k--',rin,phiIN_3D,'r');
     hold on;
-    plot(rout,phiOUT_2D,'k',rout,phiOUT_3D,'r');
+    plot(rout,phiOUT_2D,'k--',rout,phiOUT_3D,'r');
     xlim([0 rmax]);
-    L=legend('2D','3D');
-    set(L,'location','southwest');
-    legend boxoff;
     xlabel('$r$','interpreter','latex');
     ylabel('$\mbox{gravitational potential}, \Phi(r)$','interpreter','latex');
     
     subplot(1,2,2);
-    plot(rin,FIN_2D,'k',rin,FIN_3D,'r');
+    plot(rin,FIN_2D,'k--',rin,FIN_3D,'r');
     hold on;
-    plot(rout,FOUT_2D,'k',rout,FOUT_3D,'r');
+    plot(rout,FOUT_2D,'k--',rout,FOUT_3D,'r');
     xlim([0 rmax]);
+    L=legend('2D','3D');
+    set(L,'location','northeast');
+    legend boxoff;
     xlabel('$r$','interpreter','latex');
     ylabel('$\mbox{gravitational force}, F(r)$','interpreter','latex');
     

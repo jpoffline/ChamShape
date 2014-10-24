@@ -147,7 +147,7 @@ double solve(){
 						// Second order accuracy
 						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
 												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-												+fld[tp][c][i][jm1]+h2*matterdensity[i][j]);
+												+fld[tp][c][i][jm1]+h2*matterdensity[i][j]/M);
 						
 						// Compute derivatives to compute force
 						// for error measurement; uses second order for brevity
