@@ -220,7 +220,7 @@ The first and second derivatives of a quantity $Q$, say, are approximated at a g
 There are obvious equivalents for the $y$-derivatives; these can be used to compute the forces and relevant Laplacians.
 
 \subsubsection{SoR} 
-This is used to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the SoR parameter, $\omega = \frac{2}{1+ {\pi}/{N}}$ where $N$ is the number of grid-points in a given direction. A quantity $Q$ is discretized as $Q^n_{i,j}$ corresponding to the value of $Q$ at lattice site $(i,j)$, and `time-step'' $n$. The updating algorithm is
+We use successive over relaxation (SoR)   to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the SoR parameter, $\omega = \frac{2}{1+ {\pi}/{N}}$ where $N$ is the number of grid-points in a given direction. A quantity $Q$ is discretized as $Q^n_{i,j}$ corresponding to the value of $Q$ at lattice site $(i,j)$, and `time-step'' $n$. The updating algorithm is
 \bea
 Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^{n+1}_{i-1,j} + Q^n_{i,j+1} + Q^{n+1}_{i,j-1} + h^2\rho \right],
 \eea

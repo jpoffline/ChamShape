@@ -127,11 +127,16 @@ double solve(){
 					// Gradient flow for the chameleon scalar
 					if(c==0){
 						
-						eom=lap-getdpot(phi)-matterdensity[i][j]/M;
-						fld[tp][c][i][j]=ht*eom+phi;
+//						eom=lap-getdpot(phi)-matterdensity[i][j]/M;
+//						fld[tp][c][i][j]=ht*eom+phi;
+
+						eom=getdpot(phi)+matterdensity[i][j]/M;
+						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
+												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
+												+fld[tp][c][i][jm1]-h2*eom);
 						
 						// The error measurement is phidot								
-						error_phi=error_phi+eom*h2;
+						error_phi=error_phi+abs((fld[tp][c][i][j]-fld[tt][c][i][j]))/h*h2;
 						phierrdens=eom;
 						// Also compute error by computing time variation of the integral
 						// of the magnitude of the force density
@@ -197,8 +202,6 @@ double solve(){
 					if(i==j){
 						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
-
-
 					}
 						
 
