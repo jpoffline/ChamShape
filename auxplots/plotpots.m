@@ -17,7 +17,7 @@ function plotpots
     nr=nrs(2);
     
     plot_sizeunits='inches';
-    plot_width=4.5;
+    plot_width=5.5;
     plot_height=2.5;
     outfigname = strcat('rhoin_',num2str(rhoin),'_comps.pdf'); 
     

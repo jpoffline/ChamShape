@@ -65,7 +65,7 @@ In the static regime the chameleon scalar $\phi$ satisfies
 and the gravitational potential $\Phi$ satisfies Laplace's equation,
 \bea
 \label{eq:laplaceseqn}
-\nabla^2\Phi = - \rho
+\nabla^2\Phi = - \rho / M
 \eea
 \ese
 The forces due to the chameleon and gravitational scalars are computed by taking the gradient of the relevant scalar:
@@ -118,9 +118,9 @@ See \fref{fig:circ} for a plot of the chameleon force; there is a shell of ``for
       \begin{center}
 \subfigure[\,  Chameleon scalar  ]{\includegraphics[scale=0.5,angle=0]{images/circ/circ_fxy_cham_final}}
 \subfigure[\,  Gravitational potential  ]{\includegraphics[scale=0.5,angle=0]{images/circ/circ_fxy_gpot_final}}
-\subfigure[\,  Gravitational and chameleon forces  ]{\includegraphics[scale=0.5,angle=0]{images/circ/circ_fcomp_final}}
+\subfigure[\,  Gravitational and chameleon forces (left), and ratios of the forces (right)  ]{\includegraphics[scale=1,angle=0]{images/circ/circ_fcomp_x_final}}
       \end{center}
-\caption{ Plots of various fields for the same 2D circular source as given in \fref{fig:circ}. In (a) and (b) we plot the values of the chameleon scalar and gravitational potential as a function of distance from the centre of the circular source. One should note that the value of $\Phi(0)$ is arbitrary, since Poisson's equation is invariant under the shift $\Phi \rightarrow \Phi + c$, where $c$ is a constant. In (c) we plot the forces due to the gravitational and chameleon scalars. }\label{fig:circ-1dplots}
+\caption{ Plots of various fields for the same 2D circular source as given in \fref{fig:circ}. In (a) and (b) we plot the values of the chameleon scalar and gravitational potential as a function of distance from the centre of the circular source. One should note that the value of $\Phi(\mbox{origin})$ is arbitrary, since Poisson's equation is invariant under the shift $\Phi \rightarrow \Phi + c$, where $c$ is a constant. In (c) we plot the forces due to the gravitational and chameleon scalars. The rightmost panel in (c) shows the ratio of the chameleon and gravitational forces. }\label{fig:circ-1dplots}
 \end{figure}
 
 \subsection{Ellipsoidal sources}
@@ -140,10 +140,10 @@ See \fref{fig:ellip} for a plot of the chameleon force density, and \fref{fig:el
 
 \begin{figure}[!t]
       \begin{center}
-\subfigure[\,  Down the $x$-axis  ]{\includegraphics[scale=0.5,angle=0]{images/el/el_fcomp_x_final}}
-\subfigure[\,  Down the $y$-axis  ]{\includegraphics[scale=0.5,angle=0]{images/el/el_fcomp_y_final}}
+\subfigure[\,  Down the $x$-axis  ]{\includegraphics[scale=1,angle=0]{images/el/el_fcomp_x_final}}
+\subfigure[\,  Down the $y$-axis  ]{\includegraphics[scale=1,angle=0]{images/el/el_fcomp_y_final}}
       \end{center}
-\caption{  Comparisons of the chameleon and gravitational forces down the $x$- and $y$-axes for the elliptical source shown in \fref{fig:ellip}. The maximum force acheived at the source's surface is largest down the $y$-axis for the chameleon force, and down the $x$-axis for the gravitational force. This is only very slight for the example shown here, but highlights an important distinction between the nature of the gravitational and chameleonic forces (this also corroborates one of the main results of Stevenson et al).}\label{fig:el-1dplots}
+\caption{  Comparisons of the chameleon and gravitational forces down the $x$- and $y$-axes for the elliptical source shown in \fref{fig:ellip}. The maximum force acheived at the source's surface is largest down the $y$-axis for the chameleon force, and down the $x$-axis for the gravitational force. This is only very slight for the example shown here, but highlights an important distinction between the nature of the gravitational and chameleonic forces (this also corroborates one of the main results of Stevenson et al). The right-most panels  shows the ratio of the forces due to the gravitational and chamelon scalars. }\label{fig:el-1dplots}
 \end{figure}
 
 \subsection{Other shapes}
@@ -156,7 +156,7 @@ See \fref{fig:ellip} for a plot of the chameleon force density, and \fref{fig:el
 \caption{ The force due to the chameleon around various sources. In (a) there are two ellipses at right-angles each with the same properties as those in \fref{fig:ellip}.  \note{replace with converged versions}}\label{fig:varioushapes}
 \end{figure}
 
-\section{Using the \textit{cartoon} method to shape chameleons in 3D}
+\section{Using the \textit{cartoon} method to shape axial chameleons in 3D}
 The codes used in Section \ref{sec:resulys_2d} use gradient flow to obtain the shape of the chameleon fields in 2D. This is an initial choice, born out of numerical simplicity (as well as being able to easily see everything that is going on). However, as discussed in Appendix \ref{poissonseqsoln}, the gravitational potential in 2D and 3D are rather different in nature: and so we want to be able to test whether force discrepancies in 2D are due to the chameleon, or because we are using 2D. 
 
 It is now to be remarked that whilst the numerical algorithms are simple to extend from 2D to 3D, the increase in computational resources is substantial. We can make progress if we assume that the source in 3D is axially symmetric. This allows us to obtain the chameleon profiles in a 2D slice of the object: this slice must be rotated forwards and backwards to capture the 3D-ness. One can also impose some periodic breaking of axial symmetry. This is the essence of the \textit{cartoon} method \cite{Alcubierre:1999ab}. 
@@ -215,15 +215,16 @@ The first and second derivatives of a quantity $Q$, say, are approximated at a g
 \bea
 \pd{^2Q}{x^2} \approx \frac{-Q_{i+2} + 16 Q_{i+1} - 30 Q_i + 16 Q_{i-1} - Q_{i-2}}{12h^2}.
 \eea
-There are obvious equivalents for the $y$-derivatives.
+There are obvious equivalents for the $y$-derivatives; these can be used to compute the forces and relevant Laplacians.
 
 \subsubsection{SoR} 
-This is used to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the parameter $\omega$. The updating algorithm is
+This is used to solve Laplace's equation. Fictitious ``time-steps'' are used, and indexed by $n$. Convergence is determined by the SoR parameter, $\omega = \frac{2}{1+ {\pi}/{N}}$ where $N$ is the number of grid-points in a given direction. A quantity $Q$ is discretized as $Q^n_{i,j}$ corresponding to the value of $Q$ at lattice site $(i,j)$, and `time-step'' $n$. The updating algorithm is
 \bea
-Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^{n+1}_{i-1,j} + Q^n_{i,j+1} + Q^{n+1}_{i,j-1} + h^2\rho \right]
+Q^{n+1}_{i,j} = (1-\omega) Q^{n}_{i,j} + \frac{\omega}{4}\left[ Q^n_{i+1,j} + Q^{n+1}_{i-1,j} + Q^n_{i,j+1} + Q^{n+1}_{i,j-1} + h^2\rho \right],
 \eea
+where we remind that $h$ is the space step-size.
 
-\subsection{Simulated annealing}
+\subsection{Simulated annealing to find the optimum shape}
 We have a suggestion to obtain the optimal shape via simulated annealing. This would be implemented by first specifying some given matter distribution (e.g., a sphere), and computing the scalar and gravitational forces. A new shape is randomly proposed -- by switching ``on'' or ``off'' locations which are supposed to have matter. If the force discrepancies are greater for this new shape, it is kept, and the whole process is repeated until an optimal shape is obtained. One needs to be careful to only proposed connected objects.
 
 This strategy is relatively straight-forward, but computationally very intensive -- one way to help is to parallelise the code.
@@ -314,7 +315,7 @@ See \fref{fig:poisson_soln} for a plot of these solutions.
 
 \begin{figure}[!t]
       \begin{center}
-{\includegraphics[scale=1.4,angle=0]{images/rhoin_12_comps}}
+{\includegraphics[scale=1,angle=0]{images/rhoin_12_comps}}
       \end{center}
 \caption{ The gravitational potential (left) and force (right) for 2D and 3D circularly and spherically symmetric sources with constant density. These correspond to the solutions we presented in Appendix \ref{poissonseqsoln}. The values of the parameters are exactly those we gave in (\ref{paramvalues}), along with $R=4$ for the radius of the source. }\label{fig:poisson_soln}
 \end{figure}
