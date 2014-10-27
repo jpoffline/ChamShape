@@ -22,7 +22,7 @@ double solve(){
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
-	ofstream timehist,filedump,filexdump,fileydump;  
+	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
 	
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
@@ -54,30 +54,30 @@ double solve(){
 			// open up full 2D-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_final.dat";
-			else{
-				//filename=outDIR+filePREFIX+"_"+Int2String(trail+filenum)+".dat";
+			else
 				filename=outDIR+filePREFIX+"_uptodate.dat";				
-			}
-			
 			filedump.open(filename);
 			
 			// open up x-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_x_final.dat";
-			else{
-//				filename=outDIR+filePREFIX+"_x_"+Int2String(trail+filenum)+".dat";
+			else
 				filename=outDIR+filePREFIX+"_x_uptodate.dat";	
-			}
 			filexdump.open(filename);
 			
 			// open up y-field files
 			if(t==ttot-1)
 				filename = outDIR+filePREFIX+"_y_final.dat";
-			else{
-//				filename=outDIR+filePREFIX+"_y_"+Int2String(trail+filenum)+".dat";
+			else
 				filename=outDIR+filePREFIX+"_y_uptodate.dat";
-			}
 			fileydump.open(filename);
+			
+			// open up y-field files
+			if(t==ttot-1)
+				filename = outDIR+filePREFIX+"_xy_final.dat";
+			else
+				filename=outDIR+filePREFIX+"_xy_uptodate.dat";
+			filexydump.open(filename);
 			
 		} 
 	
@@ -192,7 +192,15 @@ double solve(){
 						if(fd[0]>maxFy)
 							maxFy=fd[0];
 
-					}	
+					}
+					
+					if(i==j){
+						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
+						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+
+
+					}
+						
 
 				}
 				
@@ -214,6 +222,7 @@ double solve(){
         	filedump.close();
 			filexdump.close();
 			fileydump.close();
+			filexydump.close();
 			dump=false;
 			filenum++;
         }

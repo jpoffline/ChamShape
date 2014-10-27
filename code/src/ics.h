@@ -37,12 +37,20 @@ double initialconditions(double phi_bg){
 					matterdensity[i][j]=obj_rhobg;
 			}
 			
+			if(mattdisttype==4){
+				if(abs(x) < elparam1 && abs(y) < elparam2)
+					matterdensity[i][j]=objdensity;
+				else
+					matterdensity[i][j]=obj_rhobg;
+			}
+			
 			if(inittype == 0){
 				for(int tt=0;tt<2;tt++){
 					fld[tt][0][i][j]=phi_bg;
 					fld[tt][1][i][j]=0.0;
 				}
 			}	
+			
 		}
 	}
 	

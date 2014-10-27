@@ -102,6 +102,10 @@ void printobjectproperties(ostream& whereto){
 		whereto << " :: crossed ellipses " << endl;
 		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
 	}
+	if(mattdisttype == 4){
+		whereto << " :: square " << endl;
+		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
+	}
 	else
 		whereto << endl;
 	
