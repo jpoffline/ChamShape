@@ -88,6 +88,9 @@ int main(int argc, char* argv[]) {
 			// (1) solve 
 			FI=solve();	
 			
+			// Dump the total mass into the FI vector
+			FI.push_back(totmass);
+			
 			// (2) Dump force ratio info
 			for(int n=0; n < FI.size(); n++)
 				dumpforce << FI[n] << " ";
@@ -102,7 +105,7 @@ int main(int argc, char* argv[]) {
 			// Print the elapsed time to log file
 			printlog("end",timeinMS,0.0);
 			
-			if(counter>maxshapes)
+			if(counter > maxshapes)
 				break;
 			else
 				counter++;

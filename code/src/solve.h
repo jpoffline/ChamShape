@@ -7,27 +7,30 @@
 
 vector<double> solve(){
 	
-	double error_phi=1.0E12,error_grav=1.0E12,olderror_phi,olderror_grav;
+	double error_phi=1.0E12,error_grav=1.0E12;
+	double olderror_phi,olderror_grav;
 	double int_CHAMforce,int_GRAVforce;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
     double x,y;
-	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
     double h2=h*h;
-	bool   dump=false;
+	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
+	bool   dump=false; // initial setup of the dump-checker
     int    filenum=0;
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
 	double phierrdens;
-	double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0,maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
+	double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0;
+	double maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
 	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
 	bool killnext=false;
-	double errorTHRESH=1.0E-10;
+	double errorTHRESH=5.0E-10;
 	double GlobalMaxForceRatio=0.0;
-	double GlobalMaxForceRatio_xpos, GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
+	double GlobalMaxForceRatio_xpos,GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
+	
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
 	int iminb = bl;
@@ -231,19 +234,17 @@ vector<double> solve(){
 					if(i==j){
 						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+					}						
+				}
+				
+				// At the end, find the location of maximum force ratio
+				if( (killnext || t==ttot-1) && x!=0 && y!=0){
+					if(fd[0]/fd[1]>GlobalMaxForceRatio && matterdensity[i][j]<objdensity){
+						GlobalMaxForceRatio=fd[0]/fd[1];
+						GlobalMaxForceRatio_xpos=x;
+						GlobalMaxForceRatio_ypos=y;
+						GlobalMaxForceRatio_dens=matterdensity[i][j];
 					}
-					
-					// At the end, find the location of maximum force ratio
-					if(killnext && x!=0 && y!=0){
-						if(fd[0]/fd[1]>GlobalMaxForceRatio && matterdensity[i][j]<objdensity){
-							GlobalMaxForceRatio=fd[0]/fd[1];
-							GlobalMaxForceRatio_xpos=x;
-							GlobalMaxForceRatio_ypos=y;
-							GlobalMaxForceRatio_dens=matterdensity[i][j];
-						}
-					}
-						
-
 				}
 				
 				
@@ -286,7 +287,7 @@ vector<double> solve(){
 	
 		if(killnext){
 			cout << endl;
-			cout << "Errors in chameleon and gravitational scalars below threshold" << endl;
+			cout << "Errors in chameleon and gravitational scalars are below threshold" << endl;
 			cout << "EoM satisfied to less than " << errorTHRESH << endl;
 			cout << " > stopping" << endl;
 			cout << endl;
@@ -300,6 +301,7 @@ vector<double> solve(){
 	
 	// Dump force info into vector
 	vector<double> forceinfo;
+	// This gets returned back to the main_X.cpp algorithm
 	forceinfo.push_back(maxCHAMforce_x);
 	forceinfo.push_back(maxCHAMforce_y);
 	forceinfo.push_back(maxGRAVforce_x);
