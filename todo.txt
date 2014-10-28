@@ -1,0 +1,24 @@
+------------------
+ChamShape: To do
+-------------------
+
+> PROBLEM
+- convergence
+> RESOLUTION
+- now using SoR: equations solved to within 10^-10 accuracy (integrated)
+- SoR only uses 2nd order accurate finite difference derivatives
+
+> PROBLEM
+- find screened solution
+> RESOLUTION
+- not sure yet
+
+> PROBLEM
+- find optiumum box size
+> RESOLUTION
+- not found yet (needs extensive testing)
+
+EXTENSIONS
+- 3D: cartoon method: axially symmetric sources only
+- 3D: general shapes
+- 2&3D: simulated annealing to find optimum shapes

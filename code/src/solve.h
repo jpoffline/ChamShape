@@ -7,7 +7,8 @@
 
 double solve(){
 	
-	double error_phi=0.0,error_grav=0.0,olderror_phi,olderror_grav,error_cham_force;
+	double error_phi=1.0E12,error_grav=1.0E12,olderror_phi,olderror_grav;
+	double int_CHAMforce,int_GRAVforce;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
     double x,y;
 	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
@@ -18,11 +19,14 @@ double solve(){
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
-	double phierrdens,maxFx=0.0,maxFy=0.0;
+	double phierrdens;
+	double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0,maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
 	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
+	bool killnext=false;
+	double errorTHRESH=1.0E-10;
 	
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
@@ -39,41 +43,46 @@ double solve(){
 	
     // Begin evolution
 	cout << endl;
-	cout << "Begin gradient flow to find chameleon shapes" << endl;
+	cout << "Begin relaxation to find chameleon and gravitational potential shapes" << endl;
 	cout << endl;
     for(int t=0;t<ttot;t++){
+	
+		// If the errors are below the acceptable threshold, kill.
+		// The errors are the integrated values of the "violation" of the equations of motion.
+		if(abs(error_phi) < errorTHRESH && abs(error_grav) < errorTHRESH)
+			killnext=true;
 	
         // Set the time-step counters for arrays
 		tt=t%2;tp=tt+1;
 		if(tt==1)tp=0;
 	
 		// If outputting to file, setup that file
-		if(( (t%filedumpfreq==0 || t==ttot-1) && dumptofile) || t==ttot-1){
+		if(( (t%filedumpfreq==0 || t==ttot-1) && dumptofile) || t==ttot-1 || killnext){
 			dump=true;
 			
 			// open up full 2D-field files
-			if(t==ttot-1)
+			if(t==ttot-1 || killnext)
 				filename = outDIR+filePREFIX+"_final.dat";
 			else
 				filename=outDIR+filePREFIX+"_uptodate.dat";				
 			filedump.open(filename);
 			
 			// open up x-field files
-			if(t==ttot-1)
+			if(t==ttot-1 || killnext)
 				filename = outDIR+filePREFIX+"_x_final.dat";
 			else
 				filename=outDIR+filePREFIX+"_x_uptodate.dat";	
 			filexdump.open(filename);
 			
 			// open up y-field files
-			if(t==ttot-1)
+			if(t==ttot-1 || killnext)
 				filename = outDIR+filePREFIX+"_y_final.dat";
 			else
 				filename=outDIR+filePREFIX+"_y_uptodate.dat";
 			fileydump.open(filename);
 			
 			// open up y-field files
-			if(t==ttot-1)
+			if(t==ttot-1 || killnext)
 				filename = outDIR+filePREFIX+"_xy_final.dat";
 			else
 				filename=outDIR+filePREFIX+"_xy_uptodate.dat";
@@ -83,13 +92,19 @@ double solve(){
 	
 	
 		
-		// dump current energy into the old energy 
+		// Dump current errors into the old errors:
 		olderror_phi=error_phi;
 		olderror_grav=error_grav;
-		// zero the integrated errors
+		
+		// Zero the integrated errors:
 		error_phi=0.0;
 		error_grav=0.0;
-		error_cham_force=0.0;
+		
+		// Note: also tracking the integrated forces.
+		// They must be zeroed here too
+		int_CHAMforce=0.0;
+		int_GRAVforce=0.0;
+		
 		// Begin run over space
         for(int i=iminb;i<imaxb;i++){
             
@@ -115,12 +130,12 @@ double solve(){
 					phi_jm1=fld[tt][c][i][jm1];			
 			 
 					// Second order accurate laplacian
-					//lap=(phi_ip+phi_im+phi_jp+phi_jm-4.0*phi)/h2;
+					lap=(phi_ip1+phi_im1+phi_jp1+phi_jm1-4.0*phi)/h2;
 				
 					// Fourth order accurate laplacian
 					// Really flipping accurate, but takes slightly longer to compute
-					lap = (-fld[tt][c][ip2][j]+16.0*phi_ip1-30.0*phi+16.0*phi_im1-fld[tt][c][im2][j])/12.0/h2
-						+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
+					//lap = (-fld[tt][c][ip2][j]+16.0*phi_ip1-30.0*phi+16.0*phi_im1-fld[tt][c][im2][j])/12.0/h2
+					//	+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
 				
 					// The updating algorithms, also computes an error measurement
 					
@@ -135,14 +150,15 @@ double solve(){
 												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
 												+fld[tp][c][i][jm1]-h2*eom);
 						
-						// The error measurement is phidot								
-						error_phi=error_phi+abs((fld[tp][c][i][j]-fld[tt][c][i][j]))/h*h2;
-						phierrdens=eom;
+						// error measurement is the violation of the equation of motion								
+						phierrdens=lap-getdpot(phi)-matterdensity[i][j]/M;
+						error_phi=error_phi+phierrdens*h2;
+						
 						// Also compute error by computing time variation of the integral
 						// of the magnitude of the force density
 						dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
 						dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;		
-					    error_cham_force=error_cham_force+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 						
 					}
 					
@@ -155,11 +171,13 @@ double solve(){
 												+fld[tp][c][i][jm1]+h2*matterdensity[i][j]/M);
 						
 						// Compute derivatives to compute force
-						// for error measurement; uses second order for brevity
+
 						dfdx=(phi_ip1-phi_im1)/2.0/h;
 						dfdy=(phi_jp1-phi_jm1)/2.0/h;
-					    error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
-						
+					    //error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+						// error measurement is the violation of the equation of motion								
+						error_grav=error_grav+(lap+matterdensity[i][j]/M)*h2;
+						int_GRAVforce=int_GRAVforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
 					
 					
@@ -185,8 +203,11 @@ double solve(){
 						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
 
 						// Find max force in x-direction
-						if(fd[0]>maxFx)
-							maxFx=fd[0];
+						if(fd[0]>maxCHAMforce_x)
+							maxCHAMforce_x=fd[0];
+						
+						if(fd[1]>maxGRAVforce_x)
+							maxGRAVforce_x=fd[1];
 
 					}	
 					if(x==0){
@@ -194,8 +215,11 @@ double solve(){
 						fileydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
 
 						// Find max force in y-direction
-						if(fd[0]>maxFy)
-							maxFy=fd[0];
+						if(fd[0]>maxCHAMforce_y)
+							maxCHAMforce_y=fd[0];
+						
+						if(fd[1]>maxGRAVforce_y)
+							maxGRAVforce_y=fd[1];						
 
 					}
 					
@@ -234,26 +258,48 @@ double solve(){
 		timehist << t*ht << " ";
 		timehist << abs(error_phi) << " " << (error_phi - olderror_phi)/ht << " ";
 		timehist << abs(error_grav) << " " << (error_grav - olderror_grav)/ht << " ";
-		timehist << error_cham_force << endl;
+		timehist << int_CHAMforce << " " << int_GRAVforce << endl;
 		
 		// Dump to screen
 		if(t%screendumpfreq==0){
-			cout << t << "/"  << ttot << " " << error_phi << " " << error_grav << " " ;
-			cout << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << " " << error_cham_force << endl;
+			cout << t << "/"  << ttot << " " << abs(error_phi) << " " << abs(error_grav) << " " ;
+			cout << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << " ";
+			cout << int_CHAMforce << " " << int_GRAVforce << endl;
 		}
 		// Rescale gravitational potential
 		// Note: Laplace's equation, nabla^2Phi = - rho, is invariant under Phi -> Phi + c1 x + c2 x^2
+	
+		if(killnext){
+			cout << endl;
+			cout << "Errors in chameleon and gravitational scalars below threshold" << endl;
+			cout << "EoM satisfied to less than " << errorTHRESH << endl;
+			cout << " > stopping" << endl;
+			cout << endl;
+			break;
+		}
 	
     }// end t-loop
 
 	// Close timehistory file
 	timehist.close();
 	cout << endl;
-	cout << "max force in x-direction = " << maxFx << endl;
-	cout << "max force in y-direction = " << maxFy << endl;
-	printlog("maxFs",maxFx,maxFy);
+	cout << "max cham force in x-direction = " << maxCHAMforce_x << endl;
+	cout << "max cham force in y-direction = " << maxCHAMforce_y << endl;
+	cout << "max grav force in x-direction = " << maxGRAVforce_x << endl;
+	cout << "max grav force in y-direction = " << maxGRAVforce_y << endl;
 	cout << endl;
-	cout << "Completed gradient flow" << endl;
+	if(maxCHAMforce_x>maxCHAMforce_y)
+		cout << "largest chameleon force in x-direction" << endl;
+	else
+		cout << "largest chameleon force in y-direction" << endl;
+	if(maxGRAVforce_x>maxGRAVforce_y)
+		cout << "largest gravitational force in x-direction" << endl;
+	else
+		cout << "largest gravitational force in y-direction" << endl;
+	
+	printlog("maxFs",maxCHAMforce_x,maxCHAMforce_y);
+	cout << endl;
+	cout << "Completed relaxation" << endl;
 	cout << endl;	
 	return 1.0;
 	

@@ -9,6 +9,7 @@
 
 double initialconditions(double phi_bg){
 	double x,y;
+	double area=0.0;
 	for(int i=0;i<imax;i++){
 		x=(i-0.5*imax)*h;
 		for(int j=0;j<jmax;j++){
@@ -44,6 +45,10 @@ double initialconditions(double phi_bg){
 					matterdensity[i][j]=obj_rhobg;
 			}
 			
+			
+			if(matterdensity[i][j]==objdensity)
+				area++;
+			
 			if(inittype == 0){
 				for(int tt=0;tt<2;tt++){
 					fld[tt][0][i][j]=phi_bg;
@@ -51,9 +56,11 @@ double initialconditions(double phi_bg){
 				}
 			}	
 			
+			
+			
 		}
 	}
 	
-	return 1.0;
+	return area*h*h*objdensity;
 	
 } // END initialconditions()

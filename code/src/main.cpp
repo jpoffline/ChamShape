@@ -57,8 +57,9 @@ int main(int argc, char* argv[]) {
 	 
 		// (0) set the initial conditions
 		// argument = phi_bg
-		initialconditions(sqrt(M*Lambda5/obj_rhobg));
-	
+		double totmass = initialconditions(sqrt(M*Lambda5/obj_rhobg));
+		cout << "total mass = " << totmass << endl;
+		
 		// (1) solve 
 		solve();	
 	
