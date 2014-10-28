@@ -5,7 +5,7 @@
 */
 
 
-double solve(){
+vector<double> solve(){
 	
 	double error_phi=1.0E12,error_grav=1.0E12,olderror_phi,olderror_grav;
 	double int_CHAMforce,int_GRAVforce;
@@ -15,7 +15,6 @@ double solve(){
     double h2=h*h;
 	bool   dump=false;
     int    filenum=0;
-	int    trail=10000;
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
@@ -27,7 +26,8 @@ double solve(){
 	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
 	bool killnext=false;
 	double errorTHRESH=1.0E-10;
-	
+	double GlobalMaxForceRatio=0.0;
+	double GlobalMaxForceRatio_xpos, GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
 	int iminb = bl;
@@ -137,6 +137,11 @@ double solve(){
 					//lap = (-fld[tt][c][ip2][j]+16.0*phi_ip1-30.0*phi+16.0*phi_im1-fld[tt][c][im2][j])/12.0/h2
 					//	+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
 				
+					// Compute derivatives to compute force
+
+					dfdx=(phi_ip1-phi_im1)/2.0/h;
+					dfdy=(phi_jp1-phi_jm1)/2.0/h;
+				
 					// The updating algorithms, also computes an error measurement
 					
 					// Gradient flow for the chameleon scalar
@@ -156,8 +161,8 @@ double solve(){
 						
 						// Also compute error by computing time variation of the integral
 						// of the magnitude of the force density
-						dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
-						dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;		
+						//dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
+						//dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;		
 					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 						
 					}
@@ -170,10 +175,7 @@ double solve(){
 												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
 												+fld[tp][c][i][jm1]+h2*matterdensity[i][j]/M);
 						
-						// Compute derivatives to compute force
-
-						dfdx=(phi_ip1-phi_im1)/2.0/h;
-						dfdy=(phi_jp1-phi_jm1)/2.0/h;
+						
 					    //error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 						// error measurement is the violation of the equation of motion								
 						error_grav=error_grav+(lap+matterdensity[i][j]/M)*h2;
@@ -197,7 +199,7 @@ double solve(){
 					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
 					
-
+					// Output down the x-axis
 					if(y==0){
 						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
@@ -210,6 +212,8 @@ double solve(){
 							maxGRAVforce_x=fd[1];
 
 					}	
+					
+					// Output down the y-axis
 					if(x==0){
 						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 						fileydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
@@ -223,9 +227,20 @@ double solve(){
 
 					}
 					
+					// Output down the x=y-axis
 					if(i==j){
 						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+					}
+					
+					// At the end, find the location of maximum force ratio
+					if(killnext && x!=0 && y!=0){
+						if(fd[0]/fd[1]>GlobalMaxForceRatio && matterdensity[i][j]<objdensity){
+							GlobalMaxForceRatio=fd[0]/fd[1];
+							GlobalMaxForceRatio_xpos=x;
+							GlobalMaxForceRatio_ypos=y;
+							GlobalMaxForceRatio_dens=matterdensity[i][j];
+						}
 					}
 						
 
@@ -282,25 +297,33 @@ double solve(){
 
 	// Close timehistory file
 	timehist.close();
-	cout << endl;
-	cout << "max cham force in x-direction = " << maxCHAMforce_x << endl;
-	cout << "max cham force in y-direction = " << maxCHAMforce_y << endl;
-	cout << "max grav force in x-direction = " << maxGRAVforce_x << endl;
-	cout << "max grav force in y-direction = " << maxGRAVforce_y << endl;
-	cout << endl;
-	if(maxCHAMforce_x>maxCHAMforce_y)
-		cout << "largest chameleon force in x-direction" << endl;
-	else
-		cout << "largest chameleon force in y-direction" << endl;
-	if(maxGRAVforce_x>maxGRAVforce_y)
-		cout << "largest gravitational force in x-direction" << endl;
-	else
-		cout << "largest gravitational force in y-direction" << endl;
 	
-	printlog("maxFs",maxCHAMforce_x,maxCHAMforce_y);
+	// Dump force info into vector
+	vector<double> forceinfo;
+	forceinfo.push_back(maxCHAMforce_x);
+	forceinfo.push_back(maxCHAMforce_y);
+	forceinfo.push_back(maxGRAVforce_x);
+	forceinfo.push_back(maxGRAVforce_y);
+	forceinfo.push_back(GlobalMaxForceRatio);
+	forceinfo.push_back(GlobalMaxForceRatio_xpos);
+	forceinfo.push_back(GlobalMaxForceRatio_ypos);	
+	forceinfo.push_back(GlobalMaxForceRatio_dens);
+	forceinfo.push_back(M);
+	forceinfo.push_back(objdensity);
+	forceinfo.push_back(obj_rhobg);
+	forceinfo.push_back(elparam1);
+	forceinfo.push_back(elparam2);
+	
+	// Print force info: first to screen
+	PrintForceInfo(cout,forceinfo);	
+	// Now to logfile (its the same info, but call routine which opens up logfile first)
+	PrintForceInfoToLogfile(forceinfo);
+	
+	// Print closing message to screen
 	cout << endl;
 	cout << "Completed relaxation" << endl;
 	cout << endl;	
-	return 1.0;
+	
+	return forceinfo;
 	
 } // END solve()

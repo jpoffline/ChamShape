@@ -138,7 +138,7 @@ void printfinalmessage(ostream& whereto, double te){
 } // END printfinalmessage()
 
 // Print info to logfile
-void printlog(string when, double v1,double v2){
+void printlog(string when,double v1,double v2){
 	
 	if(when=="start"){
 		string filename = outDIR+filePREFIX+".log";
@@ -147,17 +147,6 @@ void printlog(string when, double v1,double v2){
 		printwelcome(dumplog);
 		printtopmatter(dumplog);
 		printobjectproperties(dumplog);
-		dumplog.close();
-	}
-	
-	if(when=="maxFs"){
-		string filename = outDIR+filePREFIX+".log";
-		ofstream dumplog;
-		dumplog.open(filename,ios::app);
-		dumplog << endl;
-		dumplog << "Max force in x-direction = " << v1 << endl;
-		dumplog << "Max force in y-direction = " << v2 << endl;		
-		dumplog << endl;
 		dumplog.close();
 	}
 	
@@ -170,6 +159,64 @@ void printlog(string when, double v1,double v2){
 	}
 	
 } // END printlog()
+
+// Print info about the forces to general ostream
+void PrintForceInfo(ostream& whereto, vector<double> fvals){
+	
+	int ID = 0;
+	// extract data from 
+	double maxCHAMforce_x = fvals[ID]; ID++;
+	double maxCHAMforce_y = fvals[ID]; ID++;
+	double maxGRAVforce_x = fvals[ID]; ID++;
+	double maxGRAVforce_y = fvals[ID]; ID++;
+	double GlobalMaxForceRatio = fvals[ID]; ID++;
+	double GlobalMaxForceRatio_xpos = fvals[ID]; ID++;
+	double GlobalMaxForceRatio_ypos = fvals[ID]; ID++;
+	double GlobalMaxForceRatio_dens = fvals[ID]; ID++;
+	// Output analysis of maximum forces encountered
+	whereto << "max cham force in x-direction = " << maxCHAMforce_x << endl;
+	whereto << "max cham force in y-direction = " << maxCHAMforce_y << endl;
+	whereto << "max grav force in x-direction = " << maxGRAVforce_x << endl;
+	whereto << "max grav force in y-direction = " << maxGRAVforce_y << endl;
+	whereto << endl;
+	
+	if(maxCHAMforce_x>maxCHAMforce_y)
+		whereto << "The value of the largest chameleon force is in the x-direction" << endl;
+	else
+		whereto << "The value of the largest chameleon force is in the y-direction" << endl;
+	if(maxGRAVforce_x>maxGRAVforce_y)
+		whereto << "The value of the largest gravitational force is in the x-direction" << endl;
+	else
+		whereto << "The value of the largest gravitational force is in the y-direction" << endl;
+	
+	whereto << endl;
+	whereto << "Maximum force ratios (chamF/gravF)" << endl;
+	whereto << " > down x-direction = " << maxCHAMforce_x/maxGRAVforce_x << endl;
+	whereto << " > down y-direction = " << maxCHAMforce_y/maxGRAVforce_y << endl;
+	whereto << endl;
+		
+	if(maxCHAMforce_x/maxGRAVforce_x > maxCHAMforce_y/maxGRAVforce_y)
+		whereto << "The maximum force ratio is down the x-axis" << endl;
+	else
+		whereto << "The maximum force ratio is down the y-axis" << endl;
+	
+	whereto << endl;		
+	whereto << "Maximum global force ratio (chamF/gravF) = " << GlobalMaxForceRatio << endl;
+	whereto << " > coords@max: (" << GlobalMaxForceRatio_xpos << ", " << GlobalMaxForceRatio_ypos << ")" << endl;
+	whereto << " > sourcerho@max: " << GlobalMaxForceRatio_dens << endl;
+	
+} // END PrintForceInfo()
+
+// Print info about the forces to logfile (this opens up logfile stream, and calls "PrintForceInfo")
+void PrintForceInfoToLogfile(vector<double> fvals){
+	
+	string filename = outDIR+filePREFIX+".log";
+	ofstream dumplog;
+	dumplog.open(filename,ios::app);
+	PrintForceInfo(dumplog,fvals);
+	dumplog.close();
+	
+} // END PrintForceInfoToLogfile()
 
 void printerror(ostream& whereto, int errID){
 	

@@ -13,7 +13,7 @@
 #include <string>
 #include <stdlib.h>
 #include <sys/stat.h>   // For stat().
-
+#include <vector>
 using namespace std;
 
 using namespace std;
