@@ -18,6 +18,11 @@ ChamShape: To do
 > RESOLUTION
 - not found yet (needs extensive testing)
 
+> PROBLEM
+- find parameter ranges that maximizes force
+> RESOLUTION
+- need to play around (not done yet)
+
 EXTENSIONS
 - 3D: cartoon method: axially symmetric sources only
 - 3D: general shapes

@@ -84,6 +84,7 @@ int main(int argc, char* argv[]) {
 			// Print a logfile with all parameter info & simulation conditions
 			printlog("start",0.0,0.0);
 
+			////////////////////////////////////////
 			// Run the solver:
 	 
 			// (0) set the initial conditions
@@ -93,7 +94,11 @@ int main(int argc, char* argv[]) {
 		
 			// (1) solve 
 			// Returns all the force info
-			FI=solve();	
+			FI=solve();				
+			////////////////////////////////////////
+			
+			// Now we've found some profiles, extract information about them
+			// passed back by solve()
 			
 			// Dump the total mass into the FI vector
 			FI.push_back(totmass);
@@ -103,7 +108,7 @@ int main(int argc, char* argv[]) {
 				dumpforce << FI[n] << " ";
 			dumpforce << endl;		
 			
-			// Stop timing for this run
+			// Stop timing for this shape
 			clock_t endTime = clock();
 			
 			// Compute elapsed time in ms
