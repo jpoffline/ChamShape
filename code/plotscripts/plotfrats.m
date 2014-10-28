@@ -36,16 +36,19 @@ function plotfrats(varargin)
     
     for n=1:nd
         el(n)=b(n)/a(n);
+        frat(n)=frat(n)*1000-999;
     end;
     
     plot(el,frat,'k-o','MarkerFaceColor','k');
     
-    xlabel('$b/a$', 'interpreter','latex');
-    ylabel('$\mbox{max}(F_{\rm cham}{\,} / F_{\rm grav})$', 'interpreter','latex');
+    xlabel('$\mbox{aspect }\mbox{ratio,}{\,}b/a$', 'interpreter','latex');
+    ylabel('$\mbox{max}(F_{\rm cham}{\,} / F_{\rm grav}){\,}[\mbox{arbitrary } \mbox{units}]$', 'interpreter','latex');
     
     set(gcf, 'PaperUnits',plot_sizeunits);
     set(gcf, 'PaperSize',[plot_width plot_height]);
     set(gcf, 'PaperPosition',[ 0 0 plot_width plot_height]);
     set(gcf, 'renderer', 'painters');
     print('-dpdf',outfigname);
+    
+    fprintf('Plot saved to %s\n',outfigname);
     

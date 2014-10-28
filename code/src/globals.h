@@ -36,7 +36,6 @@ int 		eomtype;
 int			tdamp;				// Time to stop damping			
 double		damp;				// Damping magnitude
 
-
 int			bctype;				
 int			pottype;
 int			inittype;			

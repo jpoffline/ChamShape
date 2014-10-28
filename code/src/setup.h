@@ -14,7 +14,6 @@ double setuparams(string paramFileName){
 	// Go read in relevant parts of the parameter file
 	// Structure: getiniTYPE(PARAMstream, PARAMname, DEFAULTvalue)
 	 
-	
 	h =  getiniDouble(paramsfile,"h", 0.25);
 	ht = getiniDouble(paramsfile,"ht", 0.1);	
 	ttot = getiniInt(paramsfile,"ttot", 1000);		
@@ -44,6 +43,8 @@ double setuparams(string paramFileName){
 	dumptofile = getiniBool(paramsfile,"dumptofile", true);		
 	filedumpfreq = getiniInt(paramsfile,"filedumpfreq", 1000);	
 	timehistoryproto = getiniString(paramsfile,"timehistoryproto", "timehistory");	
+	
+	
 	
 	// Put the root dir onto the outDIR
 	outDIR=rootoutDIR+outDIR;

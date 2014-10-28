@@ -7,29 +7,22 @@
 
 vector<double> solve(){
 	
-	double error_phi=1.0E12,error_grav=1.0E12;
-	double olderror_phi,olderror_grav;
-	double int_CHAMforce,int_GRAVforce;
-	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
+	// Define 
     double x,y;
     double h2=h*h;
 	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
-	bool   dump=false; // initial setup of the dump-checker
-    int    filenum=0;
+	
+	double olderror_phi,olderror_grav;
+	double int_CHAMforce,int_GRAVforce;
+	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
+	double GlobalMaxForceRatio_xpos,GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
+	
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
 	double phierrdens;
-	double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0;
-	double maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
-	// SoR parameter used to relax Poisson equation
-	double SORparam=2.0/(1.0+PI/imax);
 	string filename;
 	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
-	bool killnext=false;
-	double errorTHRESH=5.0E-10;
-	double GlobalMaxForceRatio=0.0;
-	double GlobalMaxForceRatio_xpos,GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
 	
 	// Set min & max grid-points to be solved
 	// where "min" is the bl - boundary layer
@@ -37,6 +30,23 @@ vector<double> solve(){
 	int imaxb = imax-bl;
 	int jminb = bl;
 	int jmaxb = jmax-bl;
+	
+	// Define and initialize integrated, maximal quantities,
+	// and checkers.
+	double error_phi=1.0E12,error_grav=1.0E12;
+	double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0;
+	double maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
+	double GlobalMaxForceRatio=0.0;
+	bool   dump=false; // initial setup of the dump-checker
+	bool   killnext=false;
+    int    filenum=0;
+	
+	
+	// SoR parameter used to relax Poisson equation
+	double SORparam=2.0/(1.0+PI/imax);
+	
+	// Accuracy threshold on chameleon scalar and gravitational potential
+	double errorTHRESH=5.0E-10;
 	
 	// Get file name of timehistory
 	filename=outDIR+filePREFIX+"_"+timehistoryproto+".dat";
@@ -48,6 +58,7 @@ vector<double> solve(){
 	cout << endl;
 	cout << "Begin relaxation to find chameleon and gravitational potential shapes" << endl;
 	cout << endl;
+	
     for(int t=0;t<ttot;t++){
 	
 		// If the errors are below the acceptable threshold, kill.
@@ -92,8 +103,6 @@ vector<double> solve(){
 			filexydump.open(filename);
 			
 		} 
-	
-	
 		
 		// Dump current errors into the old errors:
 		olderror_phi=error_phi;
@@ -145,46 +154,28 @@ vector<double> solve(){
 					dfdx=(phi_ip1-phi_im1)/2.0/h;
 					dfdy=(phi_jp1-phi_jm1)/2.0/h;
 				
-					// The updating algorithms, also computes an error measurement
-					
-					// Gradient flow for the chameleon scalar
+					// The updating algorithms; also computes an error measurement
+					// error measurements are the violation of the equation of motion	
+												
+					// (1) Chameleon scalar
 					if(c==0){
-						
-//						eom=lap-getdpot(phi)-matterdensity[i][j]/M;
-//						fld[tp][c][i][j]=ht*eom+phi;
-
-						eom=getdpot(phi)+matterdensity[i][j]/M;
-						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
-												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-												+fld[tp][c][i][jm1]-h2*eom);
-						
-						// error measurement is the violation of the equation of motion								
-						phierrdens=lap-eom;
-						error_phi=error_phi+phierrdens*h2;
-						
-						// Also compute error by computing time variation of the integral
-						// of the magnitude of the force density
-						//dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
-						//dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;		
+						eom=getdpot(phi)+matterdensity[i][j]/M;						
+						error_phi=error_phi+(lap-eom)*h2;
 					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
-						
 					}
 					
-					// SoR updating algorithm for gravitational potential
+					// (2) Gravitational potential
 					if(c==1){
-						
-						// Second order accuracy
-						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
-												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-												+fld[tp][c][i][jm1]+h2*matterdensity[i][j]/M);
-						
-						
-					    //error_grav=error_grav+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
-						// error measurement is the violation of the equation of motion								
+						eom=-matterdensity[i][j]/M;
 						error_grav=error_grav+(lap+matterdensity[i][j]/M)*h2;
 						int_GRAVforce=int_GRAVforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
 					
+					// Do the updating with 2nd order accurate SoR
+					// note that this solves \nabla^2F = S; S = eom below
+					fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
+											+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
+											+fld[tp][c][i][jm1]-h2*eom);
 					
 				}
 				
@@ -200,12 +191,12 @@ vector<double> solve(){
 					}
 					
 					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 					
 					// Output down the x-axis
 					if(y==0){
 						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 
 						// Find max force in x-direction
 						if(fd[0]>maxCHAMforce_x)
@@ -219,7 +210,7 @@ vector<double> solve(){
 					// Output down the y-axis
 					if(x==0){
 						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						fileydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+						fileydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 
 						// Find max force in y-direction
 						if(fd[0]>maxCHAMforce_y)
@@ -233,7 +224,7 @@ vector<double> solve(){
 					// Output down the x=y-axis
 					if(i==j){
 						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << " " << phierrdens << endl;
+						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 					}						
 				}
 				

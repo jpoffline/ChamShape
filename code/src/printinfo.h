@@ -201,7 +201,7 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 		whereto << "The maximum force ratio is down the y-axis" << endl;
 	
 	whereto << endl;		
-	whereto << "Maximum global force ratio (chamF/gravF) = " << GlobalMaxForceRatio << endl;
+	whereto << "Maximum global force ratio:  max(chamF/gravF) = " << GlobalMaxForceRatio << endl;
 	whereto << " > coords@max: (" << GlobalMaxForceRatio_xpos << ", " << GlobalMaxForceRatio_ypos << ")" << endl;
 	whereto << " > sourcerho@max: " << GlobalMaxForceRatio_dens << endl;
 	
