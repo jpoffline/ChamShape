@@ -26,11 +26,12 @@ double initialconditions(double phi_bg){
 			if(mattdisttype==2){
 				//pec=(sqrt(x*x+(y+elparam)*(y+elparam))+sqrt(x*x+(y-elparam)*(y-elparam)))/2.0/elparam;
 				//matterdensity[i][j] = obj_rhobg*(1+0.5*(objdensity/obj_rhobg-1.0)*(1.0-tanh((pec-objsize)/objskindepth)));
-				if(abs(x)<elparam1*sqrt(objsize*objsize-y*y/elparam2/elparam2))
+				if(abs(x) < elparam1*sqrt(objsize*objsize-y*y/elparam2/elparam2))
 					matterdensity[i][j]=objdensity;
 				else
 					matterdensity[i][j]=obj_rhobg;
 			}
+			
 			if(mattdisttype==3){
 				if(abs(x)<elparam1*sqrt(objsize*objsize-y*y/elparam2/elparam2) || abs(y)<elparam1*sqrt(objsize*objsize-x*x/elparam2/elparam2))
 					matterdensity[i][j]=objdensity;

@@ -159,7 +159,7 @@ vector<double> solve(){
 												+fld[tp][c][i][jm1]-h2*eom);
 						
 						// error measurement is the violation of the equation of motion								
-						phierrdens=lap-getdpot(phi)-matterdensity[i][j]/M;
+						phierrdens=lap-eom;
 						error_phi=error_phi+phierrdens*h2;
 						
 						// Also compute error by computing time variation of the integral

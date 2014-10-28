@@ -1,4 +1,9 @@
 function plotfrats(varargin)
+
+    % plot script:
+    % plots max(Fcham/Fgrav) as a function of a parameter specifying
+    % the source (here, ellipse: so b/a).
+
     close all;
     
     name = char(varargin(1));
@@ -15,6 +20,7 @@ function plotfrats(varargin)
     outfigname=strcat(rootDIR,plotDIR,name,'_frats.pdf');
     dat=load(datafile);
     
+    % locations in data file
     fratpos=5;
     apos=12;
     bpos=13;
