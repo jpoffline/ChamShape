@@ -1,7 +1,7 @@
 function plotfrats(varargin)
     close all;
     
-    name = strcat(char(varargin(1)),'/');
+    name = char(varargin(1));
     rootDIR='../';
     outDIR='output/';
     plotDIR='plots/';
@@ -11,7 +11,7 @@ function plotfrats(varargin)
     plot_width=4.5;
     plot_height=3.5;
     
-    datafile=strcat(rootDIR,outDIR,name,forceinfofileproto);
+    datafile=strcat(rootDIR,outDIR,name,'/',forceinfofileproto);
     outfigname=strcat(rootDIR,plotDIR,name,'_frats.pdf');
     dat=load(datafile);
     
@@ -29,7 +29,7 @@ function plotfrats(varargin)
     nd=ndat(1);
     
     for n=1:nd
-        el=b(n)/a(n);
+        el(n)=b(n)/a(n);
     end;
     
     plot(el,frat,'k-o','MarkerFaceColor','k');
