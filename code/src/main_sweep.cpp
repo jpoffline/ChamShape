@@ -28,20 +28,7 @@ int main(int argc, char* argv[]) {
 	else
 		inifileName = "params.ini";
 
-	////////////////////////////////////////
-	// Stuff specific to the sweeper
-	int maxshapes=10;
-	double elparam2_start = elparam2;
-	double elparam2_end = elparam1;
-	double delparam2 = (elparam2_end-elparam2_start)/(double)maxshapes;
 	
-	string fileprefix_proto=filePREFIX;
-	int trail=1000;
-	vector<double> FI;
-	ofstream dumpforce;
-	string filename = outDIR+"forceinfo.dat";
-	dumpforce.open(filename);
-	////////////////////////////////////////
 		
 	// Setup parameters
 	setuparams(inifileName);
@@ -54,6 +41,21 @@ int main(int argc, char* argv[]) {
 	
 	// Do a quick sanity check
 	int isok = checksanity();
+	
+	
+	////////////////////////////////////////
+	// Stuff specific to the sweeper
+	int maxshapes=10;
+	double elparam2_start = elparam2;
+	double elparam2_end = elparam1;
+	double delparam2 = (elparam2_end-elparam2_start)/(double)maxshapes;
+	string fileprefix_proto=filePREFIX;
+	int trail=1000;
+	vector<double> FI;
+	ofstream dumpforce;
+	string filename = outDIR+"forceinfo.dat";
+	dumpforce.open(filename);
+	////////////////////////////////////////
 	
 	// If all is ok folowing the sanity check, keep going
 	if(isok==0){
