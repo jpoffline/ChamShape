@@ -20,7 +20,6 @@ vector<double> solve(){
 	double eom,lap;
 	double dfdx,dfdy;
 	double fd[2];
-	double phierrdens;
 	string filename;
 	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
 	

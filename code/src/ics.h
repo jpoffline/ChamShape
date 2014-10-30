@@ -12,6 +12,17 @@ double initialconditions(double phi_bg){
 	double x,y;
 	double area=0.0;
 	
+	 
+	
+	
+	double l1=elparam1;
+	double l2=elparam2;
+	double l3=sqrt(l1*l1-(l2/2.0)*(l2/2.0));
+	double mCA=2*l3/l2;
+	double cCA=l3/2;
+	double mAB=-2*l3/l2;
+	double cAB=l3/2;
+
 	
 	for(int i=0;i<imax;i++){
 		x=(i-0.5*imax)*h;
@@ -45,6 +56,15 @@ double initialconditions(double phi_bg){
 			// rectangle
 			if(mattdisttype==4){
 				if(abs(x) < elparam1 && abs(y) < elparam2)
+					matterdensity[i][j]=objdensity;
+				else
+					matterdensity[i][j]=obj_rhobg;
+			}
+			
+			
+			// triangle
+			if(mattdisttype==5){
+				if( y>-0.5*l3 && y<mCA*x+cCA && y<mAB*x+cAB )
 					matterdensity[i][j]=objdensity;
 				else
 					matterdensity[i][j]=obj_rhobg;

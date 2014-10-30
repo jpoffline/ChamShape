@@ -106,6 +106,10 @@ void printobjectproperties(ostream& whereto){
 		whereto << " :: square " << endl;
 		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
 	}
+	if(mattdisttype == 5){
+		whereto << " :: triangle " << endl;
+		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
+	}
 	else
 		whereto << endl;
 	
@@ -203,7 +207,7 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	whereto << endl;		
 	whereto << "Maximum global force ratio:  max(chamF/gravF) = " << GlobalMaxForceRatio << endl;
 	whereto << " > coords@max: (" << GlobalMaxForceRatio_xpos << ", " << GlobalMaxForceRatio_ypos << ")" << endl;
-	whereto << " > sourcerho@max: " << GlobalMaxForceRatio_dens << endl;
+	whereto << " > density@max: " << GlobalMaxForceRatio_dens << endl;
 	
 } // END PrintForceInfo()
 
