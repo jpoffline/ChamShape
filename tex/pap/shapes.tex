@@ -1,0 +1,59 @@
+%%\documentclass[a4paper,eqsecnum,twoside,aps,floatfix,notitlepage]{revtex4}
+\documentclass[amsmath,amssymb,10pt,eqsecnum, twocolumn]{revtex4}
+\usepackage{graphicx,float,subfloat,caption}
+\usepackage[breaklinks, colorlinks, citecolor=blue]{hyperref}
+\usepackage{bm}% bold math
+
+\usepackage{subfigure}
+\usepackage{hyperref}
+
+\input{defs}
+ 
+\begin{document}
+
+\title{Shaping the chameleon}
+\author{Jonathan A. Pearson}
+\email{j.pearson@nottingham.ac.uk}
+\affiliation{School of Physics \& Astronomy, University of Nottingham, Nottingham, NG7 2RD, U.K.}	
+\date{\today}
+
+\maketitle
+
+
+
+
+ 
+ 
+ 
+\section{Introduction}
+
+The source density is $\rho(\rbm{x})$.  Different geometrical shapes of this source (such as ellipses, rectangles, triangles, etc) will yield different gravitational potentials, and will alter how the chameleon scalar responds.
+
+The effective potential for the chameleon is
+\bea
+\qsubrm{V}{eff} = \frac{\Lambda^5}{\phi} + \frac{\rho(\rbm{x})}{M}\phi.
+\eea
+The equations governing the chameleon scalar and gravitational potential are
+\bse
+\bea
+\nabla^2\phi = \frac{\dd \qsubrm{V}{eff}}{\dd\phi}.
+\eea
+\bea
+\nabla^2\Phi = - \rho(\rbm{x})/\qsubrm{M}{pl}^2
+\eea
+\ese
+The force on a test particle, due to the gravitational and chameleon scalars are given by
+\bea
+\rbm{F}_{(\phi)} = - \tfrac{1}{M}\nabla\phi,\qquad \rbm{F}_{(\Phi)} = - \nabla\Phi.
+\eea
+The idea is to obtain the source-shape that maximises the force that a test particle will feel, that cannot be explained by forces of a purely gravitational origin.
+
+
+\section{Explanation of numerical methods}
+Discretize onto a grid. Using successive over relaxation.
+\section{Results}
+
+\section{Discussion}
+
+
+\end{document}

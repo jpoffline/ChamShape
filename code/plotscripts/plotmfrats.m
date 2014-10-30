@@ -32,7 +32,7 @@ function plotmfrats(varargin)
     plot_height=3.5;
     
     cols={'k','b','r'};
-    maks={'-ks','--bo','-rd'};
+    maks={'-ks','--bo','-r^'};
     
     outfigname=strcat(rootDIR,plotDIR,'many_frats.pdf');
     maxrat=0.0;
@@ -49,7 +49,7 @@ function plotmfrats(varargin)
         nd=ndat(1);
 
         for n=1:nd
-            el(n)=b(n)/a(n);
+            el(n)=b(n)/a(n)/M(n);
             if frat(n) > maxrat
                 maxrat=frat(n);
             end;
