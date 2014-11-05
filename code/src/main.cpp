@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
 		
 		// Print properties of the object
 		printobjectproperties(cout);
+		
 		// Print a logfile with all parameter info & simulation conditions
 		printlog("start",0.0,0.0);
 
@@ -57,8 +58,9 @@ int main(int argc, char* argv[]) {
 	 
 		// (0) set the initial conditions
 		// argument = phi_bg
-		double totmass = initialconditions(sqrt(M*Lambda5/obj_rhobg));
-		cout << "total mass = " << totmass << endl;
+		double phi_bg = sqrt(1.0/obj_rhobg);
+		double totmass = initialconditions(phi_bg);
+		cout << "Object's total mass = " << totmass << endl;
 		
 		// (1) solve 
 		solve();	

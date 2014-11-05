@@ -90,9 +90,10 @@ int main(int argc, char* argv[]) {
 			// Run the solver:
 	 
 			// (0) set the initial conditions
-			// argument = phi_bg (calculate)
-			double totmass = initialconditions(sqrt(M*Lambda5/obj_rhobg));
-			cout << "Total mass of the source = " << totmass << endl;
+			// argument = phi_bg
+			double phi_bg = sqrt(1.0/obj_rhobg);
+			double totmass = initialconditions(phi_bg);
+			cout << "Object's total mass = " << totmass << endl;
 		
 			// (1) solve 
 			// Returns all the force info

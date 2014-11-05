@@ -38,7 +38,11 @@ double getiniDouble(ifstream& inif, string namerequired, double deflt){
 		
 	}	
 	
-	// Send default back if not found anything
+	// If not found anything
+	// (1) go back to start of file	
+	inif.clear();
+	inif.seekg(0,ios::beg);
+	// (2) return the default
 	return deflt;
 	
 } // END getiniDouble()
@@ -55,6 +59,7 @@ int getiniInt(ifstream& inif, string namerequired, int deflt){
 
 		// Dump into string array
 		inif >> temp;
+
 		if(temp.substr(0) != commlim){
 			// find out where in string the delimiter is
 			size_t pos = temp.find(delim);       
@@ -73,8 +78,12 @@ int getiniInt(ifstream& inif, string namerequired, int deflt){
 		}
 		
 	}	
-	
-	// Send default back if not found anything
+
+	// If not found anything
+	// (1) go back to start of file	
+	inif.clear();
+	inif.seekg(0,ios::beg);
+	// (2) return the default
 	return deflt;
 	
 } // END getiniInt()
@@ -91,6 +100,7 @@ string getiniString(ifstream& inif, string namerequired, string deflt){
 
 		// Dump into string array
 		inif >> temp;
+		
 		if(temp.substr(0) != commlim){
 			// find out where in string the delimiter is
 			size_t pos = temp.find(delim);       
@@ -110,7 +120,11 @@ string getiniString(ifstream& inif, string namerequired, string deflt){
 		
 	}	
 	
-	// Send default back if not found anything
+	// If not found anything
+	// (1) go back to start of file	
+	inif.clear();
+	inif.seekg(0,ios::beg);
+	// (2) return the default
 	return deflt;
 	
 } // END getiniString()
@@ -128,6 +142,7 @@ bool getiniBool(ifstream& inif, string namerequired, bool deflt){
 
 		// Dump into string array
 		inif >> temp;
+		
 		if(temp.substr(0) != commlim){
 			// find out where in string the delimiter is
 			size_t pos = temp.find(delim);       
@@ -151,7 +166,11 @@ bool getiniBool(ifstream& inif, string namerequired, bool deflt){
 		
 	}	
 	
-	// Send default back if not found anything
+	// If not found anything
+	// (1) go back to start of file	
+	inif.clear();
+	inif.seekg(0,ios::beg);
+	// (2) return the default
 	return deflt;
 	
 } // END getiniBool()

@@ -94,6 +94,27 @@ For the parameters in the model we typically set
 \Lambda = 1, \qquad M = 10^3, \qquad \rho_0 = 12, \qquad \qsubrm{\rho}{bg} = 0.1.
 \eea
 This is the  hierarchy of scales required to obtain the screening solutions of interest. Note that we require a large density contrast, $\delta \defn \frac{\rho_0}{\qsubrm{\rho}{bg}}-1$, and large $M$.
+\subsection{Modification: units}
+The dimensionally correct equations are
+\bea
+\nabla^2\phi = - \frac{\Lambda^5}{\phi^2} + \frac{\rho}{M},\qquad \nabla^2\Phi = - \frac{\rho}{2\qsubrm{M}{Pl}^2},
+\eea
+and the forces are
+\bea
+\rbm{F}_{\phi} = - \frac{1}{M}\nabla\phi,\qquad \rbm{F}_{\Phi} = - \nabla\Phi.
+\eea
+By setting
+\bea
+\phi = \sqrt{\Lambda^5M}\tilde{\phi},\qquad \Phi = \frac{M}{\qsubrm{M}{Pl}^2}\sqrt{\Lambda^5M}\tilde{\Phi},\qquad x^{\mu} = M^{1/2}(\Lambda^5M)^{1/4}\tilde{x}^{\mu},
+\eea
+we obtain
+\bea
+\tilde{\nabla}^2\tilde{\phi} = - \frac{1}{\tilde{\phi}^2} + \rho,\qquad \tilde{\nabla}^2\tilde{\Phi} = - \half \rho,
+\eea
+and the force ratio becomes
+\bea
+\frac{\left| \rbm{F}_{\phi}\right|}{\left| \rbm{F}_{\Phi}\right|} = \left( \frac{\qsubrm{M}{Pl}}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
+\eea
 \section{Results in 2D}
 \label{sec:resulys_2d}
 Here we present results of numerically solving the equations in 2D;  the chameleon scalar $\phi$ satisfies

@@ -81,7 +81,15 @@ void printtopmatter(ostream& whereto){
 	
 	printinfo(whereto,"Potential",pottype);	
 	printinfo(whereto,"InitialConditions",inittype);
-		
+	whereto << endl;
+	whereto << "All data files print out dimensionless fields and forces" << endl;
+	whereto << "Solving" << endl;
+	whereto << "(1) nabla^2phi = - 1/phi^2 + rho" << endl;
+	whereto << "(2) nabla^2Phi = - rho/2" << endl;
+	
+	whereto << "The force-ratios info has dimensions restored" << endl;
+	whereto << " |F_phi| / |F_Phi| = (Mpl/M)^2 ( |nabla phi| / |nabla Phi|)" << endl;
+	whereto << endl;
 	whereto << "Begin solving" << endl;
 	whereto << endl;
 		
@@ -92,8 +100,10 @@ void printobjectproperties(ostream& whereto){
 	whereto << endl;
 	whereto << "Source object parameters:" << endl;
 	whereto << "mattdisttype = " << mattdisttype;
-	if(mattdisttype == 1)
-		whereto << " :: spherical" <<endl;
+	if(mattdisttype == 1){
+		whereto << " :: spherical" << endl;
+		whereto << "size = " << obj_size << endl;
+	}
 	if(mattdisttype == 2){
 		whereto << " :: ellipse " << endl;
 		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
@@ -113,11 +123,12 @@ void printobjectproperties(ostream& whereto){
 	else
 		whereto << endl;
 	
-	whereto << "size = " << objsize << endl;
-	whereto << "density = " << objdensity << endl;
-	whereto << "skin depth = " << objskindepth << endl;
+	
+	whereto << "density = " << obj_density << endl;
+	//whereto << "skin depth = " << obj_skindepth << endl;
 	whereto << "bg density = " << obj_rhobg << endl;
 	whereto << "M = " << M << endl;	
+	whereto << "Mpl = " << Mpl << endl;	
 	whereto << "Lambda5 = " << Lambda5 << endl;
 	whereto << endl;
 	
@@ -167,6 +178,8 @@ void printlog(string when,double v1,double v2){
 // Print info about the forces to general ostream
 void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	
+	double Mpl_M = Mpl / M;
+	double Mpl_M2 = Mpl_M*Mpl_M;
 	int ID = 0;
 	// extract data from 
 	double maxCHAMforce_x = fvals[ID]; ID++;
@@ -177,7 +190,9 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	double GlobalMaxForceRatio_xpos = fvals[ID]; ID++;
 	double GlobalMaxForceRatio_ypos = fvals[ID]; ID++;
 	double GlobalMaxForceRatio_dens = fvals[ID]; ID++;
+	
 	// Output analysis of maximum forces encountered
+	whereto << endl;
 	whereto << "max cham force in x-direction = " << maxCHAMforce_x << endl;
 	whereto << "max cham force in y-direction = " << maxCHAMforce_y << endl;
 	whereto << "max grav force in x-direction = " << maxGRAVforce_x << endl;
@@ -194,9 +209,9 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 		whereto << "The value of the largest gravitational force is in the y-direction" << endl;
 	
 	whereto << endl;
-	whereto << "Maximum force ratios (chamF/gravF)" << endl;
-	whereto << " > down x-direction = " << maxCHAMforce_x/maxGRAVforce_x << endl;
-	whereto << " > down y-direction = " << maxCHAMforce_y/maxGRAVforce_y << endl;
+	whereto << "Maximum force ratios :: max(F_cham/F_grav)" << endl;
+	whereto << " > down x-direction = " << Mpl_M2*maxCHAMforce_x/maxGRAVforce_x << endl;
+	whereto << " > down y-direction = " << Mpl_M2*maxCHAMforce_y/maxGRAVforce_y << endl;
 	whereto << endl;
 		
 	if(maxCHAMforce_x/maxGRAVforce_x > maxCHAMforce_y/maxGRAVforce_y)
@@ -205,7 +220,7 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 		whereto << "The maximum force ratio is down the y-axis" << endl;
 	
 	whereto << endl;		
-	whereto << "Maximum global force ratio:  max(chamF/gravF) = " << GlobalMaxForceRatio << endl;
+	whereto << "Maximum global force ratio:  max(F_cham/F_grav) = " << Mpl_M2*GlobalMaxForceRatio << endl;
 	whereto << " > coords@max: (" << GlobalMaxForceRatio_xpos << ", " << GlobalMaxForceRatio_ypos << ")" << endl;
 	whereto << " > density@max: " << GlobalMaxForceRatio_dens << endl;
 	

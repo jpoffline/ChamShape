@@ -24,9 +24,9 @@ double setuparams(string paramFileName){
 	bl = getiniInt(paramsfile,"bl", 1);		
 	
 	mattdisttype = getiniInt(paramsfile,"mattdisttype", 1);	
-	objdensity =  getiniDouble(paramsfile,"objdensity", 5.0);
-	objsize = getiniDouble(paramsfile,"objsize", 5.0);	
-	objskindepth = getiniDouble(paramsfile,"objskindepth", 5.0);	
+	obj_density =  getiniDouble(paramsfile,"obj_density", 5.0);
+	obj_size = getiniDouble(paramsfile,"obj_size", 5.0);	
+	obj_skindepth = getiniDouble(paramsfile,"obj_skindepth", 5.0);	
 	obj_rhobg = getiniDouble(paramsfile,"obj_rhobg", 1.0);	
 	
 	elparam1 = getiniDouble(paramsfile,"elparam1", 1);	
@@ -34,10 +34,10 @@ double setuparams(string paramFileName){
 	
 	Lambda5 = getiniDouble(paramsfile,"Lambda5", 5.0);	
 	M = getiniDouble(paramsfile,"M", 5.0);	
-	phi_bg = getiniDouble(paramsfile,"phi_bg", 5.0);	
-
-	rootoutDIR =  getiniString(paramsfile,"rootoutDIR", "output/");		
-	outDIR =  getiniString(paramsfile,"outDIR", "data/");		
+	Mpl = getiniDouble(paramsfile,"Mpl", M);	
+	
+	rootoutDIR = getiniString(paramsfile,"rootoutDIR", "output/");		
+	outDIR = getiniString(paramsfile,"outDIR", "data/");		
 	screendumpfreq = getiniInt(paramsfile,"screendumpfreq", 20);	
 	filePREFIX = getiniString(paramsfile,"filePREFIX", "file");	
 	dumptofile = getiniBool(paramsfile,"dumptofile", true);		

@@ -14,7 +14,8 @@ double initialconditions(double phi_bg){
 	
 	 
 	
-	
+	// Parameters for squashing triangles
+	// these are the dimensions of the triangle
 	double l1=elparam1;
 	double l2=elparam2;
 	double l3=sqrt(l1*l1-(l2/2.0)*(l2/2.0));
@@ -31,24 +32,24 @@ double initialconditions(double phi_bg){
 			
 			// Spherical matter distribution
 			if(mattdisttype==1){
-			  if(abs(x) < sqrt(objsize*objsize-y*y))
-			     matterdensity[i][j]=objdensity;
+			  if(abs(x) < sqrt(obj_size*obj_size-y*y))
+			     matterdensity[i][j]=obj_density;
 			  else
 			     matterdensity[i][j]=obj_rhobg;
 			}
 			
 			// elliptical distribution
 			if(mattdisttype==2){
-				if(abs(x) < elparam1*sqrt(objsize*objsize-y*y/elparam2/elparam2))
-					matterdensity[i][j]=objdensity;
+				if(abs(x) < elparam1*sqrt(1.0-y*y/elparam2/elparam2))
+					matterdensity[i][j]=obj_density;
 				else
 					matterdensity[i][j]=obj_rhobg;
 			}
 			
 			// crossed ellipses
 			if(mattdisttype==3){
-				if(abs(x)<elparam1*sqrt(objsize*objsize-y*y/elparam2/elparam2) || abs(y)<elparam1*sqrt(objsize*objsize-x*x/elparam2/elparam2))
-					matterdensity[i][j]=objdensity;
+				if(abs(x)<elparam1*sqrt(1.0-y*y/elparam2/elparam2) || abs(y)<elparam1*sqrt(1.0-x*x/elparam2/elparam2))
+					matterdensity[i][j]=obj_density;
 				else
 					matterdensity[i][j]=obj_rhobg;
 			}
@@ -56,7 +57,7 @@ double initialconditions(double phi_bg){
 			// rectangle
 			if(mattdisttype==4){
 				if(abs(x) < elparam1 && abs(y) < elparam2)
-					matterdensity[i][j]=objdensity;
+					matterdensity[i][j]=obj_density;
 				else
 					matterdensity[i][j]=obj_rhobg;
 			}
@@ -65,13 +66,20 @@ double initialconditions(double phi_bg){
 			// triangle
 			if(mattdisttype==5){
 				if( y>-0.5*l3 && y<mCA*x+cCA && y<mAB*x+cAB )
-					matterdensity[i][j]=objdensity;
+					matterdensity[i][j]=obj_density;
+				else
+					matterdensity[i][j]=obj_rhobg;
+			}
+			
+			if(mattdisttype==6){
+				if((abs(x)<elparam1+elparam2 && abs(x)>elparam1-elparam2))
+					matterdensity[i][j]=obj_density;
 				else
 					matterdensity[i][j]=obj_rhobg;
 			}
 			
 			//  find the area
-			if(matterdensity[i][j]==objdensity)
+			if(matterdensity[i][j]==obj_density)
 				area++;
 			
 			// set the initial conditions for the chameleon and gravitational scalar
@@ -88,6 +96,6 @@ double initialconditions(double phi_bg){
 	}
 	
 	// send the total mass back
-	return area*h*h*objdensity;
+	return area*h*h*obj_density;
 	
 } // END initialconditions()

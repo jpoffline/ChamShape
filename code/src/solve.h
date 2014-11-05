@@ -131,6 +131,7 @@ vector<double> solve(){
 				
 				// Now for the main evolution and analysis rountines
 				for(int c=0; c<nflds;c++){
+					
 					// Get phi at this location for easier reading
 	                phi=fld[tt][c][i][j];
 				
@@ -158,15 +159,15 @@ vector<double> solve(){
 												
 					// (1) Chameleon scalar
 					if(c==0){
-						eom=getdpot(phi)+matterdensity[i][j]/M;						
+						eom=-1.0/phi/phi+matterdensity[i][j];						
 						error_phi=error_phi+(lap-eom)*h2;
 					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
 					
 					// (2) Gravitational potential
 					if(c==1){
-						eom=-matterdensity[i][j]/M;
-						error_grav=error_grav+(lap+matterdensity[i][j]/M)*h2;
+						eom=-matterdensity[i][j]*0.5;
+						error_grav=error_grav+(lap-eom)*h2;
 						int_GRAVforce=int_GRAVforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
 					
@@ -176,11 +177,12 @@ vector<double> solve(){
 											+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
 											+fld[tp][c][i][jm1]-h2*eom);
 					
-				}
+				} // END c-loop
 				
 						
 				// Dump to file
 				if(dump){
+					
 					for(int c=0;c<nflds;c++){
 						// Fourth order accurate first derivatives
 						dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
@@ -225,16 +227,19 @@ vector<double> solve(){
 						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
 						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
 					}						
+					
 				}
 				
 				// At the end, find the location of maximum force ratio
 				if( (killnext || t==ttot-1) && x!=0 && y!=0){
-					if(fd[0]/fd[1]>GlobalMaxForceRatio && matterdensity[i][j]<objdensity){
+					
+					if(fd[0]/fd[1]>GlobalMaxForceRatio && matterdensity[i][j]<obj_density){
 						GlobalMaxForceRatio=fd[0]/fd[1];
 						GlobalMaxForceRatio_xpos=x;
 						GlobalMaxForceRatio_ypos=y;
 						GlobalMaxForceRatio_dens=matterdensity[i][j];
 					}
+					
 				}
 				
 				
@@ -249,6 +254,21 @@ vector<double> solve(){
 		
         } // end i-loop
 	
+		// If constructing plates, enforce periodic boundaries
+		if(mattdisttype==6){
+			for(int j=0; j<jminb;j++){
+				for(int i=iminb;i<imaxb;i++){
+					for(int c=0;c<nflds;c++)
+						fld[tp][c][i][j]=fld[tp][c][i][jminb+1];
+				}
+			}
+			for(int j=jmaxb; j<jmax;j++){
+				for(int i=iminb;i<imaxb;i++){
+					for(int c=0;c<nflds;c++)
+						fld[tp][c][i][j]=fld[tp][c][i][jmaxb-1];
+				}
+			}
+		}
 	
 		// Close the output file
         if(dump){
@@ -300,8 +320,7 @@ vector<double> solve(){
 	forceinfo.push_back(GlobalMaxForceRatio_xpos);
 	forceinfo.push_back(GlobalMaxForceRatio_ypos);	
 	forceinfo.push_back(GlobalMaxForceRatio_dens);
-	forceinfo.push_back(M);
-	forceinfo.push_back(objdensity);
+	forceinfo.push_back(obj_density);
 	forceinfo.push_back(obj_rhobg);
 	forceinfo.push_back(elparam1);
 	forceinfo.push_back(elparam2);
