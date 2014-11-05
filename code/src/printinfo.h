@@ -127,6 +127,7 @@ void printobjectproperties(ostream& whereto){
 	whereto << "density = " << obj_density << endl;
 	//whereto << "skin depth = " << obj_skindepth << endl;
 	whereto << "bg density = " << obj_rhobg << endl;
+	whereto << "density contrast = " << 1.0 - obj_density/obj_rhobg << endl;
 	whereto << "M = " << M << endl;	
 	whereto << "Mpl = " << Mpl << endl;	
 	whereto << "Lambda5 = " << Lambda5 << endl;

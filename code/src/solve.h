@@ -45,7 +45,7 @@ vector<double> solve(){
 	double SORparam=2.0/(1.0+PI/imax);
 	
 	// Accuracy threshold on chameleon scalar and gravitational potential
-	double errorTHRESH=5.0E-10;
+	double errorTHRESH=5.0E-8;
 	
 	// Get file name of timehistory
 	filename=outDIR+filePREFIX+"_"+timehistoryproto+".dat";
