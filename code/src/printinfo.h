@@ -76,6 +76,7 @@ void printtopmatter(ostream& whereto){
 	whereto << "Simulation conditions/parameters:" << endl;
 	whereto << "output dir: " << outDIR << endl;	
 	whereto << "(imax, jmax) = (" << imax << ", " << jmax << ")" << endl;
+	whereto << "(xmax, ymax) = (" << (double)imax*h << ", " << (double)jmax*h << ")" << endl;
 	whereto << "(h, ht) = (" << h << ", " << ht << ")" << endl;
 	whereto << "boundary layer = " << bl << " grid-points" << endl;
 	
@@ -127,7 +128,9 @@ void printobjectproperties(ostream& whereto){
 	whereto << "density = " << obj_density << endl;
 	//whereto << "skin depth = " << obj_skindepth << endl;
 	whereto << "bg density = " << obj_rhobg << endl;
-	whereto << "density contrast = " << 1.0 - obj_density/obj_rhobg << endl;
+	whereto << "density contrast = " << obj_density/obj_rhobg - 1.0 << endl;
+	whereto << "phi_inf = " << 1.0/sqrt(obj_rhobg) << endl;
+	whereto << "phi_centre = " << 1.0/sqrt(obj_density) << endl;
 	whereto << "M = " << M << endl;	
 	whereto << "Mpl = " << Mpl << endl;	
 	whereto << "Lambda5 = " << Lambda5 << endl;

@@ -51,6 +51,28 @@ The idea is to obtain the source-shape that maximises the force that a test part
 
 \section{Explanation of numerical methods}
 Discretize onto a grid. Using successive over relaxation.
+
+By setting
+\bea
+\phi = \sqrt{M\Lambda^5}\tilde{\phi},
+\eea
+\bea
+\Phi = \frac{M}{\qsubrm{M}{Pl}^2}\sqrt{M\Lambda^5}\tilde{\Phi},
+\eea
+\bea
+x^{\mu} = \sqrt{M}\left(M\Lambda^5\right)^{1/4}\tilde{x}^{\mu},
+\eea
+the equations become
+\bea
+\tilde{\nabla}^2\tilde{\phi} = - \frac{1}{\tilde{\phi}^2} + \rho,
+\eea
+\bea
+\tilde{\nabla}^2\tilde{\Phi} = - \half \rho,
+\eea
+and the force ratio
+\bea
+\frac{\left|\rbm{F}_{(\phi)} \right|}{\left|\rbm{F}_{(\Phi)} \right|} = \left( \frac{\qsubrm{M}{Pl}^2}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
+\eea
 \section{Results}
 
 \section{Discussion}

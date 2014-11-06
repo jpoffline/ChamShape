@@ -40,7 +40,6 @@ vector<double> solve(){
 	bool   killnext=false;
     int    filenum=0;
 	
-	
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
 	
@@ -159,7 +158,14 @@ vector<double> solve(){
 												
 					// (1) Chameleon scalar
 					if(c==0){
-						eom=-1.0/phi/phi+matterdensity[i][j];						
+
+						eom=-1.0/(phi*phi)+matterdensity[i][j];
+						fld[tp][c][i][j]=ht*(lap-eom)+phi;	
+//						cout << matterdensity[i][j] << " " << M  << " " << eom << " " << lap << endl;
+//						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
+//												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
+//												+fld[tp][c][i][jm1]-h2*eom);				
+//						fld[tp][c][i][j]=0.25*(fld[tt][c][ip1][j]+fld[tt][c][im1][j]+fld[tt][c][i][jp1]+fld[tt][c][i][jm1]-h2*eom);	
 						error_phi=error_phi+(lap-eom)*h2;
 					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
@@ -169,13 +175,14 @@ vector<double> solve(){
 						eom=-matterdensity[i][j]*0.5;
 						error_grav=error_grav+(lap-eom)*h2;
 						int_GRAVforce=int_GRAVforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+						// Do the updating with 2nd order accurate SoR
+						// note that this solves \nabla^2F = S; S = eom below
+						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
+												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
+												+fld[tp][c][i][jm1]-h2*eom);
 					}
 					
-					// Do the updating with 2nd order accurate SoR
-					// note that this solves \nabla^2F = S; S = eom below
-					fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
-											+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-											+fld[tp][c][i][jm1]-h2*eom);
+					
 					
 				} // END c-loop
 				
@@ -284,7 +291,8 @@ vector<double> solve(){
 		timehist << t*ht << " ";
 		timehist << abs(error_phi) << " " << (error_phi - olderror_phi)/ht << " ";
 		timehist << abs(error_grav) << " " << (error_grav - olderror_grav)/ht << " ";
-		timehist << int_CHAMforce << " " << int_GRAVforce << endl;
+		timehist << int_CHAMforce << " " << int_GRAVforce << " ";
+		timehist << fld[tt][0][int(0.5*imax)][int(0.5*jmax)] << endl;
 		
 		// Dump to screen
 		if(t%screendumpfreq==0){
