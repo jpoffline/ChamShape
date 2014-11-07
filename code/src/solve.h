@@ -120,14 +120,13 @@ vector<double> solve(){
 				filename=outDIR+filePREFIX+"_xy_uptodate.dat";
 			filexydump.open(filename);
 			
-			// Zero the maximum forces (these are only computed when files are dumped, 
-			//  so zeroing here is a bit more efficient than at every time-step)
-			for(int c=0;c<nflds;c++){
-				max_xdir.maxF[c]=0.0;
-				max_ydir.maxF[c]=0.0;
-			}
-			
 		} 
+		
+		// Zero the maximum forces
+		for(int c=0;c<nflds;c++){
+			max_xdir.maxF[c]=0.0;
+			max_ydir.maxF[c]=0.0;
+		}
 		
 		// Dump current errors into the old errors:
 		olderror_phi=error_phi;
@@ -220,6 +219,28 @@ vector<double> solve(){
 					}
 										
 				} // END c-loop
+					
+				// Check to find maximum forces
+				if(x==x0){
+					for(int c=0;c<nflds;c++){
+						if(fd[c]>=max_ydir.maxF[c]){
+							max_ydir.maxF[c]=fd[c];
+							max_ydir.pos[c][xID]=x;
+							max_ydir.pos[c][yID]=y;								
+						}
+					}
+				}	
+					
+				// Check to find maximum forces
+				if(y==y0){
+					for(int c=0;c<nflds;c++){
+						if(fd[c]>=max_xdir.maxF[c]){
+							max_xdir.maxF[c]=fd[c];
+							max_xdir.pos[c][xID]=x;
+							max_xdir.pos[c][yID]=y;
+						}
+					}
+				}	
 						
 				// Dump to file
 				if(dump){
@@ -231,28 +252,13 @@ vector<double> solve(){
 					if(y==y0){
 						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
 						filexdump << rho << " " << fd[0] << " " << fd[1] << endl;
-						// Check to find maximum forces
-						for(int c=0;c<nflds;c++){
-							if(fd[c]>=max_xdir.maxF[c]){
-								max_xdir.maxF[c]=fd[c];
-								max_xdir.pos[c][xID]=x;
-								max_xdir.pos[c][yID]=y;
-							}
-						}
+
 					}	
 					
 					// Output down the y-axis
 					if(x==x0){
 						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
-						fileydump << rho << " " << fd[0] << " " << fd[1] << endl;
-						// Check to find maximum forces
-						for(int c=0;c<nflds;c++){
-							if(fd[c]>=max_ydir.maxF[c]){
-								max_ydir.maxF[c]=fd[c];
-								max_ydir.pos[c][xID]=x;
-								max_ydir.pos[c][yID]=y;								
-							}
-						}						
+						fileydump << rho << " " << fd[0] << " " << fd[1] << endl;						
 					}
 					
 					// Output down the x=y-axis
@@ -318,7 +324,8 @@ vector<double> solve(){
 		timehist << abs(error_phi) << " " << (error_phi - olderror_phi)/ht << " ";
 		timehist << abs(error_grav) << " " << (error_grav - olderror_grav)/ht << " ";
 		timehist << int_CHAMforce << " " << int_GRAVforce << " ";
-		timehist << fld[tt][0][int(0.5*imax)][int(0.5*jmax)] << endl;
+		timehist << fld[tt][0][int(0.5*imax)][int(0.5*jmax)] << " ";
+		timehist << max_xdir.maxF[0] << " " << max_ydir.maxF[0] << endl;
 		
 		// Dump to screen
 		if(t%screendumpfreq==0){
