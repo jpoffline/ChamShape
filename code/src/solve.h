@@ -17,7 +17,7 @@ vector<double> solve(){
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
 	double GlobalMaxForceRatio_xpos,GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
 	
-	double eom,lap;
+	double eom,lap,rho;
 	double dfdx,dfdy;
 	double fd[2];
 	string filename;
@@ -39,6 +39,9 @@ vector<double> solve(){
 	bool   dump=false; // initial setup of the dump-checker
 	bool   killnext=false;
     int    filenum=0;
+	
+	double x0 = 0.0; 
+	double y0 = 0.0;
 	
 	// SoR parameter used to relax Poisson equation
 	double SORparam=2.0/(1.0+PI/imax);
@@ -128,6 +131,8 @@ vector<double> solve(){
                 jp1=j+1;jm1=j-1;                
 				jp2=j+2;jm2=j-2;
 				
+				rho=matterdensity[i][j];
+				
 				// Now for the main evolution and analysis rountines
 				for(int c=0; c<nflds;c++){
 					
@@ -159,27 +164,31 @@ vector<double> solve(){
 					// (1) Chameleon scalar
 					if(c==0){
 
-						eom=-1.0/(phi*phi)+matterdensity[i][j];
+						eom=-1.0/(phi*phi)+rho;
 						fld[tp][c][i][j]=ht*(lap-eom)+phi;	
 //						cout << matterdensity[i][j] << " " << M  << " " << eom << " " << lap << endl;
 //						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
 //												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
 //												+fld[tp][c][i][jm1]-h2*eom);				
 //						fld[tp][c][i][j]=0.25*(fld[tt][c][ip1][j]+fld[tt][c][im1][j]+fld[tt][c][i][jp1]+fld[tt][c][i][jm1]-h2*eom);	
-						error_phi=error_phi+(lap-eom)*h2;
+//						error_phi=error_phi+(lap-eom)*h2;
+						if(i > iminb+10 && i < imaxb-10 && j > jminb+10 && j<jmaxb-10){
+							error_phi=error_phi+(fld[tp][c][i][j]-phi);
+						}
 					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 					}
 					
 					// (2) Gravitational potential
 					if(c==1){
-						eom=-matterdensity[i][j]*0.5;
+						eom=-rho*0.5;
 						error_grav=error_grav+(lap-eom)*h2;
 						int_GRAVforce=int_GRAVforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
 						// Do the updating with 2nd order accurate SoR
 						// note that this solves \nabla^2F = S; S = eom below
 						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
-												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-												+fld[tp][c][i][jm1]-h2*eom);
+										  +0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
+					 			 		  +fld[tp][c][i][jm1]-h2*eom);
+						//fld[tp][c][i][j]=ht*(lap-eom)+phi;
 					}
 					
 					
@@ -192,19 +201,21 @@ vector<double> solve(){
 					
 					for(int c=0;c<nflds;c++){
 						// Fourth order accurate first derivatives
-						dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
-						dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;					
+						//dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
+						//dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;					
 						// |F| 						
+						dfdx=(phi_ip1-phi_im1)/2.0/h;
+						dfdy=(phi_jp1-phi_jm1)/2.0/h;
 						fd[c]=sqrt(dfdx*dfdx+dfdy*dfdy);
 					}
 					
 					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-					filedump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
+					filedump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
 					
 					// Output down the x-axis
-					if(y==0){
+					if(y==y0){
 						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexdump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
+						filexdump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
 
 						// Find max force in x-direction
 						if(fd[0]>maxCHAMforce_x)
@@ -216,9 +227,9 @@ vector<double> solve(){
 					}	
 					
 					// Output down the y-axis
-					if(x==0){
+					if(x==x0){
 						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						fileydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
+						fileydump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
 
 						// Find max force in y-direction
 						if(fd[0]>maxCHAMforce_y)
@@ -232,7 +243,7 @@ vector<double> solve(){
 					// Output down the x=y-axis
 					if(i==j){
 						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexydump << " " << matterdensity[i][j] << " " << fd[0] << " " << fd[1] << endl;
+						filexydump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
 					}						
 					
 				}
@@ -240,11 +251,11 @@ vector<double> solve(){
 				// At the end, find the location of maximum force ratio
 				if( (killnext || t==ttot-1) && x!=0 && y!=0){
 					
-					if(fd[0]/fd[1]>GlobalMaxForceRatio && matterdensity[i][j]<obj_density){
+					if(fd[0]/fd[1]>GlobalMaxForceRatio && rho <obj_density){
 						GlobalMaxForceRatio=fd[0]/fd[1];
 						GlobalMaxForceRatio_xpos=x;
 						GlobalMaxForceRatio_ypos=y;
-						GlobalMaxForceRatio_dens=matterdensity[i][j];
+						GlobalMaxForceRatio_dens=rho;
 					}
 					
 				}

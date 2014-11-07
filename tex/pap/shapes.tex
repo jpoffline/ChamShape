@@ -50,9 +50,10 @@ The idea is to obtain the source-shape that maximises the force that a test part
 
 
 \section{Explanation of numerical methods}
-Discretize onto a grid. Using successive over relaxation.
+Discretize onto a grid. Using successive over relaxation and gradient flow.
 
-By setting
+The equations   implemented by our numerical methods are dimensionless. By setting
+\bse
 \bea
 \phi = \sqrt{M\Lambda^5}\tilde{\phi},
 \eea
@@ -62,16 +63,19 @@ By setting
 \bea
 x^{\mu} = \sqrt{M}\left(M\Lambda^5\right)^{1/4}\tilde{x}^{\mu},
 \eea
+\ese
 the equations become
+\bse
 \bea
 \tilde{\nabla}^2\tilde{\phi} = - \frac{1}{\tilde{\phi}^2} + \rho,
 \eea
 \bea
 \tilde{\nabla}^2\tilde{\Phi} = - \half \rho,
 \eea
-and the force ratio
+\ese
+and the ratio of the  forces becomes
 \bea
-\frac{\left|\rbm{F}_{(\phi)} \right|}{\left|\rbm{F}_{(\Phi)} \right|} = \left( \frac{\qsubrm{M}{Pl}^2}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
+\frac{\left|\rbm{F}_{(\phi)} \right|}{\left|\rbm{F}_{(\Phi)} \right|} = \left( \frac{\qsubrm{M}{Pl}}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
 \eea
 \section{Results}
 

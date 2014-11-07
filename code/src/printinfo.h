@@ -197,10 +197,12 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	
 	// Output analysis of maximum forces encountered
 	whereto << endl;
-	whereto << "max cham force in x-direction = " << maxCHAMforce_x << endl;
-	whereto << "max cham force in y-direction = " << maxCHAMforce_y << endl;
-	whereto << "max grav force in x-direction = " << maxGRAVforce_x << endl;
-	whereto << "max grav force in y-direction = " << maxGRAVforce_y << endl;
+	whereto << "cham: maxF(x) = " << maxCHAMforce_x << endl;
+	whereto << "cham: maxF(y) = " << maxCHAMforce_y << endl;
+	whereto << "cham: maxF(x) / maxF(y) = " << maxCHAMforce_x / maxCHAMforce_y << endl;
+	whereto << "grav: maxF(x)  = " << maxGRAVforce_x << endl;
+	whereto << "grav: maxF(x)  = " << maxGRAVforce_y << endl;
+	whereto << "grav: maxF(x) / maxF(y) = " << maxGRAVforce_x / maxGRAVforce_y << endl;
 	whereto << endl;
 	
 	if(maxCHAMforce_x>maxCHAMforce_y)
