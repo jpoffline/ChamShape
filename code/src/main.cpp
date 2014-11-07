@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 	else
 		inifileName = "params.ini";
 
+	vector<double> FI;
 	
 	// Setup parameters
 	setuparams(inifileName);
@@ -63,7 +64,15 @@ int main(int argc, char* argv[]) {
 		cout << "Object's total mass = " << totmass << endl;
 
 		// (1) solve 
-		solve();	
+		// Returns all the force info
+		FI=solve();				
+		////////////////////////////////////////
+		
+		// Now we've found some profiles, extract information about them
+		// passed back by solve()
+		
+		// Dump the total mass into the FI vector
+		FI.push_back(totmass);	
 	
 		// Stop timing
 		clock_t endTime = clock();

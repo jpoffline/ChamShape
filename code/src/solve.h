@@ -10,6 +10,7 @@ vector<double> solve(){
 	// Define 
     double x,y;
     double h2=h*h;
+	double hh=2.0*h;
 	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
 	
 	double olderror_phi,olderror_grav;
@@ -30,11 +31,27 @@ vector<double> solve(){
 	int jminb = bl;
 	int jmaxb = jmax-bl;
 	
+	struct MAXVALS{
+		double maxF[2];
+		double pos[2][2];
+	};
+	int xID = 0;
+	int yID = 1;
+	MAXVALS max_xdir;
+	MAXVALS max_ydir;
+	
 	// Define and initialize integrated, maximal quantities,
 	// and checkers.
 	double error_phi=1.0E12,error_grav=1.0E12;
-	double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0;
-	double maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
+	//double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0;
+	//double maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
+	
+	for(int c=0;c<nflds;c++){
+		max_xdir.maxF[c]=0.0;
+		max_ydir.maxF[c]=0.0;
+	}
+		
+	
 	double GlobalMaxForceRatio=0.0;
 	bool   dump=false; // initial setup of the dump-checker
 	bool   killnext=false;
@@ -103,6 +120,13 @@ vector<double> solve(){
 				filename=outDIR+filePREFIX+"_xy_uptodate.dat";
 			filexydump.open(filename);
 			
+			// Zero the maximum forces (these are only computed when files are dumped, 
+			//  so zeroing here is a bit more efficient than at every time-step)
+			for(int c=0;c<nflds;c++){
+				max_xdir.maxF[c]=0.0;
+				max_ydir.maxF[c]=0.0;
+			}
+			
 		} 
 		
 		// Dump current errors into the old errors:
@@ -134,7 +158,7 @@ vector<double> solve(){
 				rho=matterdensity[i][j];
 				
 				// Now for the main evolution and analysis rountines
-				for(int c=0; c<nflds;c++){
+				for(int c=0;c<nflds;c++){
 					
 					// Get phi at this location for easier reading
 	                phi=fld[tt][c][i][j];
@@ -155,9 +179,12 @@ vector<double> solve(){
 				
 					// Compute derivatives to compute force
 
-					dfdx=(phi_ip1-phi_im1)/2.0/h;
-					dfdy=(phi_jp1-phi_jm1)/2.0/h;
-				
+					dfdx=(phi_ip1-phi_im1)/hh;
+					dfdy=(phi_jp1-phi_jm1)/hh;
+					//dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
+					//dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;	
+					fd[c]=sqrt(dfdx*dfdx+dfdy*dfdy);
+					
 					// The updating algorithms; also computes an error measurement
 					// error measurements are the violation of the equation of motion	
 												
@@ -166,6 +193,7 @@ vector<double> solve(){
 
 						eom=-1.0/(phi*phi)+rho;
 						fld[tp][c][i][j]=ht*(lap-eom)+phi;	
+
 //						cout << matterdensity[i][j] << " " << M  << " " << eom << " " << lap << endl;
 //						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
 //												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
@@ -175,14 +203,14 @@ vector<double> solve(){
 						if(i > iminb+10 && i < imaxb-10 && j > jminb+10 && j<jmaxb-10){
 							error_phi=error_phi+(fld[tp][c][i][j]-phi);
 						}
-					    int_CHAMforce=int_CHAMforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+					    int_CHAMforce=int_CHAMforce+fd[c]*h2;
 					}
 					
 					// (2) Gravitational potential
 					if(c==1){
 						eom=-rho*0.5;
 						error_grav=error_grav+(lap-eom)*h2;
-						int_GRAVforce=int_GRAVforce+sqrt(dfdx*dfdx+dfdy*dfdy)*h2;
+						int_GRAVforce=int_GRAVforce+fd[c]*h2;
 						// Do the updating with 2nd order accurate SoR
 						// note that this solves \nabla^2F = S; S = eom below
 						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
@@ -190,60 +218,47 @@ vector<double> solve(){
 					 			 		  +fld[tp][c][i][jm1]-h2*eom);
 						//fld[tp][c][i][j]=ht*(lap-eom)+phi;
 					}
-					
-					
-					
+										
 				} // END c-loop
-				
 						
 				// Dump to file
 				if(dump){
 					
-					for(int c=0;c<nflds;c++){
-						// Fourth order accurate first derivatives
-						//dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
-						//dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;					
-						// |F| 						
-						dfdx=(phi_ip1-phi_im1)/2.0/h;
-						dfdy=(phi_jp1-phi_jm1)/2.0/h;
-						fd[c]=sqrt(dfdx*dfdx+dfdy*dfdy);
-					}
-					
-					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-					filedump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
+					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
+					filedump << rho << " " << fd[0] << " " << fd[1] << endl;
 					
 					// Output down the x-axis
 					if(y==y0){
-						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexdump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
-
-						// Find max force in x-direction
-						if(fd[0]>maxCHAMforce_x)
-							maxCHAMforce_x=fd[0];
-						
-						if(fd[1]>maxGRAVforce_x)
-							maxGRAVforce_x=fd[1];
-
+						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
+						filexdump << rho << " " << fd[0] << " " << fd[1] << endl;
+						// Check to find maximum forces
+						for(int c=0;c<nflds;c++){
+							if(fd[c]>=max_xdir.maxF[c]){
+								max_xdir.maxF[c]=fd[c];
+								max_xdir.pos[c][xID]=x;
+								max_xdir.pos[c][yID]=y;
+							}
+						}
 					}	
 					
 					// Output down the y-axis
 					if(x==x0){
-						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						fileydump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
-
-						// Find max force in y-direction
-						if(fd[0]>maxCHAMforce_y)
-							maxCHAMforce_y=fd[0];
-						
-						if(fd[1]>maxGRAVforce_y)
-							maxGRAVforce_y=fd[1];						
-
+						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
+						fileydump << rho << " " << fd[0] << " " << fd[1] << endl;
+						// Check to find maximum forces
+						for(int c=0;c<nflds;c++){
+							if(fd[c]>=max_ydir.maxF[c]){
+								max_ydir.maxF[c]=fd[c];
+								max_ydir.pos[c][xID]=x;
+								max_ydir.pos[c][yID]=y;								
+							}
+						}						
 					}
 					
 					// Output down the x=y-axis
 					if(i==j){
-						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j];
-						filexydump << " " << rho << " " << fd[0] << " " << fd[1] << endl;
+						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
+						filexydump << rho << " " << fd[0] << " " << fd[1] << endl;
 					}						
 					
 				}
@@ -274,13 +289,13 @@ vector<double> solve(){
 	
 		// If constructing plates, enforce periodic boundaries
 		if(mattdisttype==6){
-			for(int j=0; j<jminb;j++){
+			for(int j=0;j<jminb;j++){
 				for(int i=iminb;i<imaxb;i++){
 					for(int c=0;c<nflds;c++)
 						fld[tp][c][i][j]=fld[tp][c][i][jminb+1];
 				}
 			}
-			for(int j=jmaxb; j<jmax;j++){
+			for(int j=jmaxb;j<jmax;j++){
 				for(int i=iminb;i<imaxb;i++){
 					for(int c=0;c<nflds;c++)
 						fld[tp][c][i][j]=fld[tp][c][i][jmaxb-1];
@@ -330,11 +345,17 @@ vector<double> solve(){
 	
 	// Dump force info into vector
 	vector<double> forceinfo;
+	
 	// This gets returned back to the main_X.cpp algorithm
-	forceinfo.push_back(maxCHAMforce_x);
-	forceinfo.push_back(maxCHAMforce_y);
-	forceinfo.push_back(maxGRAVforce_x);
-	forceinfo.push_back(maxGRAVforce_y);
+	for(int c=0; c < nflds; c++){
+		forceinfo.push_back(max_xdir.maxF[c]);
+		forceinfo.push_back(max_xdir.pos[c][xID]);
+		forceinfo.push_back(max_xdir.pos[c][yID]);		
+		forceinfo.push_back(max_ydir.maxF[c]);
+		forceinfo.push_back(max_ydir.pos[c][xID]);
+		forceinfo.push_back(max_ydir.pos[c][yID]);		
+	}
+	
 	forceinfo.push_back(GlobalMaxForceRatio);
 	forceinfo.push_back(GlobalMaxForceRatio_xpos);
 	forceinfo.push_back(GlobalMaxForceRatio_ypos);	

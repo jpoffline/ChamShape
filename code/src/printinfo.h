@@ -185,11 +185,22 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	double Mpl_M = Mpl / M;
 	double Mpl_M2 = Mpl_M*Mpl_M;
 	int ID = 0;
-	// extract data from 
+	
+	// extract data from fvals 
 	double maxCHAMforce_x = fvals[ID]; ID++;
+	double maxCHAMforce_x_pos_x = fvals[ID]; ID++;
+	double maxCHAMforce_x_pos_y = fvals[ID]; ID++;	
 	double maxCHAMforce_y = fvals[ID]; ID++;
+	double maxCHAMforce_y_pos_x = fvals[ID]; ID++;
+	double maxCHAMforce_y_pos_y = fvals[ID]; ID++;
+		
 	double maxGRAVforce_x = fvals[ID]; ID++;
+	double maxGRAVforce_x_pos_x = fvals[ID]; ID++;
+	double maxGRAVforce_x_pos_y = fvals[ID]; ID++;	
 	double maxGRAVforce_y = fvals[ID]; ID++;
+	double maxGRAVforce_y_pos_x = fvals[ID]; ID++;
+	double maxGRAVforce_y_pos_y = fvals[ID]; ID++;
+	
 	double GlobalMaxForceRatio = fvals[ID]; ID++;
 	double GlobalMaxForceRatio_xpos = fvals[ID]; ID++;
 	double GlobalMaxForceRatio_ypos = fvals[ID]; ID++;
@@ -197,11 +208,11 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	
 	// Output analysis of maximum forces encountered
 	whereto << endl;
-	whereto << "cham: maxF(x) = " << maxCHAMforce_x << endl;
-	whereto << "cham: maxF(y) = " << maxCHAMforce_y << endl;
+	whereto << "cham: maxF(x) = " << maxCHAMforce_x << ", (x,y) = (" <<  maxCHAMforce_x_pos_x << ", " << maxCHAMforce_x_pos_y << ")" << endl;
+	whereto << "cham: maxF(y) = " << maxCHAMforce_y << ", (x,y) = (" <<  maxCHAMforce_y_pos_x << ", " << maxCHAMforce_y_pos_y << ")" << endl;
 	whereto << "cham: maxF(x) / maxF(y) = " << maxCHAMforce_x / maxCHAMforce_y << endl;
-	whereto << "grav: maxF(x)  = " << maxGRAVforce_x << endl;
-	whereto << "grav: maxF(x)  = " << maxGRAVforce_y << endl;
+	whereto << "grav: maxF(x) = " << maxGRAVforce_x << ", (x,y) = (" <<  maxGRAVforce_x_pos_x << ", " << maxGRAVforce_x_pos_y << ")" << endl;
+	whereto << "grav: maxF(y) = " << maxGRAVforce_y << ", (x,y) = (" <<  maxGRAVforce_y_pos_x << ", " << maxGRAVforce_y_pos_y << ")" << endl;
 	whereto << "grav: maxF(x) / maxF(y) = " << maxGRAVforce_x / maxGRAVforce_y << endl;
 	whereto << endl;
 	
