@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 			// (0) set the initial conditions
 			// argument = phi_bg
 			double phi_bg = sqrt(1.0/obj_rhobg);
-			double totmass = initialconditions(phi_bg);
+			totmass = initialconditions(phi_bg);
 			cout << "Object's total mass = " << totmass << endl;
 		
 			// (1) solve 

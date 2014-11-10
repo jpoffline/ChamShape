@@ -8,7 +8,7 @@ function plotsol
     R = 1;
     s = 0.1;
     Lambda5 = 1.0;
-    M = 0.01;
+    M = 0.1;
     
     rho_cen = 10.0;
     rho_inf = 0.1;

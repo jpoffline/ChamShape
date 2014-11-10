@@ -41,7 +41,7 @@ int			pottype;
 int			inittype;			
 int			mattdisttype;
 int 		bl;
-double 		Lambda5, M, Mpl;
+double 		Lambda5, M, Mpl, totmass;
 double 		obj_size,obj_skindepth,obj_density, obj_rhobg;
 double 		elparam1,elparam2;
 

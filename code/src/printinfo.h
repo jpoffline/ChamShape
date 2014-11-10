@@ -134,6 +134,7 @@ void printobjectproperties(ostream& whereto){
 	whereto << "M = " << M << endl;	
 	whereto << "Mpl = " << Mpl << endl;	
 	whereto << "Lambda5 = " << Lambda5 << endl;
+	whereto << "totmass = " << totmass << endl;
 	whereto << endl;
 	
 }

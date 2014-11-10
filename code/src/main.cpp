@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 	else
 		inifileName = "params.ini";
 
-	vector<double> FI;
+	vector<double> icRETS,FI;
 	
 	// Setup parameters
 	setuparams(inifileName);
@@ -60,9 +60,10 @@ int main(int argc, char* argv[]) {
 		// (0) set the initial conditions
 		// argument = phi_bg
 		double phi_bg = sqrt(1.0/obj_rhobg);
-		double totmass = initialconditions(phi_bg);
+		icRETS = initialconditions(phi_bg);
+		totmass = icRETS[0];
 		cout << "Object's total mass = " << totmass << endl;
-
+		cout << "Biggest sphere mass = " << icRETS[1] << endl;
 		// (1) solve 
 		// Returns all the force info
 		FI=solve();				

@@ -7,13 +7,11 @@
 
 */
 
-double initialconditions(double phi_bg){
-	
-	double x,y;
-	double area=0.0;
-	
-	 
-	
+vector<double> initialconditions(double phi_bg){
+		
+	double x,y,r;
+	double mass_object=0.0;
+	double mass_biggest_sphere=0.0;
 	// Parameters for squashing triangles
 	// these are the dimensions of the triangle
 	double l1=elparam1;
@@ -24,11 +22,19 @@ double initialconditions(double phi_bg){
 	double mAB=-2*l3/l2;
 	double cAB=l3/2;
 
+	double largestdist;
+	if(elparam1>elparam2)
+		largestdist=elparam1;
+	else
+		largestdist=elparam2;
+	
 	
 	for(int i=0;i<imax;i++){
 		x=(i-0.5*imax)*h;
 		for(int j=0;j<jmax;j++){
 			y=(j-0.5*jmax)*h;
+			r=sqrt(x*x+y*y);
+			
 			
 			// Spherical matter distribution
 			if(mattdisttype==1){
@@ -80,7 +86,10 @@ double initialconditions(double phi_bg){
 			
 			//  find the area
 			if(matterdensity[i][j]==obj_density)
-				area++;
+				mass_object++;
+			
+			if(r<largestdist && matterdensity[i][j]==obj_rhobg)
+				mass_biggest_sphere+=matterdensity[i][j];
 			
 			// set the initial conditions for the chameleon and gravitational scalar
 			if(inittype == 0){
@@ -95,7 +104,13 @@ double initialconditions(double phi_bg){
 		}
 	}
 	
+	mass_object=mass_object*h*h*obj_density;
+	
+	vector<double> rets; 
+	rets.push_back(mass_object);
+	rets.push_back(mass_biggest_sphere*h*h);
+	
 	// send the total mass back
-	return area*h*h*obj_density;
+	return rets;
 	
 } // END initialconditions()

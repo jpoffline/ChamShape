@@ -36,7 +36,7 @@ function plotxy(varargin)
     daty = load(datafy);
     x = datx(:,1);
     y = daty(:,1);
-    axlim=max(x);
+    axlim=10;
     scale=1.0;
     
     if strcmp(whichID,'cham')

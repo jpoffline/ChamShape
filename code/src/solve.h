@@ -200,7 +200,7 @@ vector<double> solve(){
 //						fld[tp][c][i][j]=0.25*(fld[tt][c][ip1][j]+fld[tt][c][im1][j]+fld[tt][c][i][jp1]+fld[tt][c][i][jm1]-h2*eom);	
 //						error_phi=error_phi+(lap-eom)*h2;
 						if(i > iminb+10 && i < imaxb-10 && j > jminb+10 && j<jmaxb-10){
-							error_phi=error_phi+(fld[tp][c][i][j]-phi);
+							error_phi=error_phi+(fld[tp][c][i][j]-phi)*h2;
 						}
 					    int_CHAMforce=int_CHAMforce+fd[c]*h2;
 					}
