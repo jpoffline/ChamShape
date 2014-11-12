@@ -64,7 +64,9 @@ int main(int argc, char* argv[]) {
 	string filename = strs.outDIR + strs.mainID + strs.ratiosPROTO + strs.fileSUFFIX;
 	ratioinfo.open(filename);
 	
+	// Vector which will contain all the info about the shape under consideration
 	vector<double> shapeinfo;
+	// Vector which will contain |F| at various locations for the given shape
 	vector<double> modfpoints;
 	
 	for(int shape = 0; shape <= nshapes; shape++){
@@ -104,7 +106,7 @@ int main(int argc, char* argv[]) {
 			// This "default" is the closest we can get to the surface
 			// of the shape; not that we actually compute force at
 			// measureshift * h AWAY from the surface
-			if(shape.type == "ellipse"){
+			if(object.type == "ellipse"){
 				coord.loc.push_back( object.ep1 + object.measureshift * box.h );
 				coord.loc.push_back( 0.0 );
 				points.push_back( coord );

@@ -4,6 +4,48 @@
 
 */
 
+vector<double> GetForceAtPoints(vector<PARTICLE> particles, vector<COORDS> points){
+	
+	////////////////////////////////////////////////////////////////////////////
+	//
+	// Function to get the forces at given "interesting" locations.
+	// INPUT:  Vector of particles, 
+	//         Vector containing the coordinates at which we want the forces at.
+	//
+	// OUTPUT: Vector whose entries are |F| for each of the input points
+	//
+	////////////////////////////////////////////////////////////////////////////
+	
+	// Vector to hold the forces returned from GetForce
+	vector<double> force;
+	
+	// Double to hold |F| for a given location
+	double modforce;
+	
+	// Vector to hold |F| for each of the locations of interest
+	vector<double> modforces;
+		
+	// Loop over all the locations of interest	
+	for(int location = 0; location < points.size(); location++){
+		
+		// Get the force at this location
+		force = GetForce(points[location].loc, particles);
+		
+		// Compute |F| at this location
+		modforce = 0.0;
+		for(int c = 0; c < force.size(); c++)
+			modforce += pow( force[c] , 2.0 );
+		modforce = sqrt( modforce );
+		
+		// Dump the computed |F| into the vector to be returned
+		modforces.push_back( modforce );
+		
+	}
+
+	return modforces;
+	
+} // END DumpForceAtPoints()
+
 
 void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKKEEPING strs){
 	
@@ -53,47 +95,7 @@ void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKK
 	
 } // END DumpForceDownAxes()
 
-vector<double> GetForceAtPoints(vector<PARTICLE> particles, vector<COORDS> points){
-	
-	////////////////////////////////////////////////////////////////////////////
-	//
-	// Function to get the forces at given "interesting" locations.
-	// INPUT:  Vector of particles, 
-	//         Vector containing the coordinates at which we want the forces at.
-	//
-	// OUTPUT: Vector of |F| for each of the input points
-	//
-	////////////////////////////////////////////////////////////////////////////
-	
-	// Vector to hold the forces returned from GetForce
-	vector<double> force;
-	
-	// Double to hold |F| for a given location
-	double modforce;
-	
-	// Vector to hold |F| for each of the locations of interest
-	vector<double> modforces;
-		
-	// Loop over all the locations of interest	
-	for(int location = 0; location < points.size(); location++){
-		
-		// Get the force at this location
-		force = GetForce(points[location].loc, particles);
-		
-		// Compute |F| at this location
-		modforce = 0.0;
-		for(int c = 0; c < force.size(); c++)
-			modforce += pow( force[c] , 2.0 );
-		modforce = sqrt( modforce );
-		
-		// Dump the computed |F| into the vector to be returned
-		modforces.push_back( modforce );
-		
-	}
 
-	return modforces;
-	
-} // END DumpForceAtPoints()
 
 
 // EOF

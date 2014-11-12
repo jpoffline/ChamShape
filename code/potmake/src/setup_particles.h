@@ -20,7 +20,7 @@ bool CheckInsideObject(struct OBJECT obj, double x, double y){
 
 vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BOOKKEEPING strs){
 	
-	// Setup particles
+	// Setup particle positions
 	
 	vector<PARTICLE> particles;
 	int imax = box.imax;

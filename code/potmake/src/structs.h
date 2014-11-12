@@ -2,6 +2,8 @@
 
 	structs.h
 
+	File to contain globally defined "struct"s
+
 */
 
 

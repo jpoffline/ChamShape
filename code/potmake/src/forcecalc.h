@@ -6,9 +6,21 @@
 
 vector<double> GetForce(vector<double> pos, vector<PARTICLE> particles){
 	
+	////////////////////////////////////////////////////////////////////////////	
+	//
 	// Function to return force at a given position,
 	// due to a given set of particles.
 	// This algorithm works in an arbitrary number of dimensions.
+	//
+	// INPUT: 
+	//			Vector "pos": the location at which the force is required
+	//			Vector "particles": the set of particles
+	// OUTPUT: 
+	//			Vector "force" whose components are the components of the 
+	//			gravitational force at the location defined by the 
+	//			components of the input vector "pos"
+	//
+	////////////////////////////////////////////////////////////////////////////
 	
 	// Variable to hold denominator in the force calculation
 	double den;
