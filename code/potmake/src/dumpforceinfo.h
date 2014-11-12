@@ -61,7 +61,8 @@ void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKK
 	double pos;
 	double h = box.h;
 	int imax = box.imax;
-	for(int i = 0; i < imax; i++){
+	int di = box.di;
+	for(int i = 0; i < imax; i = i + di){
 		pos = (i - 0.5 * imax) * h;
 		
 		// Compute F(x,0)

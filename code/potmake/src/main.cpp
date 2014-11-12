@@ -12,6 +12,7 @@
 #include "setup_particles.h"
 #include "dumpforceinfo.h"
 #include "dump.h"
+#include "sanity.h"
 
 int main(int argc, char* argv[]) {
 
@@ -34,6 +35,7 @@ int main(int argc, char* argv[]) {
 	box.h = getiniDouble(paramsfile,"h", 0.25);
 	box.imax = getiniInt(paramsfile,"imax", 1000);
 	box.jmax = getiniInt(paramsfile,"jmax", 1000);
+	box.di = getiniInt(paramsfile,"di", 100);
 	object.type = getiniString(paramsfile,"objecttype","ellipse");
 	object.mass = getiniDouble(paramsfile,"mass", 1.0);
 	object.measureshift = getiniDouble(paramsfile,"measureshift", 4.0);
@@ -69,12 +71,21 @@ int main(int argc, char* argv[]) {
 	// Vector which will contain |F| at various locations for the given shape
 	vector<double> modfpoints;
 	
-	for(int shape = 0; shape <= nshapes; shape++){
+	// Compute the maximum distance the grid can support
+	box.xmax = 0.5 * box.imax * box.h;
+	
+	// Shape number counter
+	int shape = 0;
+	
+	while(true){
 	
 		// Setup properties of the source object
 		
 		object.ep1 = elparam1_start + shape * dep1;
 		object.ep2 = elparam2_start;
+		
+		if( !sanity(object, box) )
+			break;
 		
 		// Compute the area of the source
 		object.area = object.ep1 * object.ep2 * PI;
@@ -107,6 +118,7 @@ int main(int argc, char* argv[]) {
 			// of the shape; not that we actually compute force at
 			// measureshift * h AWAY from the surface
 			if(object.type == "ellipse"){
+				
 				coord.loc.push_back( object.ep1 + object.measureshift * box.h );
 				coord.loc.push_back( 0.0 );
 				points.push_back( coord );
@@ -116,6 +128,7 @@ int main(int argc, char* argv[]) {
 				coord.loc.push_back( object.ep2 + object.measureshift * box.h );
 				points.push_back( coord );
 				coord.loc.clear();
+				
 			}
 			
 			// Get the vector of |F|'s at the required locations
@@ -143,6 +156,9 @@ int main(int argc, char* argv[]) {
 			
 		}
 
+		shape++;
+		if(shape > nshapes)
+			break;
 
 	} // END shape-loop
 

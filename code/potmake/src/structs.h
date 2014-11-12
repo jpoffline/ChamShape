@@ -32,8 +32,9 @@ struct GRID{
 	
 	int imax;
 	int jmax;
+	int di;
 	double h;
-	
+	double xmax;
 };
 
 struct COORDS{

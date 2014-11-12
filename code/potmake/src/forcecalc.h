@@ -40,7 +40,7 @@ vector<double> GetForce(vector<double> pos, vector<PARTICLE> particles){
 			den = 0.0;
 			for(int cc = 0; cc < dims; cc++)
 				den += pow(pos[cc] - particles[n].location[cc],2.0);
-			force[c] += -(pos[c] - particles[n].location[c])/pow(den,1.5);
+			force[c] += - particles[n].mass * (pos[c] - particles[n].location[c])/pow(den,1.5);
 		}
 	}
 	
