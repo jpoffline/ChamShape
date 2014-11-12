@@ -6,43 +6,66 @@
 
 
 #include "main.h"
+#include "myparamreader.h"
 #include "structs.h"
 #include "forcecalc.h"
-#include "setup.h"
+#include "setup_particles.h"
+#include "dumpforceinfo.h"
 #include "dump.h"
 
-int main(){
-	
-	bool dumpdownaxes = false;
-	bool dumpatpoints = true;
-	
-	// Setup properties of the grid
-	GRID box;
-	box.h = 0.05;
-	box.imax = 1000;
-	box.jmax = 1000;
+int main(int argc, char* argv[]) {
 
-	int nshapes = 50;
+	// Read the input parameters file, named "params.ini" by default.
+	// If there is a command line argument, assume that it is the filename for the parameters file.
+	string inifileName;
+	if (argc > 1)
+		inifileName = argv[1];
+	else
+		inifileName = "params.ini";	
 	
-	ofstream dump;
-	dump.open("size.dat");
-	
+	// Initialise various useful structs
+	GRID box;
 	OBJECT object;
-	object.type = "ellipse";
-	object.mass = 1.0;
+	BOOKKEEPING strs;
+	
+	// Read in the parameter file
+	ifstream paramsfile;
+	paramsfile.open(inifileName);
+	box.h = getiniDouble(paramsfile,"h", 0.25);
+	box.imax = getiniInt(paramsfile,"imax", 1000);
+	box.jmax = getiniInt(paramsfile,"jmax", 1000);
+	object.type = getiniString(paramsfile,"objecttype","ellipse");
+	object.mass = getiniDouble(paramsfile,"mass", 1.0);
+	object.measureshift = getiniDouble(paramsfile,"measureshift", 4.0);
+	strs.outDIR = getiniString(paramsfile,"outDIR","data/");
+	strs.mainID = getiniString(paramsfile,"mainID","run");
+	int nshapes = getiniInt(paramsfile,"nshapes", 10);
+	bool dumpdownaxes = getiniBool(paramsfile,"dumpdownaxes",false);
+	bool dumpatpoints = getiniBool(paramsfile,"dumpatpoints",false);
+	double maxratio = getiniDouble(paramsfile,"maxratio", 8.0);
+	paramsfile.close();	
+
+	// Put an underscore after the mainID string
+	strs.mainID+="_";
+	
 	
 	double elparam2_start = 2.0;
 	double elparam1_start = elparam2_start;
-	double maxratio = 8.0;
 	double dep1 = elparam1_start * ( maxratio - 1.0 ) / (double)nshapes;
-	
-	BOOKKEEPING strs;
-	strs.outDIR = "data/";
-	strs.mainID = "run_";
 	strs.fileSUFFIX = ".dat";
 	strs.icsPROTO = "partpos";
+	strs.forcexPROTO = "Fx";
+	strs.forceyPROTO = "Fy";
+	strs.ratiosPROTO = "ratios";
 	strs.trail = 1000;
-	ofstream dummyout;
+	
+	// Setup stream to dump force ratios info
+	ofstream ratioinfo;
+	string filename = strs.outDIR + strs.mainID + strs.ratiosPROTO + strs.fileSUFFIX;
+	ratioinfo.open(filename);
+	
+	vector<double> shapeinfo;
+	vector<double> modfpoints;
 	
 	for(int shape = 0; shape <= nshapes; shape++){
 	
@@ -53,51 +76,76 @@ int main(){
 		
 		// Compute the area of the source
 		object.area = object.ep1 * object.ep2 * PI;
-		
+
 		// Pick the density of each "particle"
 		// so that the mass is fixed
 		object.dns = object.mass / object.area;
-	
+		
 		// Set the ID of the object
-		object.ID = Int2String(strs.trail + shape);
-	
+		object.ID = Int2String(strs.trail + shape) + "_";
+		
+		// Put the ID into the strs struct too
+		strs.ID = object.ID;
+		
 		// Setup the particles
 		vector<PARTICLE> particles = SetupParticles(object, box, strs);		
 
 		// If required, dump the forces down the axes
 		if(dumpdownaxes)
-			DumpForceDownAxes(particles, box);
-	
-		// These are the coordinates we want the forces at	
-		vector<COORDS> points;
-		COORDS coord;
-	
-		coord.loc.push_back(object.ep1+0*box.h);
-		coord.loc.push_back(0.0);
-		points.push_back(coord);
-		coord.loc.clear();
-	
-		coord.loc.push_back(0.0);
-		coord.loc.push_back(object.ep2+0*box.h);
-		points.push_back(coord);
-		coord.loc.clear();
+			DumpForceDownAxes(particles, box, strs);
 		
+		// If required, compute the forces at specific locations
 		if(dumpatpoints){
-			vector<double> modfpoints = DumpForceAtPoints(particles, box, points, dummyout);
-			dump << object.ep2/object.ep1 << " " << modfpoints[1]/modfpoints[0] << endl;
-			cout << "np = " << particles.size() << " ";
-		//	cout << "den = " << object.dns << " ";
-			cout << "ep1 = " << object.ep1 << ", ep2 = " << object.ep2 << " ";
-	 	//	cout << "aspect ratio = " << object.ep2/object.ep1 << ", ";
-			cout << "f1 = " << modfpoints[1] << ", f2 = " << modfpoints[0] << ", ";
-			cout << "ratio = " << modfpoints[1]/modfpoints[0] << endl;
-//			cout << endl;
-		}
-		points.clear();		
-				
-	}
+			
+			// These are the coordinates we want the forces at	
+			vector<COORDS> points;
+			COORDS coord;
+			
+			// This "default" is the closest we can get to the surface
+			// of the shape; not that we actually compute force at
+			// measureshift * h AWAY from the surface
+			if(shape.type == "ellipse"){
+				coord.loc.push_back( object.ep1 + object.measureshift * box.h );
+				coord.loc.push_back( 0.0 );
+				points.push_back( coord );
+				coord.loc.clear();
 	
-	dump.close();
+				coord.loc.push_back( 0.0 );
+				coord.loc.push_back( object.ep2 + object.measureshift * box.h );
+				points.push_back( coord );
+				coord.loc.clear();
+			}
+			
+			// Get the vector of |F|'s at the required locations
+			modfpoints = GetForceAtPoints(particles, points);
+			
+			shapeinfo.push_back(shape);
+			shapeinfo.push_back(particles.size());
+			shapeinfo.push_back(object.dns);
+			shapeinfo.push_back(object.ep1);
+			shapeinfo.push_back(object.ep2);
+			shapeinfo.push_back(object.ep2/object.ep1);
+			shapeinfo.push_back(modfpoints[0]);
+			shapeinfo.push_back(modfpoints[1]);			
+			shapeinfo.push_back(modfpoints[1]/modfpoints[0]);
+				
+			// Send all this info to the screen			
+			dumpshapeinfo(shapeinfo,cout);	
+			// Send all this info to the "ratioinfo" file		
+			dumpshapeinfo(shapeinfo,ratioinfo);			
+			
+			// Clean up these vectors			
+			modfpoints.clear();
+			points.clear();		
+			shapeinfo.clear();	
+			
+		}
+
+
+	} // END shape-loop
+
+	// Close ratioinfo file	
+	ratioinfo.close();
 	
 } // END main()
 

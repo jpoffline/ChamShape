@@ -37,10 +37,10 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 			y = (j - 0.5 * jmax) * h ;		
 			
 			// If we are inside the ellipse, then put a particle here
-			if(CheckInsideObject(object,x,y))
+			if( CheckInsideObject(object,x,y) )
 				putparticle = true;
 			
-			if(putparticle){
+			if( putparticle ){
 				particle.mass = object.dns;
 				locs.push_back(x);
 				locs.push_back(y);
@@ -59,8 +59,10 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 	string filename = strs.outDIR + strs.mainID + object.ID + strs.icsPROTO + strs.fileSUFFIX;
 	dump.open(filename);
 	for(int n = 0; n < particles.size(); n ++){	
+		dump << n << " ";
 		for(int c = 0; c < particles[n].location.size(); c ++)
 			dump << particles[n].location[c] << " ";
+		dump << particles[n].mass;
 		dump << endl;
 	}		
 	dump.close();
