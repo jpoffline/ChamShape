@@ -39,7 +39,7 @@ The equations governing the chameleon scalar and gravitational potential are
 \nabla^2\phi = \frac{\dd \qsubrm{V}{eff}}{\dd\phi}.
 \eea
 \bea
-\nabla^2\Phi = - \rho(\rbm{x})/\qsubrm{M}{pl}^2
+\nabla^2\Phi = - \rho(\rbm{x})/2\qsubrm{M}{pl}^2
 \eea
 \ese
 The force on a test particle, due to the gravitational and chameleon scalars are given by
@@ -77,6 +77,13 @@ and the ratio of the  forces becomes
 \bea
 \frac{\left|\rbm{F}_{(\phi)} \right|}{\left|\rbm{F}_{(\Phi)} \right|} = \left( \frac{\qsubrm{M}{Pl}}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
 \eea
+\subsection{Solving for the Chameleon}
+\subsection{Solving Poisson's equation}
+We have found conventional relaxation methods cumbersome and difficult to use for complicated shapes, mainly due to the nature of the boundary conditions. We found it much more convenient (as well as being increible computationally-cheap) to compute  the gravitational force, $\rbm{F}_{(\Phi)}$ at a given location, $\rbm{x}$, via
+\bea
+\rbm{F}_{(\Phi)}(\rbm{x}) = - \frac{1}{8\pi \qsubrm{M}{Pl}^2}\sum_{i}m_i \frac{\rbm{x} - \rbm{x}_i}{\left| \rbm{x} - \rbm{x}_i\right|^3},
+\eea
+where $\{m_i,\rbm{x}_i\}$ are the mass and location of the $\qsuprm{i}{th}$ constituent of the source.
 \section{Results}
 
 \section{Discussion}
