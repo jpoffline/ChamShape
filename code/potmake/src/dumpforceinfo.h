@@ -4,6 +4,32 @@
 
 */
 
+
+vector<double> GetPotAtPoints(vector<PARTICLE> particles, vector<COORDS> points){
+	
+	
+	// Vector to hold the gravitational potential (grav.pot) returned from 
+	// 
+	double gpot;
+	
+	// Vector to hold grav.pot for each of the locations of interest
+	vector<double> gpots;
+		
+	// Loop over all the locations of interest	
+	for(int location = 0; location < points.size(); location++){
+		
+		// Get the grav.pot at this location
+		gpot = getGpot(points[location].loc, particles);
+		
+		// Dump the computed grav.pot into the vector to be returned
+		gpots.push_back( gpot );
+		
+	}
+
+	return gpots;
+	
+} // END GetPotAtPoints()
+
 vector<double> GetForceAtPoints(vector<PARTICLE> particles, vector<COORDS> points){
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -46,12 +72,11 @@ vector<double> GetForceAtPoints(vector<PARTICLE> particles, vector<COORDS> point
 	
 } // END DumpForceAtPoints()
 
-
 void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKKEEPING strs){
 	
 	vector<double> loc;
 	vector<double> force;
-	double modF;
+	double modF, gpot;
 	ofstream dumpFx, dumpFy;
 	string filename;
 	filename = strs.outDIR + strs.mainID + strs.ID + strs.forcexPROTO + strs.fileSUFFIX;	
@@ -69,25 +94,37 @@ void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKK
 		loc.push_back(pos);
 		loc.push_back(0.0);
 		force = GetForce(loc, particles);
+		gpot = getGpot(loc,particles);
 		loc.clear();
+		
 		modF = 0.0;
 		for(int c = 0; c < force.size(); c++)
 			modF += force[c] * force[c];
 		modF = sqrt(modF);
 		
-		dumpFx << pos << " " << modF << endl;
+		// Check the force for sanity (mainly, if nan)
+		modF = checkFieldSanity(modF);
+		gpot = checkFieldSanity(gpot);
+		dumpFx << pos << " " << modF << " " << gpot << endl;
+		
 		
 		// Compute F(0,y)
 		loc.push_back(0.0);
 		loc.push_back(pos);
 		force = GetForce(loc, particles);
+		gpot = getGpot(loc,particles);
 		loc.clear();
+		
 		modF = 0.0;
 		for(int c = 0; c < force.size(); c++)
 			modF += force[c] * force[c];
 		modF = sqrt(modF);
 		
-		dumpFy << pos << " " << modF << endl;
+		// Check the force for sanity (mainly, if nan)
+		modF = checkFieldSanity(modF);
+		gpot = checkFieldSanity(gpot);
+		dumpFy << pos << " " << modF <<  " " << gpot << endl;
+		
 		
 	}
 	
@@ -96,7 +133,55 @@ void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKK
 	
 } // END DumpForceDownAxes()
 
+void DumpForcePlane(vector<PARTICLE> particles, struct GRID box, struct BOOKKEEPING strs){
+	
+	vector<double> loc;
+	vector<double> force;
+	double modF, gpot;
+	ofstream dumpF;
+	string filename;
+	filename = strs.outDIR + strs.mainID + strs.ID + strs.forcepPROTO + strs.fileSUFFIX;	
+	dumpF.open(filename);
 
+	double x, y;
+	double h = box.h;
+	int imax = box.imax;
+	int jmax = box.jmax;
+	int di = box.di;
+	
+	for(int i = 0; i < imax; i = i + di){
+		x = (i - 0.5 * imax) * h;
+		for(int j = 0; j < jmax; j = j + di){
+			y = (j - 0.5 * jmax) * h;	
+			
+			// Compute F(x,y)
+			loc.push_back(x);
+			loc.push_back(y);
+			force = GetForce(loc, particles);
+			gpot = getGpot(loc,particles);
+			loc.clear();
+			
+			modF = 0.0;
+			for(int c = 0; c < force.size(); c++)
+				modF += force[c] * force[c];
+			
+			modF = sqrt(modF);
+			
+			// Check the force for sanity (mainly, if nan)
+			modF = checkFieldSanity(modF);
+			gpot = checkFieldSanity(gpot);
+			dumpF << x << " " << y << " " << modF <<  " " << gpot << endl;
+			
+			
+		}
+		
+		dumpF << endl;
+		
+	}
+	
+	dumpF.close();
+	
+} // END DumpForcePlane()
 
 
 // EOF

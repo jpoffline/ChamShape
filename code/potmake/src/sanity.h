@@ -8,3 +8,15 @@ bool sanity(struct OBJECT object, struct GRID box){
 		return true;
 	
 }
+
+double checkFieldSanity(double input){
+	
+	// Routine to check whether "input"
+	// is "nan" or "inf"
+	
+	if( input != input || isinf(input) )
+		return -1.0;
+	else
+		return input;
+	
+} // END checkFieldSanity()

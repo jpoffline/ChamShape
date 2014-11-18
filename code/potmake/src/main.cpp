@@ -8,11 +8,12 @@
 #include "main.h"
 #include "myparamreader.h"
 #include "structs.h"
+#include "sanity.h"
 #include "forcecalc.h"
+#include "potcalc.h"
 #include "setup_particles.h"
 #include "dumpforceinfo.h"
 #include "dump.h"
-#include "sanity.h"
 
 int main(int argc, char* argv[]) {
 
@@ -37,6 +38,7 @@ int main(int argc, char* argv[]) {
 	box.jmax = getiniInt(paramsfile,"jmax", 1000);
 	box.di = getiniInt(paramsfile,"di", 100);
 	object.type = getiniString(paramsfile,"objecttype","ellipse");
+	object.type2 = getiniString(paramsfile,"type2","apple");
 	object.mass = getiniDouble(paramsfile,"mass", 1.0);
 	object.measureshift = getiniDouble(paramsfile,"measureshift", 4.0);
 	strs.outDIR = getiniString(paramsfile,"outDIR","data/");
@@ -44,12 +46,13 @@ int main(int argc, char* argv[]) {
 	int nshapes = getiniInt(paramsfile,"nshapes", 10);
 	bool dumpdownaxes = getiniBool(paramsfile,"dumpdownaxes",false);
 	bool dumpatpoints = getiniBool(paramsfile,"dumpatpoints",false);
+	bool dumpplane = getiniBool(paramsfile,"dumpplane",false);
+	bool RunAxesRatiosSquash = getiniBool(paramsfile,"RunAxesRatiosSquash",false);
 	double maxratio = getiniDouble(paramsfile,"maxratio", 8.0);
 	paramsfile.close();	
 
 	// Put an underscore after the mainID string
 	strs.mainID+="_";
-	
 	
 	double elparam2_start = 2.0;
 	double elparam1_start = elparam2_start;
@@ -58,6 +61,8 @@ int main(int argc, char* argv[]) {
 	strs.icsPROTO = "partpos";
 	strs.forcexPROTO = "Fx";
 	strs.forceyPROTO = "Fy";
+	strs.forcepPROTO = "F";
+	
 	strs.ratiosPROTO = "ratios";
 	strs.trail = 1000;
 	
@@ -69,13 +74,13 @@ int main(int argc, char* argv[]) {
 	// Vector which will contain all the info about the shape under consideration
 	vector<double> shapeinfo;
 	// Vector which will contain |F| at various locations for the given shape
-	vector<double> modfpoints;
+	vector<double> modfpoints, gravpots;
 	
 	// Compute the maximum distance the grid can support
 	box.xmax = 0.5 * box.imax * box.h;
 	
 	// Shape number counter
-	int shape = 0;
+	int shape = 0;	
 	
 	while(true){
 	
@@ -87,12 +92,6 @@ int main(int argc, char* argv[]) {
 		if( !sanity(object, box) )
 			break;
 		
-		// Compute the area of the source
-		object.area = object.ep1 * object.ep2 * PI;
-
-		// Pick the density of each "particle"
-		// so that the mass is fixed
-		object.dns = object.mass / object.area;
 		
 		// Set the ID of the object
 		object.ID = Int2String(strs.trail + shape) + "_";
@@ -100,8 +99,16 @@ int main(int argc, char* argv[]) {
 		// Put the ID into the strs struct too
 		strs.ID = object.ID;
 		
-		// Setup the particles
+		// :: Setup the particles ::
+		// This also sets the mass of the particles, so that
+		// the total mass of the object is the same as the user-defined
+		// value in params.ini
 		vector<PARTICLE> particles = SetupParticles(object, box, strs);		
+
+
+		// If require, dump force in the plane
+		if(dumpplane)
+			DumpForcePlane(particles, box, strs);
 
 		// If required, dump the forces down the axes
 		if(dumpdownaxes)
@@ -109,6 +116,13 @@ int main(int argc, char* argv[]) {
 		
 		// If required, compute the forces at specific locations
 		if(dumpatpoints){
+			
+			/*
+			
+				Routine to dump the forces at given locations,
+				for each shape.
+			
+			*/
 			
 			// These are the coordinates we want the forces at	
 			vector<COORDS> points;
@@ -129,23 +143,62 @@ int main(int argc, char* argv[]) {
 				points.push_back( coord );
 				coord.loc.clear();
 				
+				coord.loc.push_back( 50.0 );
+				coord.loc.push_back( 0.0 );
+				points.push_back( coord );
+				coord.loc.clear();
+				
+				coord.loc.push_back( 0.0 );
+				coord.loc.push_back( 50.0 );
+				points.push_back( coord );
+				coord.loc.clear();
+				
+			}
+			
+			if(object.type=="legply"){
+				
+				coord.loc.push_back( -10.0 );
+				coord.loc.push_back( 0.0 );
+				points.push_back( coord );
+				coord.loc.clear();
+				
+				coord.loc.push_back( 10.0 );
+				coord.loc.push_back( 0.0 );
+				points.push_back( coord );
+				coord.loc.clear();
+				
+				coord.loc.push_back( 0.0 );
+				coord.loc.push_back( 10.0 );
+				points.push_back( coord );
+				coord.loc.clear();
+				
 			}
 			
 			// Get the vector of |F|'s at the required locations
 			modfpoints = GetForceAtPoints(particles, points);
 			
+			// Get vector of grav.pots at the required locations
+			gravpots = GetPotAtPoints(particles, points);
+			
 			shapeinfo.push_back(shape);
 			shapeinfo.push_back(particles.size());
+			shapeinfo.push_back(object.measureshift * box.h);
 			shapeinfo.push_back(object.dns);
 			shapeinfo.push_back(object.ep1);
 			shapeinfo.push_back(object.ep2);
 			shapeinfo.push_back(object.ep2/object.ep1);
-			shapeinfo.push_back(modfpoints[0]);
-			shapeinfo.push_back(modfpoints[1]);			
+			
+			for(int f = 0; f < modfpoints.size(); f++ )
+				shapeinfo.push_back(modfpoints[f]);	
+			
+			for(int g = 0; g < gravpots.size(); g++ )
+				shapeinfo.push_back(gravpots[g]);	
+			
 			shapeinfo.push_back(modfpoints[1]/modfpoints[0]);
 				
 			// Send all this info to the screen			
 			dumpshapeinfo(shapeinfo,cout);	
+			
 			// Send all this info to the "ratioinfo" file		
 			dumpshapeinfo(shapeinfo,ratioinfo);			
 			
@@ -155,10 +208,75 @@ int main(int argc, char* argv[]) {
 			shapeinfo.clear();	
 			
 		}
+		
+		if(RunAxesRatiosSquash){
+		
+			/*
+			
+				Routine: 
+					For each shape, compute |F| down each axis.
+					At each fixed distance from the surface, compute F_y/F_y;
+					Prints this ratio to file; different files for each shape.
+				This is a useful experiment to perform.
+			
+			*/
+			
+			vector<COORDS> points;
+			COORDS coord;
+			
+			ofstream dumpJ;
+			dumpJ.open(strs.outDIR + strs.mainID + strs.ID + "_J_" + strs.fileSUFFIX);
+			
+			double moffset = 10.0;
+			int Nlocs = 50;
+			for(int locI = 0; locI < Nlocs; locI++){
+				
+				// Where are we doing the measurement?
+				object.measureshift = moffset + locI * 40.0;
+				if(object.type == "ellipse"){
+				
+					coord.loc.push_back( object.ep1 + object.measureshift * box.h );
+					coord.loc.push_back( 0.0 );
+					points.push_back( coord );
+					coord.loc.clear();
+	
+					coord.loc.push_back( 0.0 );
+					coord.loc.push_back( object.ep2 + object.measureshift * box.h );
+					points.push_back( coord );
+					coord.loc.clear();
+				
+				}
+				
+				// Get the vector of |F|'s at the required locations
+				modfpoints = GetForceAtPoints(particles, points);
+				
+				// Dump this info into "shapeinfo"
+				shapeinfo.push_back( shape );
+				shapeinfo.push_back( object.measureshift * box.h );
+				shapeinfo.push_back( object.ep2 / object.ep1 );
+				shapeinfo.push_back( modfpoints[1] / modfpoints[0] );
+				
+				// Send all this info to the screen			
+				dumpshapeinfo(shapeinfo,cout);	
+				// Send all this info to the "ratioinfo" file		
+				dumpshapeinfo(shapeinfo,dumpJ);			
+			
+				// Clean up these vectors			
+				modfpoints.clear();
+				points.clear();		
+				shapeinfo.clear();	
+				
+			}
+			
+			dumpJ.close();
+			
+		} // END testJ
 
 		shape++;
-		if(shape > nshapes)
+		if( shape + 1 > nshapes ){
+			cout << "done all shapes" << endl;
 			break;
+		}
 
 	} // END shape-loop
 

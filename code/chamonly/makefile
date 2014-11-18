@@ -1,6 +1,6 @@
 OBJECTS = main.o
 INC = -Wall -I/usr/local/include
-LIBS = -L/usr/local/lib -lm -lgsl -lgslcblas
+
 CC = g++ 
 
 all: main
@@ -9,7 +9,7 @@ all: main
 	$(CC) -c $(INC) $< -o $@
 
 main: $(OBJECTS)
-	$(CC) $(OBJECTS) $(LIBS) -o $@
+	$(CC) $(OBJECTS) -o $@
 
 clean:
 	-rm -f $(OBJECTS) main

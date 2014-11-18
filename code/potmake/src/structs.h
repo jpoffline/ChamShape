@@ -25,7 +25,7 @@ struct OBJECT{
 	double area;
 	double mass;
 	double measureshift;
-	
+	string type2;
 };
 
 struct GRID{
@@ -51,6 +51,7 @@ struct BOOKKEEPING{
 	string icsPROTO;
 	string forcexPROTO;
 	string forceyPROTO;
+	string forcepPROTO;
 	string ID;
 	string ratiosPROTO;
 	int trail;
