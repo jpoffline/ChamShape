@@ -8,6 +8,7 @@
 #include "main.h"
 #include "myparamreader.h"
 #include "structs.h"
+#include "setupparams.h"
 #include "sanity.h"
 #include "forcecalc.h"
 #include "potcalc.h"
@@ -20,6 +21,7 @@ int main(int argc, char* argv[]) {
 	// Read the input parameters file, named "params.ini" by default.
 	// If there is a command line argument, assume that it is the filename for the parameters file.
 	string inifileName;
+	
 	if (argc > 1)
 		inifileName = argv[1];
 	else
@@ -29,42 +31,18 @@ int main(int argc, char* argv[]) {
 	GRID box;
 	OBJECT object;
 	BOOKKEEPING strs;
+	RUNPARAMS runparams;
 	
-	// Read in the parameter file
-	ifstream paramsfile;
-	paramsfile.open(inifileName);
-	box.h = getiniDouble(paramsfile,"h", 0.25);
-	box.imax = getiniInt(paramsfile,"imax", 1000);
-	box.jmax = getiniInt(paramsfile,"jmax", 1000);
-	box.di = getiniInt(paramsfile,"di", 100);
-	object.type = getiniString(paramsfile,"objecttype","ellipse");
-	object.type2 = getiniString(paramsfile,"type2","apple");
-	object.mass = getiniDouble(paramsfile,"mass", 1.0);
-	object.measureshift = getiniDouble(paramsfile,"measureshift", 4.0);
-	strs.outDIR = getiniString(paramsfile,"outDIR","data/");
-	strs.mainID = getiniString(paramsfile,"mainID","run");
-	int nshapes = getiniInt(paramsfile,"nshapes", 10);
-	bool dumpdownaxes = getiniBool(paramsfile,"dumpdownaxes",false);
-	bool dumpatpoints = getiniBool(paramsfile,"dumpatpoints",false);
-	bool dumpplane = getiniBool(paramsfile,"dumpplane",false);
-	bool RunAxesRatiosSquash = getiniBool(paramsfile,"RunAxesRatiosSquash",false);
-	double maxratio = getiniDouble(paramsfile,"maxratio", 8.0);
-	paramsfile.close();	
+	// Setup various parameters, based on the inifile
+	setuparams(inifileName,box,strs,object,runparams);	
 
 	// Put an underscore after the mainID string
 	strs.mainID+="_";
 	
 	double elparam2_start = 2.0;
 	double elparam1_start = elparam2_start;
-	double dep1 = elparam1_start * ( maxratio - 1.0 ) / (double)nshapes;
-	strs.fileSUFFIX = ".dat";
-	strs.icsPROTO = "partpos";
-	strs.forcexPROTO = "Fx";
-	strs.forceyPROTO = "Fy";
-	strs.forcepPROTO = "F";
+	double dep1 = elparam1_start * ( runparams.maxratio - 1.0 ) / (double)runparams.nshapes;
 	
-	strs.ratiosPROTO = "ratios";
-	strs.trail = 1000;
 	
 	// Setup stream to dump force ratios info
 	ofstream ratioinfo;
@@ -73,7 +51,8 @@ int main(int argc, char* argv[]) {
 	
 	// Vector which will contain all the info about the shape under consideration
 	vector<double> shapeinfo;
-	// Vector which will contain |F| at various locations for the given shape
+	
+	// Vector which will contain |F| and grav.pots at various locations for the given shape
 	vector<double> modfpoints, gravpots;
 	
 	// Compute the maximum distance the grid can support
@@ -107,15 +86,15 @@ int main(int argc, char* argv[]) {
 
 
 		// If require, dump force in the plane
-		if(dumpplane)
+		if(runparams.dumpplane)
 			DumpForcePlane(particles, box, strs);
 
 		// If required, dump the forces down the axes
-		if(dumpdownaxes)
+		if(runparams.dumpdownaxes)
 			DumpForceDownAxes(particles, box, strs);
 		
 		// If required, compute the forces at specific locations
-		if(dumpatpoints){
+		if(runparams.dumpatpoints){
 			
 			/*
 			
@@ -183,7 +162,6 @@ int main(int argc, char* argv[]) {
 			shapeinfo.push_back(shape);
 			shapeinfo.push_back(particles.size());
 			shapeinfo.push_back(object.measureshift * box.h);
-			shapeinfo.push_back(object.dns);
 			shapeinfo.push_back(object.ep1);
 			shapeinfo.push_back(object.ep2);
 			shapeinfo.push_back(object.ep2/object.ep1);
@@ -209,7 +187,7 @@ int main(int argc, char* argv[]) {
 			
 		}
 		
-		if(RunAxesRatiosSquash){
+		if(runparams.RunAxesRatiosSquash){
 		
 			/*
 			
@@ -273,7 +251,7 @@ int main(int argc, char* argv[]) {
 		} // END testJ
 
 		shape++;
-		if( shape + 1 > nshapes ){
+		if( shape + 1 > runparams.nshapes ){
 			cout << "done all shapes" << endl;
 			break;
 		}

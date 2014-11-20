@@ -21,7 +21,6 @@ struct OBJECT{
 	string ID;
 	double ep1;
 	double ep2;
-	double dns;
 	double area;
 	double mass;
 	double measureshift;
@@ -43,17 +42,29 @@ struct COORDS{
 	
 };
 
+struct RUNPARAMS{
+	int nshapes;
+	bool dumpdownaxes;
+	bool dumpatpoints;
+	bool dumpplane;
+	bool RunAxesRatiosSquash;
+	double maxratio;
+};
+
 struct BOOKKEEPING{
 	
 	string outDIR;
 	string mainID;
 	string fileSUFFIX;
 	string icsPROTO;
-	string forcexPROTO;
-	string forceyPROTO;
-	string forcepPROTO;
+	string filexPROTO;
+	string fileyPROTO;
+	string filepPROTO;
 	string ID;
 	string ratiosPROTO;
 	int trail;
 	
 };
+
+
+// EOF

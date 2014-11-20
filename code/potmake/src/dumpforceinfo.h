@@ -79,9 +79,9 @@ void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKK
 	double modF, gpot;
 	ofstream dumpFx, dumpFy;
 	string filename;
-	filename = strs.outDIR + strs.mainID + strs.ID + strs.forcexPROTO + strs.fileSUFFIX;	
+	filename = strs.outDIR + strs.mainID + strs.ID + strs.filexPROTO + strs.fileSUFFIX;	
 	dumpFx.open(filename);
-	filename = strs.outDIR + strs.mainID + strs.ID + strs.forceyPROTO + strs.fileSUFFIX;	
+	filename = strs.outDIR + strs.mainID + strs.ID + strs.fileyPROTO + strs.fileSUFFIX;	
 	dumpFy.open(filename);
 	double pos;
 	double h = box.h;
@@ -140,7 +140,7 @@ void DumpForcePlane(vector<PARTICLE> particles, struct GRID box, struct BOOKKEEP
 	double modF, gpot;
 	ofstream dumpF;
 	string filename;
-	filename = strs.outDIR + strs.mainID + strs.ID + strs.forcepPROTO + strs.fileSUFFIX;	
+	filename = strs.outDIR + strs.mainID + strs.ID + strs.filepPROTO + strs.fileSUFFIX;	
 	dumpF.open(filename);
 
 	double x, y;

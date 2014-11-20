@@ -6,6 +6,12 @@
 
 vector<double> GetCoeffs(struct OBJECT obj){
 	
+	/*
+	
+		Coefficients, a_l, to construct Barrett's apple
+	
+	*/
+	
 	vector<double> coeff;
 	
 	if(obj.type=="legpoly"){
@@ -43,9 +49,10 @@ double computeLEGS(struct OBJECT obj, double x, double y){
 	
 	*/
 	
-	
-	// Useful auxiliary coordinates
+	// Compute theta = arctan(y/x)
 	double theta = atan2(y,x);
+	
+	// Compute cos(theta)
 	double costheta = cos(theta);
 	
 	// Go get the coefficients
@@ -53,9 +60,12 @@ double computeLEGS(struct OBJECT obj, double x, double y){
 	
 	// Zero the returned profile
 	double prof = 0.0;	
+	
+	// Compute r(theta) = SUM_l a_l P_l(cos theta)	
 	for(int l = 0; l < coeff.size(); l++)
 		prof += coeff[l] * gsl_sf_legendre_Pl(l,costheta);
 	
+	// Return this profile
 	return prof;
 	
 } // END computeLEGS()
@@ -66,9 +76,9 @@ bool CheckInsideObject(struct OBJECT obj, double x, double y){
 	// Function to check whether the given spatial coordinates is
 	// inside the object
 	
-	if(obj.type=="ellipse" && abs(x) < obj.ep1 * sqrt(1.0 - pow( y / obj.ep2, 2.0 )))
+	if(obj.type=="ellipse" && abs( x ) < obj.ep1 * sqrt(1.0 - pow( y / obj.ep2, 2.0 )))
 		return true;
-	if(obj.type=="legpoly" && x * x + y * y < computeLEGS(obj,x,y) )
+	if(obj.type=="legpoly" && x * x + y * y < computeLEGS( obj, x, y ) )
 		return true;
 	else
 		return false;
@@ -80,12 +90,16 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 	
 	// Setup particle positions
 	
+	// Vector to be returned, containing the particle coordinates, and masses
 	vector<PARTICLE> particles;
+	
+	// Extract useful quantities from the inputed structs
 	int imax = box.imax;
 	int jmax = box.jmax;
 	double h = box.h;
 	double x, y;
 	
+	// Temporary vector to hold the particle's coordinate
 	vector<double> locs;
 	PARTICLE particle;
 	for(int i = 0; i < imax; i++){
@@ -128,3 +142,6 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 	return particles;
 	
 } // END SetupParticles()
+
+
+// EOF
