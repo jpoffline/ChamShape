@@ -70,7 +70,6 @@ double computeLEGS(struct OBJECT obj, double x, double y){
 	
 } // END computeLEGS()
 
-
 bool CheckInsideObject(struct OBJECT obj, double x, double y){
 	
 	// Function to check whether the given spatial coordinates is
@@ -85,8 +84,7 @@ bool CheckInsideObject(struct OBJECT obj, double x, double y){
 	
 } // END CheckInsideObject()
 
-
-vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BOOKKEEPING strs){
+vector<PARTICLE> SetupParticles(struct OBJECT& object, struct GRID box, struct BOOKKEEPING strs){
 	
 	// Setup particle positions
 	
@@ -97,7 +95,8 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 	int imax = box.imax;
 	int jmax = box.jmax;
 	double h = box.h;
-	double x, y;
+	double x, y, r;
+	object.rmax = 0.0;
 	
 	// Temporary vector to hold the particle's coordinate
 	vector<double> locs;
@@ -117,9 +116,13 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 				particles.push_back(particle);
 				locs.clear();
 				
+				r = sqrt( x * x + y * y );
+				if( r > object.rmax )
+					object.rmax = r;
 			}
 		}
 	}
+	
 	
 	// Set the mass of the particles such that the total mass is "object.mass",
 	// as defined by the user in params.ini
@@ -138,6 +141,9 @@ vector<PARTICLE> SetupParticles(struct OBJECT object, struct GRID box, struct BO
 		dump << endl;
 	}		
 	dump.close();
+	
+	
+	cout << "finished setting up source distribution" << endl;
 	
 	return particles;
 	

@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	
 	while(true){
 	
-		// Setup properties of the source object
+		// Setup properties of the source
 		
 		object.ep1 = elparam1_start + shape * dep1;
 		object.ep2 = elparam2_start;
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 			break;
 		
 		
-		// Set the ID of the object
+		// Set the ID of the source
 		object.ID = Int2String(strs.trail + shape) + "_";
 		
 		// Put the ID into the strs struct too
@@ -85,13 +85,66 @@ int main(int argc, char* argv[]) {
 		vector<PARTICLE> particles = SetupParticles(object, box, strs);		
 
 
-		// If require, dump force in the plane
+		// If required, dump force in the plane
 		if(runparams.dumpplane)
 			DumpForcePlane(particles, box, strs);
 
 		// If required, dump the forces down the axes
 		if(runparams.dumpdownaxes)
 			DumpForceDownAxes(particles, box, strs);
+		
+		// If required, dump force in a circular zone around the source
+		if(runparams.dumpobszone){
+			
+			// Initial position
+			double theta = 0.0;
+			
+			// Increment in "theta" around the source
+			double dtheta = 0.1;
+			
+			// Radius of observation zone
+			double rad = runparams.obsrad * object.ep1;
+			
+			vector<COORDS> points;
+			COORDS coord;
+			ofstream dumpobs;
+			dumpobs.open(strs.outDIR + "obszone" + object.ID + ".dat");
+			
+			while(true){
+				
+				//cout << theta << endl;
+				coord.loc.push_back( rad * cos( theta ) );
+				coord.loc.push_back( rad * sin( theta ) );
+				points.push_back(coord);
+				coord.loc.clear();
+				
+				// Get the vector of |F|'s at the required locations
+				modfpoints = GetForceAtPoints(particles, points);
+				
+				// Get vector of grav.pots at the required locations
+				gravpots = GetPotAtPoints(particles, points);
+				
+				dumpobs << theta << " ";
+				for(int n = 0; n < modfpoints.size(); n++)
+					dumpobs << modfpoints[n] << " ";
+				
+				for(int n = 0; n < gravpots.size(); n++)
+					dumpobs << gravpots[n] << " ";
+				
+				dumpobs << endl;
+				
+				modfpoints.clear();
+				points.clear();		
+				
+				if( theta + dtheta > 2.0 * PI )
+					break;
+				else
+					theta = theta + dtheta;
+			}
+			
+			dumpobs.close();
+			
+		}
 		
 		// If required, compute the forces at specific locations
 		if(runparams.dumpatpoints){
@@ -255,6 +308,7 @@ int main(int argc, char* argv[]) {
 			cout << "done all shapes" << endl;
 			break;
 		}
+		
 
 	} // END shape-loop
 

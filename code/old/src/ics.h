@@ -12,7 +12,6 @@ vector<double> initialconditions(double phi_bg){
 	double x,y,r;
 	double mass_object=0.0;
 	double mass_biggest_sphere=0.0;
-	
 	// Parameters for squashing triangles
 	// these are the dimensions of the triangle
 	double l1=elparam1;
@@ -94,8 +93,10 @@ vector<double> initialconditions(double phi_bg){
 			
 			// set the initial conditions for the chameleon and gravitational scalar
 			if(inittype == 0){
-				for(int tt=0;tt<2;tt++)
+				for(int tt=0;tt<2;tt++){
 					fld[tt][0][i][j]=phi_bg;
+					fld[tt][1][i][j]=0.0;
+				}
 			}	
 			
 			
@@ -103,7 +104,7 @@ vector<double> initialconditions(double phi_bg){
 		}
 	}
 	
-	mass_object = mass_object * h * h * obj_density;
+	mass_object=mass_object*h*h*obj_density;
 	
 	vector<double> rets; 
 	rets.push_back(mass_object);

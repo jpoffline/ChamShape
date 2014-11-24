@@ -57,12 +57,9 @@ int main(int argc, char* argv[]) {
 
 		// Run the solvers:
 	 
-	 	// zero the background density of the source
-	 	obj_rhobg = 0.0;
-	 
 		// (0) set the initial conditions
 		// argument = phi_bg
-		double phi_bg = phi_inf;
+		double phi_bg = sqrt(1.0/obj_rhobg);
 		icRETS = initialconditions(phi_bg);
 		totmass = icRETS[0];
 		cout << "Object's total mass = " << totmass << endl;

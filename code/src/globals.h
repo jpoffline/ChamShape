@@ -40,9 +40,10 @@ int			bctype;
 int			pottype;
 int			inittype;			
 int			mattdisttype;
+int			derivorder;
 int 		bl;
 double 		Lambda5, M, Mpl, totmass;
 double 		obj_size,obj_skindepth,obj_density, obj_rhobg;
 double 		elparam1,elparam2;
-
+double		phi_mass, phi_inf;
 /// EOF

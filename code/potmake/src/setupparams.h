@@ -26,9 +26,10 @@ void setuparams(string paramFileName, struct GRID& box, struct BOOKKEEPING& strs
 	run.dumpdownaxes = getiniBool(paramsfile,"dumpdownaxes",false);
 	run.dumpatpoints = getiniBool(paramsfile,"dumpatpoints",false);
 	run.dumpplane = getiniBool(paramsfile,"dumpplane",false);
+	run.dumpobszone = getiniBool(paramsfile,"dumpobszone",false);
 	run.RunAxesRatiosSquash = getiniBool(paramsfile,"RunAxesRatiosSquash",false);
 	run.maxratio = getiniDouble(paramsfile,"maxratio", 8.0);
-	
+	run.obsrad = getiniDouble(paramsfile,"obsrad", 2.0);
 	// Setup defaults for the suffices of various file types
 	
 	strs.fileSUFFIX = ".dat";

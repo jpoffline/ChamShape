@@ -55,18 +55,22 @@ int main(int argc, char* argv[]) {
 		// Print a logfile with all parameter info & simulation conditions
 		printlog("start",0.0,0.0);
 
-		// Run the solvers:
+		// Run the solver:
+	 
+	 	// zero the background density of the source
+	 	obj_rhobg = 0.0;
 	 
 		// (0) set the initial conditions
 		// argument = phi_bg
-		double phi_bg = sqrt(1.0/obj_rhobg);
+		double phi_bg = phi_inf;
 		icRETS = initialconditions(phi_bg);
 		totmass = icRETS[0];
 		cout << "Object's total mass = " << totmass << endl;
 		cout << "Biggest sphere mass = " << icRETS[1] << endl;
+		
 		// (1) solve 
 		// Returns all the force info
-		FI=solve();				
+		FI = solve();				
 		////////////////////////////////////////
 		
 		// Now we've found some profiles, extract information about them
@@ -77,10 +81,13 @@ int main(int argc, char* argv[]) {
 	
 		// Stop timing
 		clock_t endTime = clock();
+		
 		// Compute elapsed time in ms
 		double timeinMS = (endTime - startTime) / (double) CLOCKS_PER_SEC * 1000.0;
+		
 		// Send elapsed time to be printed, along with a polite message	
 		printfinalmessage(cout,timeinMS);
+		
 		// Print the elapsed time to log file
 		printlog("end",timeinMS,0.0);
 		

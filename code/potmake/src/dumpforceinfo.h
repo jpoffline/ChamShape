@@ -74,6 +74,12 @@ vector<double> GetForceAtPoints(vector<PARTICLE> particles, vector<COORDS> point
 
 void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKKEEPING strs){
 	
+	/*
+	
+		Routine to dump the gravitational force down the x- and y-axes
+	
+	*/
+	
 	vector<double> loc;
 	vector<double> force;
 	double modF, gpot;
@@ -134,6 +140,12 @@ void DumpForceDownAxes(vector<PARTICLE> particles, struct GRID box, struct BOOKK
 } // END DumpForceDownAxes()
 
 void DumpForcePlane(vector<PARTICLE> particles, struct GRID box, struct BOOKKEEPING strs){
+	
+	/*
+	
+		Routine to dump the gravitational force in a plane
+	
+	*/
 	
 	vector<double> loc;
 	vector<double> force;

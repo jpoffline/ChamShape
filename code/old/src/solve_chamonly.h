@@ -1,6 +1,6 @@
 /*
 
-	solve.h
+	solve_chamonly.h
 
 */
 
@@ -13,14 +13,14 @@ vector<double> solve(){
 	double hh=2.0*h;
 	int    tt,tp,ip1,im1,jp1,jm1,ip2,im2,jp2,jm2;
 	
-	double olderror_phi,olderror_grav;
-	double int_CHAMforce,int_GRAVforce;
+	double olderror_phi;
+	double int_CHAMforce;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
 	double GlobalMaxForceRatio_xpos,GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
 	
 	double eom,lap,rho;
 	double dfdx,dfdy;
-	double fd[2];
+	double fd[1];
 	string filename;
 	ofstream timehist,filedump,filexdump,fileydump,filexydump;  
 	
@@ -42,9 +42,7 @@ vector<double> solve(){
 	
 	// Define and initialize integrated, maximal quantities,
 	// and checkers.
-	double error_phi=1.0E12,error_grav=1.0E12;
-	//double maxCHAMforce_x=0.0,maxCHAMforce_y=0.0;
-	//double maxGRAVforce_x=0.0,maxGRAVforce_y=0.0;
+	double error_phi=1.0E12;
 	
 	for(int c=0;c<nflds;c++){
 		max_xdir.maxF[c]=0.0;
@@ -60,8 +58,7 @@ vector<double> solve(){
 	double x0 = 0.0; 
 	double y0 = 0.0;
 	
-	// SoR parameter used to relax Poisson equation
-	double SORparam=2.0/(1.0+PI/imax);
+ 
 	
 	// Accuracy threshold on chameleon scalar and gravitational potential
 	double errorTHRESH=5.0E-8;
@@ -74,14 +71,14 @@ vector<double> solve(){
 	
     // Begin evolution
 	cout << endl;
-	cout << "Begin relaxation to find chameleon and gravitational potential shapes" << endl;
+	cout << "Begin relaxation to find chameleon scalar shapes" << endl;
 	cout << endl;
 	
     for(int t=0;t<ttot;t++){
 	
 		// If the errors are below the acceptable threshold, kill.
 		// The errors are the integrated values of the "violation" of the equations of motion.
-		if(abs(error_phi) < errorTHRESH && abs(error_grav) < errorTHRESH)
+		if( abs(error_phi) < errorTHRESH )
 			killnext=true;
 	
         // Set the time-step counters for arrays
@@ -130,16 +127,14 @@ vector<double> solve(){
 		
 		// Dump current errors into the old errors:
 		olderror_phi=error_phi;
-		olderror_grav=error_grav;
+
 		
 		// Zero the integrated errors:
 		error_phi=0.0;
-		error_grav=0.0;
 		
 		// Note: also tracking the integrated forces.
 		// They must be zeroed here too
 		int_CHAMforce=0.0;
-		int_GRAVforce=0.0;
 		
 		// Begin run over space
         for(int i=iminb;i<imaxb;i++){
@@ -190,7 +185,7 @@ vector<double> solve(){
 					// (1) Chameleon scalar
 					if(c==0){
 
-						eom=-1.0/(phi*phi)+rho;
+						eom=-1.0/(phi*phi)+rho+mass*mass*(phi-phi_inf);
 						fld[tp][c][i][j]=ht*(lap-eom)+phi;	
 
 //						cout << matterdensity[i][j] << " " << M  << " " << eom << " " << lap << endl;
@@ -205,18 +200,7 @@ vector<double> solve(){
 					    int_CHAMforce=int_CHAMforce+fd[c]*h2;
 					}
 					
-					// (2) Gravitational potential
-					if(c==1){
-						eom=-rho*0.5;
-						error_grav=error_grav+(lap-eom)*h2;
-						int_GRAVforce=int_GRAVforce+fd[c]*h2;
-						// Do the updating with 2nd order accurate SoR
-						// note that this solves \nabla^2F = S; S = eom below
-						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
-										  +0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-					 			 		  +fld[tp][c][i][jm1]-h2*eom);
-						//fld[tp][c][i][j]=ht*(lap-eom)+phi;
-					}
+					 
 										
 				} // END c-loop
 					
@@ -245,34 +229,34 @@ vector<double> solve(){
 				// Dump to file
 				if(dump){
 					
-					filedump << x << " " << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
-					filedump << rho << " " << fd[0] << " " << fd[1] << endl;
+					filedump << x << " " << y << " " << fld[tt][0][i][j] << " ";
+					filedump << rho << " " << fd[0] << endl;
 					
 					// Output down the x-axis
 					if(y==y0){
-						filexdump << x << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
-						filexdump << rho << " " << fd[0] << " " << fd[1] << endl;
+						filexdump << x << " " << fld[tt][0][i][j] << " ";
+						filexdump << rho << " " << fd[0] << endl;
 
 					}	
 					
 					// Output down the y-axis
 					if(x==x0){
-						fileydump << y << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
-						fileydump << rho << " " << fd[0] << " " << fd[1] << endl;						
+						fileydump << y << " " << fld[tt][0][i][j] << " ";
+						fileydump << rho << " " << fd[0] << endl;						
 					}
 					
 					// Output down the x=y-axis
 					if(i==j){
-						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " " << fld[tt][1][i][j] << " ";
-						filexydump << rho << " " << fd[0] << " " << fd[1] << endl;
+						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " ";
+						filexydump << rho << " " << fd[0] << endl;
 					}						
 					
 				}
-				
+				/*
 				// At the end, find the location of maximum force ratio
 				if( (killnext || t==ttot-1) && x!=0 && y!=0){
 					
-					if(fd[0]/fd[1]>GlobalMaxForceRatio && rho <obj_density){
+					if(fd[0]/fd[1]>GlobalMaxForceRatio && rho < obj_density){
 						GlobalMaxForceRatio=fd[0]/fd[1];
 						GlobalMaxForceRatio_xpos=x;
 						GlobalMaxForceRatio_ypos=y;
@@ -280,7 +264,7 @@ vector<double> solve(){
 					}
 					
 				}
-				
+				*/
 				
             } // end j-loop
 		
@@ -322,23 +306,22 @@ vector<double> solve(){
 		// Dump timehistory
 		timehist << t*ht << " ";
 		timehist << abs(error_phi) << " " << (error_phi - olderror_phi)/ht << " ";
-		timehist << abs(error_grav) << " " << (error_grav - olderror_grav)/ht << " ";
-		timehist << int_CHAMforce << " " << int_GRAVforce << " ";
+		timehist << int_CHAMforce << " ";
 		timehist << fld[tt][0][int(0.5*imax)][int(0.5*jmax)] << " ";
 		timehist << max_xdir.maxF[0] << " " << max_ydir.maxF[0] << endl;
 		
 		// Dump to screen
 		if(t%screendumpfreq==0){
-			cout << t << "/"  << ttot << " " << abs(error_phi) << " " << abs(error_grav) << " " ;
-			cout << (error_grav - olderror_grav)/ht << " " << (error_phi - olderror_phi)/ht << " ";
-			cout << int_CHAMforce << " " << int_GRAVforce << endl;
+			cout << t << "/"  << ttot << " " << abs(error_phi) << " " ;
+			cout << (error_phi - olderror_phi)/ht << " ";
+			cout << int_CHAMforce << endl;
 		}
 		// Rescale gravitational potential
 		// Note: Laplace's equation, nabla^2Phi = - rho, is invariant under Phi -> Phi + c1 x + c2 x^2
 	
 		if(killnext){
 			cout << endl;
-			cout << "Errors in chameleon and gravitational scalars are below threshold" << endl;
+			cout << "Errors in chameleon scalar is below threshold" << endl;
 			cout << "EoM satisfied to less than " << errorTHRESH << endl;
 			cout << " > stopping" << endl;
 			cout << endl;
@@ -354,7 +337,7 @@ vector<double> solve(){
 	vector<double> forceinfo;
 	
 	// This gets returned back to the main_X.cpp algorithm
-	for(int c=0; c < nflds; c++){
+	for(int c = 0; c < nflds; c++){
 		forceinfo.push_back(max_xdir.maxF[c]);
 		forceinfo.push_back(max_xdir.pos[c][xID]);
 		forceinfo.push_back(max_xdir.pos[c][yID]);		

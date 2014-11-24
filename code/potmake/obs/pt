@@ -1,0 +1,12 @@
+set terminal png
+set output "gp.png"
+loc=2
+set xl "theta/ 2 pi"
+set yl "8pi Mpl2 * F_grav"
+plot  "../obs5/obszone1000_.dat" u ($1/pi):loc w l t "r = 1.1R",\
+ "../obs4/obszone1000_.dat" u ($1/pi):loc w l t "r = 1.2R", \
+"../obs3/obszone1000_.dat" u ($1/pi):loc w l t "r = 1.5r",\
+ "../obs2/obszone1000_.dat" u ($1/pi):loc w l t "r = 2R"
+
+
+

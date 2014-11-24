@@ -16,7 +16,6 @@ vector<double> solve(){
 	double olderror_phi;
 	double int_CHAMforce;
 	double phi,phi_ip1,phi_im1,phi_jp1,phi_jm1;
-	double GlobalMaxForceRatio_xpos,GlobalMaxForceRatio_ypos,GlobalMaxForceRatio_dens;
 	
 	double eom,lap,rho;
 	double dfdx,dfdy;
@@ -35,6 +34,7 @@ vector<double> solve(){
 		double maxF[2];
 		double pos[2][2];
 	};
+	
 	int xID = 0;
 	int yID = 1;
 	MAXVALS max_xdir;
@@ -49,8 +49,6 @@ vector<double> solve(){
 		max_ydir.maxF[c]=0.0;
 	}
 		
-	
-	double GlobalMaxForceRatio=0.0;
 	bool   dump=false; // initial setup of the dump-checker
 	bool   killnext=false;
     int    filenum=0;
@@ -73,6 +71,8 @@ vector<double> solve(){
 	cout << endl;
 	cout << "Begin relaxation to find chameleon scalar shapes" << endl;
 	cout << endl;
+	
+	int c = 0;
 	
     for(int t=0;t<ttot;t++){
 	
@@ -120,15 +120,13 @@ vector<double> solve(){
 		} 
 		
 		// Zero the maximum forces
-		for(int c=0;c<nflds;c++){
-			max_xdir.maxF[c]=0.0;
-			max_ydir.maxF[c]=0.0;
-		}
 		
+		max_xdir.maxF[c]=0.0;
+		max_ydir.maxF[c]=0.0;
+				
 		// Dump current errors into the old errors:
 		olderror_phi=error_phi;
 
-		
 		// Zero the integrated errors:
 		error_phi=0.0;
 		
@@ -151,120 +149,99 @@ vector<double> solve(){
 				
 				rho=matterdensity[i][j];
 				
-				// Now for the main evolution and analysis rountines
-				for(int c=0;c<nflds;c++){
+				 
 					
-					// Get phi at this location for easier reading
-	                phi=fld[tt][c][i][j];
-				
-					// Frequently used "forward" and "backward" values of phi
-					phi_ip1=fld[tt][c][ip1][j];
-					phi_im1=fld[tt][c][im1][j];
-					phi_jp1=fld[tt][c][i][jp1];
-					phi_jm1=fld[tt][c][i][jm1];			
-			 
-					// Second order accurate laplacian
-					lap=(phi_ip1+phi_im1+phi_jp1+phi_jm1-4.0*phi)/h2;
-				
-					// Fourth order accurate laplacian
-					// Really flipping accurate, but takes slightly longer to compute
-					//lap = (-fld[tt][c][ip2][j]+16.0*phi_ip1-30.0*phi+16.0*phi_im1-fld[tt][c][im2][j])/12.0/h2
-					//	+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
-				
-					// Compute derivatives to compute force
+				// Get phi at this location for easier reading
+                phi=fld[tt][c][i][j];
+			
+				// Frequently used "forward" and "backward" values of phi
+				phi_ip1=fld[tt][c][ip1][j];
+				phi_im1=fld[tt][c][im1][j];
+				phi_jp1=fld[tt][c][i][jp1];
+				phi_jm1=fld[tt][c][i][jm1];			
+		 
 
+				if(derivorder==2){
+					
+					// Compute derivatives to compute force
 					dfdx=(phi_ip1-phi_im1)/hh;
 					dfdy=(phi_jp1-phi_jm1)/hh;
-					//dfdx=(-fld[tt][c][ip2][j]+8.0*fld[tt][c][ip1][j]-8.0*fld[tt][c][im1][j]+fld[tt][c][im2][j])/12.0/h;
-					//dfdy=(-fld[tt][c][i][jp2]+8.0*fld[tt][c][i][jp1]-8.0*fld[tt][c][i][jm1]+fld[tt][c][i][jm2])/12.0/h;	
-					fd[c]=sqrt(dfdx*dfdx+dfdy*dfdy);
+					// Second order accurate laplacian
+					lap=(phi_ip1+phi_im1+phi_jp1+phi_jm1-4.0*phi)/h2;
 					
-					// The updating algorithms; also computes an error measurement
-					// error measurements are the violation of the equation of motion	
-												
-					// (1) Chameleon scalar
-					if(c==0){
+				}
+			
+				
+				if(derivorder==4){
+					dfdx=(-fld[tt][c][ip2][j]+8.0*phi_ip1-8.0*phi_im1+fld[tt][c][im2][j])/12.0/h;
+					dfdy=(-fld[tt][c][i][jp2]+8.0*phi_jp1-8.0*phi_jm1+fld[tt][c][i][jm2])/12.0/h;
+					// Fourth order accurate laplacian
+					// Really flipping accurate, but takes slightly longer to compute	
+					lap = (-fld[tt][c][ip2][j]+16.0*phi_ip1-30.0*phi+16.0*phi_im1-fld[tt][c][im2][j])/12.0/h2
+						+ (-fld[tt][c][i][jp2]+16.0*phi_jp1-30.0*phi+16.0*phi_jm1-fld[tt][c][i][jm2])/12.0/h2;
+				}
+				
+				// Compute force
+				fd[c] = sqrt( dfdx * dfdx + dfdy * dfdy );
+				
+				// The updating algorithms; also computes an error measurement
+				// error measurements are the violation of the equation of motion	
+											
+				 
 
-						eom=-1.0/(phi*phi)+rho+mass*mass*(phi-phi_inf);
-						fld[tp][c][i][j]=ht*(lap-eom)+phi;	
-
-//						cout << matterdensity[i][j] << " " << M  << " " << eom << " " << lap << endl;
-//						fld[tp][c][i][j]=(1.0-SORparam)*fld[tt][c][i][j]
-//												+0.25*SORparam*(fld[tt][c][ip1][j]+fld[tp][c][im1][j]+fld[tt][c][i][jp1]
-//												+fld[tp][c][i][jm1]-h2*eom);				
-//						fld[tp][c][i][j]=0.25*(fld[tt][c][ip1][j]+fld[tt][c][im1][j]+fld[tt][c][i][jp1]+fld[tt][c][i][jm1]-h2*eom);	
-//						error_phi=error_phi+(lap-eom)*h2;
-						if(i > iminb+10 && i < imaxb-10 && j > jminb+10 && j<jmaxb-10){
-							error_phi=error_phi+(fld[tp][c][i][j]-phi)*h2;
-						}
-					    int_CHAMforce=int_CHAMforce+fd[c]*h2;
-					}
-					
-					 
-										
-				} // END c-loop
-					
+				eom = -1.0 / ( phi * phi ) + rho + phi_mass * phi_mass * ( phi - phi_inf );
+				
+				fld[tp][c][i][j] = ht * ( lap - eom ) + phi;	
+								
+				error_phi = error_phi + ( fld[tp][c][i][j] - phi ) * h2;
+				
+			    int_CHAMforce = int_CHAMforce + fd[c] * h2;
+					 					
 				// Check to find maximum forces
 				if(x==x0){
-					for(int c=0;c<nflds;c++){
-						if(fd[c]>=max_ydir.maxF[c]){
-							max_ydir.maxF[c]=fd[c];
-							max_ydir.pos[c][xID]=x;
-							max_ydir.pos[c][yID]=y;								
-						}
+					if(fd[c]>=max_ydir.maxF[c]){
+						max_ydir.maxF[c]=fd[c];
+						max_ydir.pos[c][xID]=x;
+						max_ydir.pos[c][yID]=y;								
 					}
 				}	
 					
 				// Check to find maximum forces
 				if(y==y0){
-					for(int c=0;c<nflds;c++){
-						if(fd[c]>=max_xdir.maxF[c]){
-							max_xdir.maxF[c]=fd[c];
-							max_xdir.pos[c][xID]=x;
-							max_xdir.pos[c][yID]=y;
-						}
+					if(fd[c]>=max_xdir.maxF[c]){
+						max_xdir.maxF[c]=fd[c];
+						max_xdir.pos[c][xID]=x;
+						max_xdir.pos[c][yID]=y;
 					}
 				}	
 						
 				// Dump to file
 				if(dump){
 					
-					filedump << x << " " << y << " " << fld[tt][0][i][j] << " ";
-					filedump << rho << " " << fd[0] << endl;
+					filedump << x << " " << y << " " << fld[tt][c][i][j] << " ";
+					filedump << rho << " " << fd[c] << endl;
 					
 					// Output down the x-axis
 					if(y==y0){
-						filexdump << x << " " << fld[tt][0][i][j] << " ";
-						filexdump << rho << " " << fd[0] << endl;
+						filexdump << x << " " << fld[tt][c][i][j] << " ";
+						filexdump << rho << " " << fd[c] << endl;
 
 					}	
 					
 					// Output down the y-axis
 					if(x==x0){
-						fileydump << y << " " << fld[tt][0][i][j] << " ";
-						fileydump << rho << " " << fd[0] << endl;						
+						fileydump << y << " " << fld[tt][c][i][j] << " ";
+						fileydump << rho << " " << fd[c] << endl;						
 					}
 					
 					// Output down the x=y-axis
 					if(i==j){
-						filexydump << sqrt(x*x+y*y) << " " << fld[tt][0][i][j] << " ";
-						filexydump << rho << " " << fd[0] << endl;
+						filexydump << sqrt(x*x+y*y) << " " << fld[tt][c][i][j] << " ";
+						filexydump << rho << " " << fd[c] << endl;
 					}						
 					
 				}
-				/*
-				// At the end, find the location of maximum force ratio
-				if( (killnext || t==ttot-1) && x!=0 && y!=0){
-					
-					if(fd[0]/fd[1]>GlobalMaxForceRatio && rho < obj_density){
-						GlobalMaxForceRatio=fd[0]/fd[1];
-						GlobalMaxForceRatio_xpos=x;
-						GlobalMaxForceRatio_ypos=y;
-						GlobalMaxForceRatio_dens=rho;
-					}
-					
-				}
-				*/
+				 
 				
             } // end j-loop
 		
@@ -277,21 +254,7 @@ vector<double> solve(){
 		
         } // end i-loop
 	
-		// If constructing plates, enforce periodic boundaries
-		if(mattdisttype==6){
-			for(int j=0;j<jminb;j++){
-				for(int i=iminb;i<imaxb;i++){
-					for(int c=0;c<nflds;c++)
-						fld[tp][c][i][j]=fld[tp][c][i][jminb+1];
-				}
-			}
-			for(int j=jmaxb;j<jmax;j++){
-				for(int i=iminb;i<imaxb;i++){
-					for(int c=0;c<nflds;c++)
-						fld[tp][c][i][j]=fld[tp][c][i][jmaxb-1];
-				}
-			}
-		}
+	 
 	
 		// Close the output file
         if(dump){
@@ -316,14 +279,14 @@ vector<double> solve(){
 			cout << (error_phi - olderror_phi)/ht << " ";
 			cout << int_CHAMforce << endl;
 		}
-		// Rescale gravitational potential
-		// Note: Laplace's equation, nabla^2Phi = - rho, is invariant under Phi -> Phi + c1 x + c2 x^2
-	
+		
 		if(killnext){
 			cout << endl;
+			cout << "<><><><><><><><><><><><><><><><><><><><><><><>" << endl;
 			cout << "Errors in chameleon scalar is below threshold" << endl;
 			cout << "EoM satisfied to less than " << errorTHRESH << endl;
 			cout << " > stopping" << endl;
+			cout << "<><><><><><><><><><><><><><><><><><><><><><><>" << endl;
 			cout << endl;
 			break;
 		}
@@ -346,10 +309,6 @@ vector<double> solve(){
 		forceinfo.push_back(max_ydir.pos[c][yID]);		
 	}
 	
-	forceinfo.push_back(GlobalMaxForceRatio);
-	forceinfo.push_back(GlobalMaxForceRatio_xpos);
-	forceinfo.push_back(GlobalMaxForceRatio_ypos);	
-	forceinfo.push_back(GlobalMaxForceRatio_dens);
 	forceinfo.push_back(obj_density);
 	forceinfo.push_back(obj_rhobg);
 	forceinfo.push_back(elparam1);
@@ -357,6 +316,7 @@ vector<double> solve(){
 	
 	// Print force info: first to screen
 	PrintForceInfo(cout,forceinfo);	
+	
 	// Now to logfile (its the same info, but call routine which opens up logfile first)
 	PrintForceInfoToLogfile(forceinfo);
 	

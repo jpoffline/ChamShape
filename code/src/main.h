@@ -17,7 +17,7 @@
 using namespace std;
 
 using namespace std;
-const double PI=4.0*atan(1.0);
+const double PI = 4.0 * atan(1.0);
 
 // Includes
 // (1) useful auxiliary functions (conversions etc)

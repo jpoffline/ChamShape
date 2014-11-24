@@ -128,10 +128,10 @@ void printobjectproperties(ostream& whereto){
 	whereto << "density = " << obj_density << endl;
 	//whereto << "skin depth = " << obj_skindepth << endl;
 	whereto << "bg density = " << obj_rhobg << endl;
-	whereto << "density contrast = " << obj_density/obj_rhobg - 1.0 << endl;
-	whereto << "phi_inf = " << 1.0/sqrt(obj_rhobg) << endl;
 	whereto << "phi_centre = " << 1.0/sqrt(obj_density) << endl;
 	whereto << "M = " << M << endl;	
+	whereto << "m = " << phi_mass << endl;
+	whereto << "phi_inf = " << phi_inf << endl;
 	whereto << "Mpl = " << Mpl << endl;	
 	whereto << "Lambda5 = " << Lambda5 << endl;
 	whereto << "totmass = " << totmass << endl;
@@ -183,8 +183,6 @@ void printlog(string when,double v1,double v2){
 // Print info about the forces to general ostream
 void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	
-	double Mpl_M = Mpl / M;
-	double Mpl_M2 = Mpl_M*Mpl_M;
 	int ID = 0;
 	
 	// extract data from fvals 
@@ -195,52 +193,20 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 	double maxCHAMforce_y_pos_x = fvals[ID]; ID++;
 	double maxCHAMforce_y_pos_y = fvals[ID]; ID++;
 		
-	double maxGRAVforce_x = fvals[ID]; ID++;
-	double maxGRAVforce_x_pos_x = fvals[ID]; ID++;
-	double maxGRAVforce_x_pos_y = fvals[ID]; ID++;	
-	double maxGRAVforce_y = fvals[ID]; ID++;
-	double maxGRAVforce_y_pos_x = fvals[ID]; ID++;
-	double maxGRAVforce_y_pos_y = fvals[ID]; ID++;
-	
-	double GlobalMaxForceRatio = fvals[ID]; ID++;
-	double GlobalMaxForceRatio_xpos = fvals[ID]; ID++;
-	double GlobalMaxForceRatio_ypos = fvals[ID]; ID++;
-	double GlobalMaxForceRatio_dens = fvals[ID]; ID++;
 	
 	// Output analysis of maximum forces encountered
 	whereto << endl;
 	whereto << "cham: maxF(x) = " << maxCHAMforce_x << ", (x,y) = (" <<  maxCHAMforce_x_pos_x << ", " << maxCHAMforce_x_pos_y << ")" << endl;
 	whereto << "cham: maxF(y) = " << maxCHAMforce_y << ", (x,y) = (" <<  maxCHAMforce_y_pos_x << ", " << maxCHAMforce_y_pos_y << ")" << endl;
-	whereto << "cham: maxF(x) / maxF(y) = " << maxCHAMforce_x / maxCHAMforce_y << endl;
-	whereto << "grav: maxF(x) = " << maxGRAVforce_x << ", (x,y) = (" <<  maxGRAVforce_x_pos_x << ", " << maxGRAVforce_x_pos_y << ")" << endl;
-	whereto << "grav: maxF(y) = " << maxGRAVforce_y << ", (x,y) = (" <<  maxGRAVforce_y_pos_x << ", " << maxGRAVforce_y_pos_y << ")" << endl;
-	whereto << "grav: maxF(x) / maxF(y) = " << maxGRAVforce_x / maxGRAVforce_y << endl;
+	whereto << "cham: maxF(y) / maxF(x) = " << maxCHAMforce_y / maxCHAMforce_x << endl;
 	whereto << endl;
 	
-	if(maxCHAMforce_x>maxCHAMforce_y)
+	if(maxCHAMforce_x > maxCHAMforce_y)
 		whereto << "The value of the largest chameleon force is in the x-direction" << endl;
-	else
+	else 
 		whereto << "The value of the largest chameleon force is in the y-direction" << endl;
-	if(maxGRAVforce_x>maxGRAVforce_y)
-		whereto << "The value of the largest gravitational force is in the x-direction" << endl;
 	else
-		whereto << "The value of the largest gravitational force is in the y-direction" << endl;
-	
-	whereto << endl;
-	whereto << "Maximum force ratios :: max(F_cham/F_grav)" << endl;
-	whereto << " > down x-direction = " << Mpl_M2*maxCHAMforce_x/maxGRAVforce_x << endl;
-	whereto << " > down y-direction = " << Mpl_M2*maxCHAMforce_y/maxGRAVforce_y << endl;
-	whereto << endl;
-		
-	if(maxCHAMforce_x/maxGRAVforce_x > maxCHAMforce_y/maxGRAVforce_y)
-		whereto << "The maximum force ratio is down the x-axis" << endl;
-	else
-		whereto << "The maximum force ratio is down the y-axis" << endl;
-	
-	whereto << endl;		
-	whereto << "Maximum global force ratio:  max(F_cham/F_grav) = " << Mpl_M2*GlobalMaxForceRatio << endl;
-	whereto << " > coords@max: (" << GlobalMaxForceRatio_xpos << ", " << GlobalMaxForceRatio_ypos << ")" << endl;
-	whereto << " > density@max: " << GlobalMaxForceRatio_dens << endl;
+		whereto << "Forces in each direction are identical" << endl;
 	
 } // END PrintForceInfo()
 

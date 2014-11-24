@@ -29,6 +29,9 @@ double setuparams(string paramFileName){
 	obj_skindepth = getiniDouble(paramsfile,"obj_skindepth", 5.0);	
 	obj_rhobg = getiniDouble(paramsfile,"obj_rhobg", 1.0);	
 	
+	phi_inf = getiniDouble(paramsfile,"phi_inf", 1.0);	
+	phi_mass = getiniDouble(paramsfile,"phi_mass", 1.0);	
+		
 	elparam1 = getiniDouble(paramsfile,"elparam1", 1);	
 	elparam2 = getiniDouble(paramsfile,"elparam2", 1);	
 	
@@ -44,7 +47,7 @@ double setuparams(string paramFileName){
 	filedumpfreq = getiniInt(paramsfile,"filedumpfreq", 1000);	
 	timehistoryproto = getiniString(paramsfile,"timehistoryproto", "timehistory");	
 	
-	
+	derivorder = getiniInt(paramsfile,"derivorder", 4);	
 	
 	// Put the root dir onto the outDIR
 	outDIR=rootoutDIR+outDIR;

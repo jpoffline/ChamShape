@@ -24,6 +24,7 @@ struct OBJECT{
 	double area;
 	double mass;
 	double measureshift;
+	double rmax;
 	string type2;
 };
 
@@ -44,8 +45,10 @@ struct COORDS{
 
 struct RUNPARAMS{
 	int nshapes;
+	double obsrad;
 	bool dumpdownaxes;
 	bool dumpatpoints;
+	bool dumpobszone;
 	bool dumpplane;
 	bool RunAxesRatiosSquash;
 	double maxratio;
