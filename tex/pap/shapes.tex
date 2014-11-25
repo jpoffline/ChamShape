@@ -1,12 +1,10 @@
 %\documentclass[a4paper,eqsecnum,twoside,aps,floatfix,notitlepage]{revtex4}
 
-
-
-\documentclass[amsmath,amssymb,10pt,eqsecnum, twocolumn]{revtex4}
+\documentclass[amsmath,amssymb,12pt,eqsecnum]{revtex4}
 \usepackage{graphicx,float,subfloat}
 \usepackage[breaklinks, colorlinks, citecolor=blue]{hyperref}
 \usepackage{bm}% bold math
-
+\linespread{1}
 \usepackage{subfigure}
 \usepackage{hyperref}
 
@@ -23,7 +21,7 @@
 \maketitle
 
 
-
+\tableofcontents
 
  
  
@@ -37,20 +35,29 @@ The effective potential for the chameleon is
 \label{eff-pot-cham}
 \qsubrm{V}{eff} = \frac{\Lambda^5}{\phi} + \frac{\rho(\rbm{x})}{M}\phi + \half m^2\left( \phi - \phi_{\infty}\right)^2.
 \eea
-The equations governing the chameleon scalar and gravitational potential are
+The field equations governing the chameleon scalar and gravitational potential are
 \bse
 \label{eq:eom-cham-}
 \bea
-\nabla^2\phi = \frac{\dd \qsubrm{V}{eff}}{\dd\phi}.
+\label{eq:eom-cham-phi}
+\nabla^2\phi = \frac{\dd \qsubrm{V}{eff}}{\dd\phi},
 \eea
 \bea
-\nabla^2\Phi = - \rho(\rbm{x})/2\qsubrm{M}{pl}^2
+\label{eq:eom-cham-grav}
+\nabla^2\Phi = - \rho(\rbm{x})/2\qsubrm{M}{pl}^2.
 \eea
 \ese
 The force on a test particle, due to the gravitational and chameleon scalars are given by
+\bse
 \bea
-\rbm{F}_{(\phi)} = - \tfrac{1}{M}\nabla\phi,\qquad \rbm{F}_{(\Phi)} = - \nabla\Phi.
+\label{cham_force}
+\rbm{F}_{(\phi)} = - \tfrac{1}{M}\nabla\phi,
 \eea
+\bea
+\label{grav_force}
+\rbm{F}_{(\Phi)} = - \nabla\Phi.
+\eea
+\ese
 The idea is to obtain the source-shape that maximises the force that a test particle will feel, that cannot be explained by forces of a purely gravitational origin.
 
 We construct the function $\rho(\rbm{x})$ such that
@@ -59,28 +66,25 @@ We construct the function $\rho(\rbm{x})$ such that
 \eea
 
 \section{Explanation of numerical methods}
-Discretize onto a grid. Using successive over relaxation and gradient flow.
+Except in the simplest scenarios and geometries, solutions to the field equations (\ref{eq:eom-cham-}) can only be found with numerical methods. The intermediary  aim is to understand the features in the field of forces due to the chameleon scalar, obtained by applying (\ref{cham_force}) to  solutions of (\ref{eq:eom-cham-phi}), as well as understanding the properties of the gravitational force (\ref{grav_force}). We treat and obtain the chameleon and gravitational forces very differently. 
 
-The equations   implemented by our numerical methods are dimensionless. By setting
+The equations   implemented by our numerical methods are dimensionless. We set
 \bse
 \bea
-\phi = \sqrt{M\Lambda^5}\tilde{\phi},
-\eea
-\bea
+\phi = \sqrt{M\Lambda^5}\tilde{\phi},\qquad
 \Phi = \frac{M}{\qsubrm{M}{Pl}^2}\sqrt{M\Lambda^5}\tilde{\Phi},
 \eea
 \bea
 x^{\mu} = \sqrt{M}\left(M\Lambda^5\right)^{1/4}\tilde{x}^{\mu},
-\eea
-\bea
-\tilde{m} = m M^{1/2}\left( \Lambda^5M\right)^{1/3},
+\qquad
+\tilde{m} = m M^{1/2}\left( \Lambda^5M\right)^{1/3}.
 \eea
 \ese
-the effective potential (\ref{eff-pot-cham}) becomes
+The effective potential (\ref{eff-pot-cham}) becomes
 \bea
 \frac{M}{\sqrt{M\Lambda^5}}\qsubrm{V}{eff} = \frac{1}{\tilde{\phi}} + \rho \tilde{\phi} + \half \tilde{m}^2 \left( \tilde{\phi} - \tilde{\phi}_{\infty}\right)^2,
 \eea
-and the equations (\ref{eq:eom-cham-}) become
+and the field equations (\ref{eq:eom-cham-}) become
 \bse
 \bea
 \tilde{\nabla}^2\tilde{\phi} = - \frac{1}{\tilde{\phi}^2} + \rho + \tilde{m}^2\left( \tilde{\phi} - \tilde{\phi}_{\infty}\right),
@@ -94,9 +98,9 @@ The ratio of the  forces becomes
 \frac{\left|\rbm{F}_{(\phi)} \right|}{\left|\rbm{F}_{(\Phi)} \right|} = \left( \frac{\qsubrm{M}{Pl}}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
 \eea
 \subsection{Solving for the Chameleon}
-We obtain the profile of the chameleon scalar around a given source profile $\rho(\rbm{x})$ using a gradient flow technique. This works by taking a initial guess for the scalar fields profile, and letting it ``relax'' into a profile which corresponds to a solution of the equation of motion.
+We obtain the profile of the chameleon scalar around a given source profile $\rho(\rbm{x})$ using a gradient flow technique. This involves discretising the field equation onto a regular square lattice, and approximating   the Laplacian using ``finite difference derivative'' schemes.  A solution is obtained by taking a initial guess for the scalar fields profile, and letting it ``relax'' into a profile which corresponds to a solution of the equation of motion.
 \subsection{Solving Poisson's equation}
-We have found conventional relaxation methods cumbersome and difficult to use for complicated shapes, mainly due to the nature of the boundary conditions (trying to put an ellipsoidal ``peg'' into a square ``box'' will always be problematic). We found it much more convenient, and incredibly computationally-cheap, to compute  the gravitational force, $\rbm{F}_{(\Phi)}$ at a given location, $\rbm{x}$, via the simple expression
+We have found conventional relaxation methods cumbersome and difficult to use for complicated shapes, mainly due to the nature of the boundary conditions: trying to put an ellipsoidal ``peg'' into a square ``box'' will always be problematic. We found it much more convenient, and incredibly computationally-cheap, to compute  the gravitational force, $\rbm{F}_{(\Phi)}$ at a given location, $\rbm{x}$, via the simple expression
 \bea
 \label{eq:sec:newt-grav-force}
 \rbm{F}_{(\Phi)}(\rbm{x}) = - \frac{1}{8\pi \qsubrm{M}{Pl}^2}\sum_{i}m_i \frac{\rbm{x} - \rbm{x}_i}{\left| \rbm{x} - \rbm{x}_i\right|^3},
@@ -107,16 +111,26 @@ where $\{m_i,\rbm{x}_i\}$ are the mass and location of the $\qsuprm{i}{th}$ cons
 
 \section{Results}
 
-\subsection{Properties of the gravitational force around different source geometries}
+\subsection{The gravitational force around different source geometries}
 The Newtonian gravitational force (\ref{eq:sec:newt-grav-force}) is one of the simplest quantities one can compute, and its ``far-field'' properties are very well understood. However, we are interested in the ``near-field'' properties of the gravitational force: that is, how the gravitational force behaves near the source object.
+
+\subsubsection{Elliptical sources}
+The first case of interest is an elliptical source. These shapes are defined to be the coordinates which lie inside the region defined by the curve
+\bea
+\left( \frac{x}{a}\right)^2 + \left( \frac{y}{b}\right)^2 = 1.
+\eea
+To fix an orientation, we take $a > b$: the ``pointy''-ends of the ellipse lie along the $x$-axis, and the `flat''-ends lie along the $y$-axis. In \fref{fig:squish-ellipse-grav} we give various diagnostic plots of the gravitational field around ellipses with various aspect ratios (we define the aspect ratio to be $b/a$). One observes the magnitude of the gravitational force is \textit{larger} at the flat-end of the ellipse than at the pointy-end. This rather un-intuitive result is coorborated by the analytical solutions found by [REF JAMES]. 
+
+In the top-left panel of \fref{fig:squish-ellipse-grav} we give the ratio of the forces in the $y$- and $x$-directions as a function of the given distance to the surface of the ellipse (each curve is an ellipse with a different aspect ratio; moving up the curves the ellipse becomes more squashed,  the aspect ratio corresponding to a given colour can be read off from the plot on the top-right panel). One observes from the figure that the forces in the $y$-direction for ellipses which are extremely squashed are over double what they are in the $x$-direction. The value of the maximum force ratio is given in the bottom-left panel. These ratios obviously tend towards unity for distances which are very large compared to the scale of the source -- but, as mentioned, we are interested in the behavior near the source. One will also observe that there is some distance from the surface at which this force ratio peaks: this position is given in the bottom-right plot. In the top-right panel we plot the force-shift: this is the fractional difference between the maximum force ratio and the force ratio at a distance ``20'' from the source. This relationship clearly has an interesting structure.
 
 \begin{figure}[!t]
       \begin{center}
-{\includegraphics[scale=0.6,angle=0]{images/p2222}}
+{\includegraphics[scale=1,angle=0]{images/p2222}}
       \end{center}
-\caption{ Interesting diagnostic quantities for the gravitational field around a squashed ellipse. The colour scheme between the panels is consistent. In the top-right panel we show the ratio $f$ of the force down the $x$- and $y$-axes as a function of distance from the surface; each colour corresponds to a different value of the aspect ratio of the ellipse. The actual values of the aspect ratios is given in the top-left panel, which shows the ``force shift''. This is the fractional difference between the maximum value of the force ratio, and the force ratio at the furthest distance from the surface shown. In the bottom-left panel we show the value of the maximum force ratio, as a function of the aspect ratio; in the bottom-right panel we show the position of the maximum force ratio. }\label{fig:squish-ellipse-grav}
+\caption{ Interesting diagnostic quantities for the gravitational field around a squashed ellipse. The colour scheme between the panels is consistent. In the top-left panel we show the ratio $f$ of the force down the $x$- and $y$-axes as a function of distance from the surface; each colour corresponds to a different value of the aspect ratio of the ellipse. The actual values of the aspect ratios is given in the top-left panel, which shows the ``force shift''. This is the fractional difference between the maximum value of the force ratio, and the force ratio at the furthest distance from the surface shown. In the bottom-left panel we show the value of the maximum force ratio, as a function of the aspect ratio; in the bottom-right panel we show the position of the maximum force ratio. }\label{fig:squish-ellipse-grav}
 \end{figure}
 
+\subsubsection{Shapes via Legendre polynomials}
 Creating a shape via
 \bea
 r(\theta) = \sum_{\ell=0}^n a_{\ell}P_{\ell}(\cos\theta)

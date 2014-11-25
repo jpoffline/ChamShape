@@ -79,17 +79,14 @@ void printtopmatter(ostream& whereto){
 	whereto << "(xmax, ymax) = (" << (double)imax*h << ", " << (double)jmax*h << ")" << endl;
 	whereto << "(h, ht) = (" << h << ", " << ht << ")" << endl;
 	whereto << "boundary layer = " << bl << " grid-points" << endl;
-	
+	whereto << "discretization order = " << derivorder << endl;
 	printinfo(whereto,"Potential",pottype);	
 	printinfo(whereto,"InitialConditions",inittype);
 	whereto << endl;
 	whereto << "All data files print out dimensionless fields and forces" << endl;
 	whereto << "Solving" << endl;
-	whereto << "(1) nabla^2phi = - 1/phi^2 + rho" << endl;
-	whereto << "(2) nabla^2Phi = - rho/2" << endl;
-	
-	whereto << "The force-ratios info has dimensions restored" << endl;
-	whereto << " |F_phi| / |F_Phi| = (Mpl/M)^2 ( |nabla phi| / |nabla Phi|)" << endl;
+	whereto << "nabla^2phi = - 1/phi^2 + rho + m^2(phi - phiinf)^2/2" << endl;
+
 	whereto << endl;
 	whereto << "Begin solving" << endl;
 	whereto << endl;
@@ -121,6 +118,11 @@ void printobjectproperties(ostream& whereto){
 		whereto << " :: triangle " << endl;
 		whereto << "(a, b) = (" << elparam1 << ", " << elparam2 << ")" << endl;
 	}
+	
+	if(mattdisttype == 7){
+		whereto << " :: Barret's apple " << endl;
+	}
+	
 	else
 		whereto << endl;
 	
@@ -205,8 +207,7 @@ void PrintForceInfo(ostream& whereto, vector<double> fvals){
 		whereto << "The value of the largest chameleon force is in the x-direction" << endl;
 	else 
 		whereto << "The value of the largest chameleon force is in the y-direction" << endl;
-	else
-		whereto << "Forces in each direction are identical" << endl;
+	
 	
 } // END PrintForceInfo()
 

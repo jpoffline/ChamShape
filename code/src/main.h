@@ -16,7 +16,9 @@
 #include <vector>
 using namespace std;
 
-using namespace std;
+// include GSL library for computing Legendre polynomials
+#include "gsl/gsl_sf_legendre.h"
+
 const double PI = 4.0 * atan(1.0);
 
 // Includes
