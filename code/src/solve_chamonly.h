@@ -189,7 +189,7 @@ vector<double> solve(){
 											
 				 
 
-				eom = -1.0 / ( phi * phi ) + rho + phi_mass * phi_mass * ( phi - phi_inf );
+				eom = - 1.0 / ( phi * phi ) + rho + phi_mass * phi_mass * ( phi - phi_inf );
 				
 				fld[tp][c][i][j] = ht * ( lap - eom ) + phi;	
 								

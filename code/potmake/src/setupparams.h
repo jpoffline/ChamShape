@@ -20,6 +20,8 @@ void setuparams(string paramFileName, struct GRID& box, struct BOOKKEEPING& strs
 	object.type2 = getiniString(paramsfile,"type2","apple");
 	object.mass = getiniDouble(paramsfile,"mass", 1.0);
 	object.measureshift = getiniDouble(paramsfile,"measureshift", 4.0);
+	object.ep1 = getiniDouble(paramsfile,"ep1", 4.0);
+	object.ep2 = getiniDouble(paramsfile,"ep2", 4.0);
 	strs.outDIR = getiniString(paramsfile,"outDIR","data/");
 	strs.mainID = getiniString(paramsfile,"mainID","run");
 	run.nshapes = getiniInt(paramsfile,"nshapes", 10);

@@ -113,7 +113,7 @@ vector<double> initialconditions(double phi_bg){
 			     matterdensity[i][j]=obj_rhobg;
 			}
 			
-			// elliptical distribution
+			// ellipse
 			if(mattdisttype==2){
 				if(abs(x) < elparam1*sqrt(1.0-y*y/elparam2/elparam2))
 					matterdensity[i][j]=obj_density;

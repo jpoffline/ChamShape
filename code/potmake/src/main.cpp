@@ -38,9 +38,9 @@ int main(int argc, char* argv[]) {
 
 	// Put an underscore after the mainID string
 	strs.mainID+="_";
-	
-	double elparam2_start = 2.0;
-	double elparam1_start = elparam2_start;
+
+	double elparam1_start = object.ep1;	
+	double elparam2_start = object.ep2;
 	double dep1 = elparam1_start * ( runparams.maxratio - 1.0 ) / (double)runparams.nshapes;
 	
 	
@@ -103,12 +103,12 @@ int main(int argc, char* argv[]) {
 			double dtheta = 0.1;
 			
 			// Radius of observation zone
-			double rad = runparams.obsrad * object.ep1;
+			double rad = runparams.obsrad * object.rmax;
 			
 			vector<COORDS> points;
 			COORDS coord;
 			ofstream dumpobs;
-			dumpobs.open(strs.outDIR + "obszone" + object.ID + ".dat");
+			dumpobs.open(strs.outDIR + strs.mainID + object.ID + "obszone"  + ".dat");
 			
 			while(true){
 				
@@ -127,10 +127,8 @@ int main(int argc, char* argv[]) {
 				dumpobs << theta << " ";
 				for(int n = 0; n < modfpoints.size(); n++)
 					dumpobs << modfpoints[n] << " ";
-				
 				for(int n = 0; n < gravpots.size(); n++)
 					dumpobs << gravpots[n] << " ";
-				
 				dumpobs << endl;
 				
 				modfpoints.clear();
