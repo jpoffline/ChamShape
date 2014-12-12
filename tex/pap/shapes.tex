@@ -93,6 +93,11 @@ and the field equations (\ref{eq:eom-cham-}) become
 \tilde{\nabla}^2\tilde{\Phi} = - \half \rho.
 \eea
 \ese
+The chameleon force computed in these dimensionless units, $\tilde{\rbm{F}}$, relates to the   force, $\rbm{F}_{(\phi)}$, via
+\bea
+\tilde{\rbm{F}} = - \tilde{\nabla}\tilde{\phi} = \frac{M^{3/2}}{(M\Lambda^5)^{1/4}}\rbm{F}
+\eea
+
 The ratio of the  forces becomes
 \bea
 \frac{\left|\rbm{F}_{(\phi)} \right|}{\left|\rbm{F}_{(\Phi)} \right|} = \left( \frac{\qsubrm{M}{Pl}}{M}\right)^2\frac{\left| \tilde{\nabla}\tilde{\phi}\right|}{\left| \tilde{\nabla}\tilde{\Phi}\right|}
@@ -159,6 +164,20 @@ $a_{12}$ & -0.0013419\\ \hline
 \caption{Values of the coefficients in the Legendre expansion required to generate the ``apple'' shape.}
 \label{apple_coeffs}
 \end{table}%
+
+\section{Comparisons to make}
+Erect ``observation zone'' around an object; this is to be at a fixed location -- probably a circle surrounding the source. Then evaluate the force on that observation zone due to (a) chameleon, and (b) gravity. It may be easier to compute the forces due to the solutions to the linear and non-linear chameleon field equation. That is, numerically obtain the scalars $\phi$ and $\psi$ which solve
+\bse
+\bea
+\nabla^2\phi &=&  \rho + m^2\left( \phi - \phi_{\infty}\right)- \tfrac{1}{\phi^2},\\
+\nabla^2\psi &=&  \rho + m^2\left( \psi - \phi_{\infty}\right).
+\eea
+\ese
+And then compute the forces due to each
+\bea
+\rbm{F}_{\phi} = - \nabla\phi,\qquad \rbm{F}_{\psi} = - \nabla\psi.
+\eea
+This will probe what effect the non-linearity $1/\phi^2$ has on the solutions, and therefore on the forces.
 \section{Discussion}
  
 \end{document}

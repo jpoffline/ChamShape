@@ -38,7 +38,7 @@ double setuparams(string paramFileName){
 	Lambda5 = getiniDouble(paramsfile,"Lambda5", 5.0);	
 	M = getiniDouble(paramsfile,"M", 5.0);	
 	Mpl = getiniDouble(paramsfile,"Mpl", M);	
-	
+	Lparam = getiniDouble(paramsfile,"Lparam", 1.0);	
 	rootoutDIR = getiniString(paramsfile,"rootoutDIR", "output/");		
 	outDIR = getiniString(paramsfile,"outDIR", "data/");		
 	screendumpfreq = getiniInt(paramsfile,"screendumpfreq", 20);	

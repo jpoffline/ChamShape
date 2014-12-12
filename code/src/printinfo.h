@@ -136,6 +136,7 @@ void printobjectproperties(ostream& whereto){
 	whereto << "phi_inf = " << phi_inf << endl;
 	whereto << "Mpl = " << Mpl << endl;	
 	whereto << "Lambda5 = " << Lambda5 << endl;
+	whereto << "Lparam = " << Lparam << endl;
 	whereto << "totmass = " << totmass << endl;
 	whereto << endl;
 	

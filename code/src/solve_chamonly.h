@@ -189,11 +189,11 @@ vector<double> solve(){
 											
 				 
 
-				eom = - 1.0 / ( phi * phi ) + rho + phi_mass * phi_mass * ( phi - phi_inf );
+				eom = - Lparam / ( phi * phi ) + rho + phi_mass * phi_mass * ( phi - phi_inf );
 				
 				fld[tp][c][i][j] = ht * ( lap - eom ) + phi;	
 								
-				error_phi = error_phi + ( fld[tp][c][i][j] - phi ) * h2;
+				error_phi = error_phi + ( fld[tp][c][i][j] - phi ) / ht * h2;
 				
 			    int_CHAMforce = int_CHAMforce + fd[c] * h2;
 					 					

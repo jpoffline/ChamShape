@@ -60,9 +60,18 @@ int main(int argc, char* argv[]) {
 	 	// zero the background density of the source
 	 	obj_rhobg = 0.0;
 	 
+	 	double s1, s2, s3, phi_bg;
+	 	//cout << gsl_poly_solve_cubic(-phi_inf, 0.0, -Lparam/phi_mass/phi_mass, &s1, &s2, &s3) << endl;
+		int getroots = gsl_poly_solve_cubic(-phi_inf, 0.0, -Lparam/phi_mass/phi_mass, &s1, &s2, &s3);
+		cout << "nroots for bg = " << getroots << " ";
+		cout << s1 << " " << s2 << " " << s3 << endl;
+		if(Lparam > 0)
+			phi_bg = s1;
+		else
+			phi_bg = s3;
 		// (0) set the initial conditions
 		// argument = phi_bg
-		double phi_bg = phi_inf;
+		//double phi_bg = phi_inf;
 		icRETS = initialconditions(phi_bg);
 		totmass = icRETS[0];
 		cout << "Object's total mass = " << totmass << endl;
