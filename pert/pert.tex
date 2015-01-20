@@ -1,0 +1,76 @@
+%\documentclass[a4paper,eqsecnum,twoside,aps,floatfix,notitlepage]{revtex4}
+
+\documentclass[amsmath,amssymb,10pt,eqsecnum]{revtex4}
+\usepackage{graphicx,float,subfloat}
+\usepackage[breaklinks, colorlinks, citecolor=blue]{hyperref}
+\usepackage{bm}% bold math
+\linespread{1}
+\usepackage{subfigure}
+\usepackage{hyperref}
+
+\input{defs}
+ 
+\begin{document}
+
+\title{Shaping the chameleon}
+\author{Jonathan A. Pearson}
+\email{j.pearson@nottingham.ac.uk}
+\affiliation{School of Physics \& Astronomy, University of Nottingham, Nottingham, NG7 2RD, U.K.}	
+\date{\today}
+
+\begin{abstract}
+In conversation with C. Burrage
+\end{abstract}
+
+\maketitle
+
+
+\tableofcontents
+
+ 
+ 
+ 
+\section{Introduction} 
+
+
+\bse
+\bea
+\phi = \left\{\begin{array}{ccc}
+\qsubrm{\phi}{c} & & 0 < r < S,\\
+\frac{\rho r^2}{6m} + \frac{c}{r} + d && S < r < R,\\
+\frac{\alpha}{r} + \phi_{\infty} && R < r
+\end{array}\right.
+\eea
+\ese
+Matching value and derivative at $r = S$:
+\bea
+\qsubrm{\phi}{c} = \frac{\rho S^2}{6m} + \frac{c}{S} + d ,\qquad 0 = \frac{\rho S}{3m} - \frac{c}{S^2}
+\eea
+Matching value and derivative at $r = R$:
+\bea
+\frac{\rho R^2}{6m} + \frac{c}{R} + d = \frac{\alpha}{R} + \phi_{\infty},\qquad \frac{\rho R}{3m} - \frac{c}{R^2} = - \frac{\alpha}{R^2}.
+\eea
+We thus combine to obtain
+\bea
+c = \frac{\rho S^3}{3m},\qquad \alpha = \frac{\rho}{3m} \left( S^3 - R^3\right),\qquad d = \qsubrm{\phi}{c} - \frac{\rho S^2}{2m}.
+\eea
+Now, let all quantities aquire an angular perturbation,
+\bea
+X \rightarrow X_0 + \varepsilon X_1(\theta).
+\eea
+Collecting like powers of $\varepsilon$ yields
+\bea
+\frac{\alpha_1}{\alpha_0} = \frac{\rho_1}{\rho_0} + \frac{3}{1 - \left(S_0/R_0\right)^3} \left[ \frac{R_1}{R_0} - \left( \frac{S_0}{R_0}\right)^2 \frac{S_1}{R_0} \right].
+\eea
+Note that $\alpha$ will be the magnitude of the radial component of the chameleon force outside the source. Note that if $S_0 \approx R_0$ then the denominator above will become very small, meaning that $\alpha_1/\alpha_0$ could become rather large.
+
+The volume of the thin shell is
+\bea
+\mathcal{V} = \frac{4}{3}\pi \left( R^3 - S^3\right).
+\eea
+Hence,
+\bea
+\mathcal{V} = \mathcal{V}_0 + 4 \pi R_0^3\left[ \frac{R_1}{R_0} - \left( \frac{S_0}{R_0}\right)^2 \frac{S_1}{R_0} \right]
+\eea
+{\tt Does this make sense? volume is an integrated quantity, and here we have angular-dependent terms on the RHS}
+\end{document}

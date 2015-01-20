@@ -187,8 +187,6 @@ vector<double> solve(){
 				// The updating algorithms; also computes an error measurement
 				// error measurements are the violation of the equation of motion	
 											
-				 
-
 				eom = - Lparam / ( phi * phi ) + rho + phi_mass * phi_mass * ( phi - phi_inf );
 				
 				fld[tp][c][i][j] = ht * ( lap - eom ) + phi;	
