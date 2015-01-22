@@ -64,13 +64,41 @@ Collecting like powers of $\varepsilon$ yields
 \eea
 Note that $\alpha$ will be the magnitude of the radial component of the chameleon force outside the source. Note that if $S_0 \approx R_0$ then the denominator above will become very small, meaning that $\alpha_1/\alpha_0$ could become rather large.
 
-The volume of the thin shell is
+In spherical polar coordinates $x^i = (r, \theta, \chi)$, the force is
 \bea
-\mathcal{V} = \frac{4}{3}\pi \left( R^3 - S^3\right).
+\rbm{F} = - \nabla \phi = - \left( \pd{\phi}{r} \hat{\rbm{r}} + \frac{1}{r}\pd{\phi}{\theta}\hat{\gbm{\theta}} +\frac{1}{r\sin\theta} \pd{\phi}{\chi} \hat{\gbm{\chi}} \right).
 \eea
-Hence,
+Write $F = |\rbm{F}|$. Then,
 \bea
-\mathcal{V} = \mathcal{V}_0 + 4 \pi R_0^3\left[ \frac{R_1}{R_0} - \left( \frac{S_0}{R_0}\right)^2 \frac{S_1}{R_0} \right]
+F^2 = F_r^2 + F_{\theta}^2 + F_{\chi}^2,\qquad F_r \defn \pd{\phi}{r},\qquad F_{\theta} \defn \frac{1}{r}\pd{\phi}{\theta},\qquad F_{\chi} \defn \frac{1}{r\sin\theta}\pd{\phi}{\chi}.
 \eea
-{\tt Does this make sense? volume is an integrated quantity, and here we have angular-dependent terms on the RHS}
+Since we have $\alpha = \alpha_0 + \varepsilon\alpha_1$, we have the corresponding decomposition of $\phi$:
+\bea
+\phi = \phi_{\infty} + \frac{\alpha_0 + \varepsilon \alpha_1(\theta, \chi)}{r} .
+\eea
+Hence, writing $\phi = \phi_0 + \varepsilon\phi_1$, we identify
+\bea
+\phi_0 = \phi_{\infty} + \frac{\alpha_0}{r},\qquad \phi_1 = \frac{\alpha_1(\theta, \chi)}{r}.
+\eea
+The only non-zero contribution to the force at zeroth-order in $\varepsilon$ is 
+\bea
+F_r^{(0)} = \pd{\phi_0}{r} = - \frac{\alpha_0}{r^2}.
+\eea
+All contributions to the force are non-zero at first order in $\varepsilon$; they are
+\bea
+F_r^{(1)} = \pd{\phi_1}{r} = - \frac{\alpha_1}{r^2},\qquad F_{\theta}^{(1)} = \frac{1}{r^2}\pd{\alpha_1}{\theta},\qquad F_{\chi}^{(1)} = \frac{1}{r^2\sin\theta}\pd{\alpha_1}{\chi}.
+\eea
+Now,
+\bea
+\pd{\alpha_1}{\psi} = \alpha_0\left( \frac{1}{\rho_0}\pd{\rho_1}{\psi} +  \frac{3}{1 - \left(S_0/R_0\right)^3} \left[ \frac{1}{R_0} \pd{R_1}{\psi}- \left( \frac{S_0}{R_0}\right)^2 \frac{1}{R_0}\pd{S_1}{\psi}\right]\right),\qquad \psi \in \{\theta, \chi\}.
+\eea
+%The volume of the thin shell is
+%\bea
+%\mathcal{V} = \frac{4}{3}\pi \left( R^3 - S^3\right).
+%\eea
+%Hence,
+%\bea
+%\mathcal{V} = \mathcal{V}_0 + 4 \pi R_0^3\left[ \frac{R_1}{R_0} - \left( \frac{S_0}{R_0}\right)^2 \frac{S_1}{R_0} \right]
+%\eea
+%{\tt Does this make sense? volume is an integrated quantity, and here we have angular-dependent terms on the RHS}
 \end{document}
