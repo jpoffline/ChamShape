@@ -10,3 +10,4 @@ code/output/
 tex/*.gz
 *~
 code/plots/*.pdf
+code_phi4/makefile
