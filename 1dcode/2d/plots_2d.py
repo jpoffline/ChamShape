@@ -5,7 +5,7 @@ import plotaux.plot_aux as aux
 
 buff = 1000
 #object_sizes = (3.0,1.0,0.3,0.1,0.03)
-object_radii = (1.5,0.5,0.15)
+object_radii = (1.5,0.5,0.15,0.05)
 
 NP = len(object_radii)
 
