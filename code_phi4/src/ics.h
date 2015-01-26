@@ -144,7 +144,7 @@ vector<double> initialconditions(double phi_bg, double phi_obj){
 					val = unitrand() * phi_obj;
 				else{
 					if(outside_bl( i , j , imax , jmax , bl + 10) )
-						val = phi_bg;
+						val = unitrand() * phi_bg;
 					else
 						val = phi_bg;
 				}

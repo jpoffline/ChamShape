@@ -81,13 +81,12 @@ int main(int argc, char* argv[]) {
 		
 		int getroots_bg = gsl_poly_solve_cubic(0.0, 6.0 * mphi2 / lambda, - 6.0 * beta * obj_rhobg / lambda / Mpl, &s1_b, &s2_b, &s3_b);
 		int getroots_obj = gsl_poly_solve_cubic(0.0, 6.0 * mphi2 / lambda, - 6.0 * beta * obj_density / lambda / Mpl, &s1_o, &s2_o, &s3_o);		
-		cout "Roots:" << endl;
+		cout << "Roots:" << endl;
 		cout << "inside object: " << s1_o << " " << s2_o << " " << s3_o << endl;
 		cout << "outside object: " << s1_b << " " << s2_b << " " << s3_b << endl;
 		phi_bg = s1_b;
 		phi_obj = s1_o;
 		// (0) set the initial conditions
-		// argument = phi_bg
 		icRETS = initialconditions(phi_bg, phi_obj);
 		totmass = icRETS[0];
 		cout << "Object's total mass = " << totmass << endl;
