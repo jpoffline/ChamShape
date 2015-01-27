@@ -30,6 +30,10 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
     # Zero the loop number
     loop = 0
     
+    # initiate counter for the error
+    error = 0.0
+    error_old = error
+    
     # How many loops to do before checking if the error is small enough?
     settle = 10
     
@@ -39,12 +43,6 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
     
     # Extract the time step-size
     ht = evparams[1]
-    
-    # How many time-history items?
-    N_thist_items = 3
-    thist_items = []
-    for i in xrange(0,N_thist_items):
-        thist_items.append(0.0)
         
     # Keep going with gradient flow until a solution has been found
     while True:
@@ -54,6 +52,8 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
         #   Update phi
         #
         ###### ------- ###### ------- ######
+        
+        error_old = error
         
         # Update the value of the scalar, and get a measure of the error on the "solution"
         (phi_new, error) = up.run_update( phi_old, phi_new, rho, evparams, potparams )
@@ -67,19 +67,31 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
         # Check to see if various quantities need outputting this loop
         # (1) dump timehistory 
         if loop % thist_screen_freq == 0:
+            
+            # Initiate a list containing time-history items
+            thist_items = []
+            
             # Construct timehistory items
-            thist_items[0] = loop
-            thist_items[1] = loop * ht
-            thist_items[2] = error
+            thist_items.append( loop )
+            thist_items.append( loop * ht )
+            thist_items.append( error )
+            thist_items.append( ( error - error_old ) / ht )
+            
             # Dump timehistory to file,
             writer.dump_thist( thist_items, ( 'file' , thist_filename ) )
+            
             # ... then to screen
             writer.dump_thist( thist_items, ['screen'] )
         
         # (2) dump fields & forces to file
         if loop % field_dump_freq == 0:
+            # First dump phi
             writer.dump( (X,Y), phi_new, outDIR +  runID + uptodate_phi_file_suffix, gridparams[1], gridparams[2] )
+            
+            # Compute the force
             force = computers.computeforce(phi_new, gridparams, evparams)
+            
+            # Now dump the force
             writer.dump( (X,Y), force, outDIR + runID + uptodate_force_file_suffix, gridparams[1], gridparams[2] )
         
       
