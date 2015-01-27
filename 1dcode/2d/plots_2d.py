@@ -9,9 +9,11 @@ import os.path
 
 buff = 10000
 
+fileDIR = 'out/'
+
 # Read in the 'object properties' file
 # in order to find out what we can plot
-object_radii = aux.getobjectinfo('out/','object_props.dat')
+object_radii = aux.getobjectinfo(fileDIR,'object_props.dat')
 
 plot_it_1_proto = 'phi'
 plot_it_2_proto = 'force'
@@ -22,7 +24,7 @@ for i in xrange(0,NP):
      
     fID = str(buff + i)    
     
-    if not os.path.exists('out/' + fID + '_' + plot_it_1_proto + '.dat'):
+    if not os.path.exists(fileDIR + fID + '_' + plot_it_1_proto + '.dat'):
         plot_it_1 = 'u' + plot_it_1_proto
         plot_it_2 = 'u' + plot_it_2_proto
         inf = 'u'
@@ -31,7 +33,7 @@ for i in xrange(0,NP):
         plot_it_2 = plot_it_2_proto
         inf = ''
     
-    filename = 'out/' + fID + '_' + plot_it_1 + '.dat'
+    filename = fileDIR + fID + '_' + plot_it_1 + '.dat'
     
     if os.path.exists(filename):
         
@@ -40,7 +42,7 @@ for i in xrange(0,NP):
         for j in xrange(0,len(y)):
             y[j] = str(float(y[j]) - object_radii[i])
     
-        filename = 'out/' + fID + '_' + plot_it_2 + '.dat'
+        filename = fileDIR + fID + '_' + plot_it_2 + '.dat'
     
         (x,y,F) = aux.GetData(filename)    
         (y,force) = aux.Get_x((x,y,F),0)
@@ -49,8 +51,10 @@ for i in xrange(0,NP):
         
         plt.subplot(121)    
         plt.plot( y, phi ,label = inf + str(object_radii[i]) )
+        
         plt.subplot(122)    
         plt.plot( y, force ,label = inf + str(object_radii[i]) )
+        
         plt.xlim([0, 1.5])     
 
    
