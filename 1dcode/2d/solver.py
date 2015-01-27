@@ -59,6 +59,8 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
         # Update the value of the scalar, and get a measure of the error on the "solution"
         (phi_new, error, energy) = up.run_update( phi_old, phi_new, rho, evparams, potparams )
         
+        energy_change = ( energy - energy_old ) / ht
+        
         ###### ------- ###### ------- ######
         #   
         #   Dumpers
@@ -78,7 +80,7 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
             thist_items.append( error )
             thist_items.append( ( error - error_old ) / ht )
             thist_items.append( energy )
-            thist_items.append( ( energy - energy_old ) / ht )
+            thist_items.append( energy_change )
             
             # Dump timehistory to file,
             writer.dump_thist( thist_items, ( 'file' , thist_filename ) )
@@ -111,12 +113,16 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
         phi_old = phi_new
         
         # Decide whether or not to kill this solving loop
-        if loop > settle and error < tol:
+        if loop > settle and abs(energy_change) < tol:
             break
     
     # Compute the force corresponding to this solution            
     force = computers.computeforce(phi_new, gridparams, evparams)
 
       
-    # Return the phi, force, and error back
-    return (phi_new, force, error)
+    # Return the phi, force, error, and energy back
+    return (phi_new, force, error, energy)
+    
+    
+    
+    

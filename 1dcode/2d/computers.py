@@ -42,9 +42,7 @@ def computeforce(phi, (h, mins, maxs), ( d, ht, ev_min, ev_max ) ):
         for j in xrange(mins[1],maxs[1]):
             to_put = 0.0
             if i > ev_min[0] and i < ev_max[0] and j > ev_min[1] and j < ev_max[1]:
-                (fx, fy) = compute_grad( (phi[i + 1][j], phi[i - 1][j], phi[i][j+1], phi[i][j-1]),h)
-                #fx = ( phi[i + 1][j] - phi[i - 1][j] ) / 2.0 / h
-                #fy = ( phi[i][j + 1] - phi[i][j - 1] ) / 2.0 / h
+                (fx, fy) = compute_grad( (phi[i + 1][j], phi[i - 1][j], phi[i][j + 1], phi[i][j - 1]),h)
                 to_put = math.sqrt( fx * fx + fy * fy )
             force_dumm.append(abs(to_put))
         force.append(force_dumm)    

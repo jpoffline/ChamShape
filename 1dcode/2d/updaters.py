@@ -31,8 +31,15 @@ def run_update(phi_current, phi_new, rho, (h,ht,ev_min,ev_max), potparams):
             
             # Extract the value of phi at this location
             phi_here = phi_current[i][j]
+            
+            # Extract the value of rho at this location
             rho_here = rho[i][j]
             
+            ###### ------- ###### ------- ######
+            #   
+            #   Updater
+            #
+            ###### ------- ###### ------- ######
             
             # Obtain the Laplacian
             lap = comp.computelap(phi_current,i,j,h2)
@@ -46,8 +53,14 @@ def run_update(phi_current, phi_new, rho, (h,ht,ev_min,ev_max), potparams):
             # Update phi at this location using gradient flow
             phi_new[i][j] = update_gradientflow(phi_here, eom, ht) 
             
+            ###### ------- ###### ------- ######
+            #   
+            #   Energy calculation
+            #
+            ###### ------- ###### ------- ######
+            
             # Get the gradient of the field at this location
-            (fx, fy) = comp.compute_grad( (phi_current[i + 1][j], phi_current[i - 1][j], phi_current[i][j+1], phi_current[i][j-1]) , h )
+            (fx, fy) = comp.compute_grad( (phi_current[ i + 1 ][ j ], phi_current[ i - 1 ][ j ], phi_current[ i ][ j + 1 ], phi_current[ i ][ j - 1 ]) , h )
             
             # Get the potential energy of the field at this location
             pot = comp.computepot( phi_here, rho_here, potparams )
@@ -56,12 +69,12 @@ def run_update(phi_current, phi_new, rho, (h,ht,ev_min,ev_max), potparams):
             energydensity = comp.compute_energy_density((fx, fy), pot)
             
             # Compute the error on this configuration
-            error = error + eom * h2
+            error = error + eom 
             
             # Compute energy
-            energy = energy + energydensity * h2
+            energy = energy + energydensity 
     
     # Return the new value of phi, the error, and the energy density
-    return (phi_new, error, energy)
+    return (phi_new, error * h2, energy * h2)
     
     

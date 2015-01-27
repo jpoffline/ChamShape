@@ -40,11 +40,11 @@ def main():
         out_info_params[ len( out_info_params ) - 1 ] = runID        
         
         # Get a solution of "phi" for this rho
-        (phi, force, error) = solver.find_solution( gridparams, evparams, potparams, rho, rho_vals, tol , out_info_params )
+        (phi, force, error, energy) = solver.find_solution( gridparams, evparams, potparams, rho, rho_vals, tol , out_info_params )
         
         # Dump the solution (phi) and force to file
-        #writer.dump( (X,Y), phi, outDIR + str(runID) + phi_final_filename, mins, maxs )
-        #writer.dump( (X,Y), force, outDIR + str(runID) + force_final_filename, mins, maxs )
+        writer.dump( (X,Y), phi, outDIR + str(runID) + phi_final_filename, mins, maxs )
+        writer.dump( (X,Y), force, outDIR + str(runID) + force_final_filename, mins, maxs )
         
         runID = runID + 1
         
