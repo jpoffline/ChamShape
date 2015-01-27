@@ -7,7 +7,7 @@ import os.path
 buff = 10000
 
 object_radii = (1.5,0.5,0.15,0.05)
-plot_it_2 = 'phi'
+plot_it_1 = 'phi'
 plot_it_2 = 'force'
 
 NP = len(object_radii)
