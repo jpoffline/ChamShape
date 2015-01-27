@@ -25,7 +25,7 @@ def main():
         
     for obj in object_params:
         
-        print 'Object ' + object_param_dialled_name_singular + ' = ', obj, unit_length_screen
+        print 'Object ' + object_param_dialled_name_singular + ' = ', obj, unit_length_screen, '; runID = ', runID
         
         # Setup the size parameters for this object
         obj_params = ( obj, rho_obj, rho_bg )

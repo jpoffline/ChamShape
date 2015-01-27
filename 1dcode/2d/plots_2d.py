@@ -3,17 +3,19 @@ import math
 import plotaux.plot_aux as aux
 
 
-buff = 1000
+buff = 10000
 
 object_radii = (1.5,0.5,0.15,0.05)
+plot_it_2 = 'phi'
+plot_it_2 = 'force'
 
 NP = len(object_radii)
 
 for i in xrange(0,NP):  
      
-    fID = str(buff) + str(i)
+    fID = str(buff + i)
     
-    filename = 'out/' + fID + '_phi.dat'
+    filename = 'out/' + fID + '_' + plot_it_1 + '.dat'
     if open(filename,'r'):
         
         (x,y,F) = aux.GetData(filename)    
@@ -22,7 +24,7 @@ for i in xrange(0,NP):
             y[j] = str(float(y[j]) - object_radii[i])
     
     
-        filename = 'out/' + fID + '_force.dat'
+        filename = 'out/' + fID + '_' + plot_it_2 + '.dat'
     
         (x,y,F) = aux.GetData(filename)    
         (y,force) = aux.Get_x((x,y,F),0)

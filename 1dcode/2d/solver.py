@@ -1,5 +1,5 @@
 # solver.py
-
+import time
 import ic
 import updaters as up
 import computers

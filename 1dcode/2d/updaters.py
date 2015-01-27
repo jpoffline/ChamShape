@@ -42,7 +42,7 @@ def run_update(phi_current, phi_new, rho, (h,ht,ev_min,ev_max), potparams):
             ###### ------- ###### ------- ######
             
             # Obtain the Laplacian
-            lap = comp.computelap(phi_current,i,j,h2)
+            lap = comp.computelap(phi_current,(i,j),h2)
             
             # Obtain dV/dphi
             dpot = comp.computedpot(phi_here, rho_here, potparams)
@@ -60,7 +60,7 @@ def run_update(phi_current, phi_new, rho, (h,ht,ev_min,ev_max), potparams):
             ###### ------- ###### ------- ######
             
             # Get the gradient of the field at this location
-            (fx, fy) = comp.compute_grad( (phi_current[ i + 1 ][ j ], phi_current[ i - 1 ][ j ], phi_current[ i ][ j + 1 ], phi_current[ i ][ j - 1 ]) , h )
+            (fx, fy) = comp.compute_grad( phi_current, (i,j) , h )
             
             # Get the potential energy of the field at this location
             pot = comp.computepot( phi_here, rho_here, potparams )

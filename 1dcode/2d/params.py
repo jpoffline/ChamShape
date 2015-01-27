@@ -13,7 +13,7 @@ imin = 0
 jmin = 0
 
 bl = 2
-h = 0.04
+h = 0.08
 ht = 0.0005
 rho_obj = 1.0
 rho_bg = 0.001
@@ -24,7 +24,7 @@ mphi2 = 0.0
 outDIR = 'out/'
 
 shape_type = 'circle' 
-object_radii = (1.5,0.5,0.15,0.05)
+object_radii = (3.0,1.5,0.5,0.15,0.05)
 object_param_dialled_name = 'radii'
 object_param_dialled_name_singular = 'radius'
 
