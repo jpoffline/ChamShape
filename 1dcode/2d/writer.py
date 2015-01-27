@@ -37,3 +37,21 @@ def dump_info(outDIR,log_fn,info):
     f = open(outDIR + log_fn,'w')
     f.write(info)
     f.close()    
+    
+
+def boot_up_objfile(outDIR, obj_prop_file_name):  
+    
+    filename = outDIR + obj_prop_file_name
+    obj_prop_file_stream = open(filename,'w')
+    obj_prop_file_stream.close()
+    
+    return filename
+    
+
+def write_objfile(filename, prop):
+    
+    obj_prop_file_stream = open(filename,'a')
+    obj_prop_file_stream.write(str(prop) + '\n')
+    obj_prop_file_stream.close()    
+    
+    

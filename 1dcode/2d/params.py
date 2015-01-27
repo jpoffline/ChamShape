@@ -56,7 +56,7 @@ final_phi_file_suffix = '_phi.dat'
 final_force_file_suffix = '_force.dat'
 thist_file_suffix = '_thist.dat'
 log_file_name = 'log.dat'
-
+obj_prop_file_name = 'object_props.dat'
 
 
 ################################################################################################

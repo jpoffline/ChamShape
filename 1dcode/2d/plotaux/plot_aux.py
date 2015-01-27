@@ -1,3 +1,6 @@
+# plot_aux.py
+
+
 def GetData(filename):
     f = open(filename,'r')
     lines = f.readlines()
@@ -25,3 +28,18 @@ def Get_x((x,y,field),VAL):
             F.append(field[i])  
             
     return (Y,F)   
+    
+
+def getobjectinfo(outd, fn):
+    
+    filename = outd + fn
+    file = open(filename,'r')
+    lines = file.readlines()
+    file.close()
+    object_radii = []
+    for line in lines:
+        if line.strip() and len(line.split()) > 0:
+            theline = line.split()
+            object_radii.append(float(theline[0]))
+    
+    return tuple(object_radii)    

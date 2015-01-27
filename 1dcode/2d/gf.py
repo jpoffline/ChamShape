@@ -22,10 +22,17 @@ def main():
     
     X = computers.getspacevect(imin,imax,h)
     Y = computers.getspacevect(jmin,jmax,h)
+    
+    
+    
+    obj_prop_filename = writer.boot_up_objfile(outDIR, obj_prop_file_name)
+    
         
     for obj in object_params:
         
         print 'Object ' + object_param_dialled_name_singular + ' = ', obj, unit_length_screen, '; runID = ', runID
+        
+        writer.write_objfile(obj_prop_filename,obj)
         
         # Setup the size parameters for this object
         obj_params = ( obj, rho_obj, rho_bg )
@@ -40,11 +47,11 @@ def main():
         out_info_params[ len( out_info_params ) - 1 ] = runID        
         
         # Get a solution of "phi" for this rho
-        (phi, force, error, energy) = solver.find_solution( gridparams, evparams, potparams, rho, rho_vals, tol , out_info_params )
+        #(phi, force, error, energy) = solver.find_solution( gridparams, evparams, potparams, rho, rho_vals, tol , out_info_params )
         
         # Dump the solution (phi) and force to file
-        writer.dump( (X,Y), phi, outDIR + str(runID) + phi_final_filename, mins, maxs )
-        writer.dump( (X,Y), force, outDIR + str(runID) + force_final_filename, mins, maxs )
+        #writer.dump( (X,Y), phi, outDIR + str(runID) + phi_final_filename, mins, maxs )
+        #writer.dump( (X,Y), force, outDIR + str(runID) + force_final_filename, mins, maxs )
         
         runID = runID + 1
         
