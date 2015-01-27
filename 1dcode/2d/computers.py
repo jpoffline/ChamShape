@@ -4,7 +4,7 @@ import math
 
 def computelap( phi, i, j, h2 ):
     
-    return (phi[i + 1][j] + phi[i - 1][j] + phi[i][j + 1]  + phi[i][j - 1] - 4.0 * phi[i][j]) / h2    
+    return ( phi[i + 1][j] + phi[i - 1][j] + phi[i][j + 1]  + phi[i][j - 1] - 4.0 * phi[i][j] ) / h2    
 
 def computepot(phi, rho, (mphi2, lam, beta, Mpl) ):
     
@@ -21,7 +21,7 @@ def computeeom(lap,dpot):
 def computeforce(phi, (h, mins, maxs), ( d, ht, ev_min, ev_max ) ):
     
     force = []
-    
+
     for i in xrange(mins[0],maxs[0]):
         force_dumm = []
         for j in xrange(mins[1],maxs[1]):
@@ -32,6 +32,7 @@ def computeforce(phi, (h, mins, maxs), ( d, ht, ev_min, ev_max ) ):
                 to_put = math.sqrt( fx * fx + fy * fy )
             force_dumm.append(abs(to_put))
         force.append(force_dumm)    
+        
     return force    
     
     
