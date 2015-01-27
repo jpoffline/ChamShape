@@ -33,7 +33,8 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
     # initiate counter for the error
     error = 0.0
     error_old = error
-    
+    energy = 0.0
+    energy_old = energy
     # How many loops to do before checking if the error is small enough?
     settle = 10
     
@@ -52,11 +53,11 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
         #   Update phi
         #
         ###### ------- ###### ------- ######
-        
+        energy_old = energy
         error_old = error
         
         # Update the value of the scalar, and get a measure of the error on the "solution"
-        (phi_new, error) = up.run_update( phi_old, phi_new, rho, evparams, potparams )
+        (phi_new, error, energy) = up.run_update( phi_old, phi_new, rho, evparams, potparams )
         
         ###### ------- ###### ------- ######
         #   
@@ -76,6 +77,8 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
             thist_items.append( loop * ht )
             thist_items.append( error )
             thist_items.append( ( error - error_old ) / ht )
+            thist_items.append( energy )
+            thist_items.append( ( energy - energy_old ) / ht )
             
             # Dump timehistory to file,
             writer.dump_thist( thist_items, ( 'file' , thist_filename ) )
