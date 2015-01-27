@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import math
 import plotaux.plot_aux as aux
+import os.path
 
 
 buff = 10000
@@ -16,7 +17,8 @@ for i in xrange(0,NP):
     fID = str(buff + i)
     
     filename = 'out/' + fID + '_' + plot_it_1 + '.dat'
-    if open(filename,'r'):
+    
+    if os.path.exists(filename):
         
         (x,y,F) = aux.GetData(filename)    
         (y,phi) = aux.Get_x((x,y,F),0)
