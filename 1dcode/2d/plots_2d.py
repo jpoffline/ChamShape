@@ -45,17 +45,16 @@ for i in xrange(0,NP):
         
         (x,y,F) = aux.GetData(filename)    
         (y,phi_y) = aux.Get_x((x,y,F),0)
+        Y = []
         for j in xrange(0,len(y)):
-            Y[j] = str(float(y[j]) - object_radii[i])
+            Y.append(str(float(y[j]) - object_radii[i]))
     
             
     
     
-        filename = fileDIR + fID + '_' + plot_it_2 + '.dat'
-    
+        filename = fileDIR + fID + '_' + plot_it_2 + '.dat'    
         (x,y,F) = aux.GetData(filename)    
         (y,force_y) = aux.Get_x((x,y,F),0)
-       
         
         plt.subplot(221)    
         plt.plot( Y, phi_y ,label = inf + str(object_radii[i]) )
