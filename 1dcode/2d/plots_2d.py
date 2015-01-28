@@ -52,7 +52,7 @@ for i in xrange(0,NP):
         (xx,phi_x) = aux.Get_y((x,y,F),0)
         X = []
         for j in xrange(0,len(xx)):
-            X.append(str(float(xx[j]) - object_radii[i]))
+            X.append(str(float(xx[j])))
             
     
         filename = fileDIR + fID + '_' + plot_it_2 + '.dat'    
