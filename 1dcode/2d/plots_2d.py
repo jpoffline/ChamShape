@@ -48,16 +48,13 @@ for i in xrange(0,NP):
         for j in xrange(0,len(y)):
             y[j] = str(float(y[j]) - object_radii[i])
     
-        (x,phi_x) = aux.Get_y((x,y,F),0)
-        for j in xrange(0,len(x)):
-            x[j] = str(float(x[j]) - object_radii[i])
     
         filename = fileDIR + fID + '_' + plot_it_2 + '.dat'
     
         (x,y,F) = aux.GetData(filename)    
-        (Y,force_y) = aux.Get_x((x,y,F),0)
-        #for j in xrange(0,len(y)):
-       #     y[j] = str(float(y[j]) - object_radii[i])
+        (y,force_y) = aux.Get_x((x,y,F),0)
+        for j in xrange(0,len(y)):
+            y[j] = str(float(y[j]) - object_radii[i])
         
         (x,y,F) = aux.GetData(filename)    
         (X,force_x) = aux.Get_y((x,y,F),0)
