@@ -59,6 +59,8 @@ for i in xrange(0,NP):
         (x,y,F) = aux.GetData(filename)    
         (y,force_y) = aux.Get_x((x,y,F),0)
         
+        (xx,force_x) = aux.Get_y((x,y,F),0)        
+        
         
         plt.subplot(221)    
         plt.plot( Y, phi_y ,label = inf + str(object_radii[i]) )
@@ -66,11 +68,13 @@ for i in xrange(0,NP):
         plt.subplot(222)    
         plt.plot( X, phi_x ,label = inf + str(object_radii[i]) )
         
-        
         plt.subplot(223)    
         plt.plot( Y, force_y ,label = inf + str(object_radii[i]) )
         plt.xlim([0, 1.5])     
 
+        plt.subplot(224)    
+        plt.plot( X, force_x ,label = inf + str(object_radii[i]) )
+        plt.xlim([0, 1.5]) 
        
    
 leg = plt.legend()   
