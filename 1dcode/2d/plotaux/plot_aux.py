@@ -27,7 +27,17 @@ def Get_x((x,y,field),VAL):
             Y.append(y[i])
             F.append(field[i])  
             
-    return (Y,F)   
+    return (Y,F)
+    
+def Get_y((x,y,field),VAL):
+    X = []
+    F = []
+    for i in xrange (0, len(y)):
+        if float(y[i]) == VAL:
+            X.append(x[i])
+            F.append(field[i])  
+            
+    return (X,F)       
     
 
 def getobjectinfo(outd, fn):

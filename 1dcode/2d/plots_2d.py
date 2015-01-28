@@ -44,25 +44,39 @@ for i in xrange(0,NP):
     if os.path.exists(filename):
         
         (x,y,F) = aux.GetData(filename)    
-        (y,phi) = aux.Get_x((x,y,F),0)
+        (y,phi_y) = aux.Get_x((x,y,F),0)
         for j in xrange(0,len(y)):
             y[j] = str(float(y[j]) - object_radii[i])
+    
+        (x,phi_x) = aux.Get_y((x,y,F),0)
+        for j in xrange(0,len(x)):
+            x[j] = str(float(x[j]) - object_radii[i])
     
         filename = fileDIR + fID + '_' + plot_it_2 + '.dat'
     
         (x,y,F) = aux.GetData(filename)    
-        (y,force) = aux.Get_x((x,y,F),0)
+        (y,force_y) = aux.Get_x((x,y,F),0)
         for j in xrange(0,len(y)):
             y[j] = str(float(y[j]) - object_radii[i])
         
-        plt.subplot(121)    
-        plt.plot( y, phi ,label = inf + str(object_radii[i]) )
+        (x,y,F) = aux.GetData(filename)    
+        (x,force_x) = aux.Get_y((x,y,F),0)
+        for j in xrange(0,len(x)):
+            x[j] = str(float(x[j]) - object_radii[i])
         
-        plt.subplot(122)    
-        plt.plot( y, force ,label = inf + str(object_radii[i]) )
+        plt.subplot(221)    
+        plt.plot( y, phi_y ,label = inf + str(object_radii[i]) )
         
+        plt.subplot(222)    
+        plt.plot( x, phi_x ,label = inf + str(object_radii[i]) )
+        
+        plt.subplot(223)    
+        plt.plot( y, force_y ,label = inf + str(object_radii[i]) )
         plt.xlim([0, 1.5])     
 
+        plt.subplot(224)    
+        plt.plot( x, force_x ,label = inf + str(object_radii[i]) )
+        plt.xlim([0, 1.5]) 
    
 leg = plt.legend()   
 leg.draw_frame(False)
