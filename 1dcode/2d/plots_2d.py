@@ -9,7 +9,7 @@ import os.path
 
 buff = 10000
 
-if len(sys.argv > 0):
+if len(sys.argv) > 1:
     fileDIR = sys.argv[1]
 else:    
     fileDIR = 'out'
