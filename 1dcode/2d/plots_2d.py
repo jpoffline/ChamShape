@@ -55,14 +55,14 @@ for i in xrange(0,NP):
         filename = fileDIR + fID + '_' + plot_it_2 + '.dat'
     
         (x,y,F) = aux.GetData(filename)    
-        (y,force_y) = aux.Get_x((x,y,F),0)
+        (Y,force_y) = aux.Get_x((x,y,F),0)
         for j in xrange(0,len(y)):
-            y[j] = str(float(y[j]) - object_radii[i])
+       #     y[j] = str(float(y[j]) - object_radii[i])
         
         (x,y,F) = aux.GetData(filename)    
-        (x,force_x) = aux.Get_y((x,y,F),0)
+        (X,force_x) = aux.Get_y((x,y,F),0)
         for j in xrange(0,len(x)):
-            x[j] = str(float(x[j]) - object_radii[i])
+        #    x[j] = str(float(x[j]) - object_radii[i])
         
         plt.subplot(221)    
         plt.plot( y, phi_y ,label = inf + str(object_radii[i]) )
