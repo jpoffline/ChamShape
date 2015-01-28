@@ -67,16 +67,11 @@ for i in xrange(0,NP):
         plt.subplot(221)    
         plt.plot( y, phi_y ,label = inf + str(object_radii[i]) )
         
-        plt.subplot(222)    
-        plt.plot( x, phi_x ,label = inf + str(object_radii[i]) )
-        
         plt.subplot(223)    
         plt.plot( y, force_y ,label = inf + str(object_radii[i]) )
         plt.xlim([0, 1.5])     
 
-        plt.subplot(224)    
-        plt.plot( x, force_x ,label = inf + str(object_radii[i]) )
-        plt.xlim([0, 1.5]) 
+       
    
 leg = plt.legend()   
 leg.draw_frame(False)
