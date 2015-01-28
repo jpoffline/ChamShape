@@ -56,12 +56,12 @@ for i in xrange(0,NP):
     
         (x,y,F) = aux.GetData(filename)    
         (Y,force_y) = aux.Get_x((x,y,F),0)
-        for j in xrange(0,len(y)):
+        #for j in xrange(0,len(y)):
        #     y[j] = str(float(y[j]) - object_radii[i])
         
         (x,y,F) = aux.GetData(filename)    
         (X,force_x) = aux.Get_y((x,y,F),0)
-        for j in xrange(0,len(x)):
+        #for j in xrange(0,len(x)):
         #    x[j] = str(float(x[j]) - object_radii[i])
         
         plt.subplot(221)    
