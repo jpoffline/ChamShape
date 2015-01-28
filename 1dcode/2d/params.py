@@ -58,12 +58,10 @@ rho_obj = 1.0
 # density of the ambient environment
 rho_bg = 0.001
 
-shape_type = 'ellipse' 
+#shape_type = 'ellipse' 
 #shape_type = 'circle' 
+shape_type = 'rectangle'
 object_radii = (3.0,1.5,0.5,0.15,0.1)
-
-object_param_dialled_name = 'radii'
-object_param_dialled_name_singular = 'radius'
 
 ## UNITS INFO ##
 unit_length_screen = "[mm]"
@@ -103,13 +101,24 @@ obj_prop_file_name = 'object_props.dat'
 
 if shape_type == 'circle':
     object_params = object_radii
+    object_param_dialled_name = 'radii'
+    object_param_dialled_name_singular = 'radius'
 
 if shape_type == 'ellipse':
     axes = []
     for i in xrange(0,len(object_radii)):
         axes.append((object_radii[0],object_radii[i]))
     object_params = axes   
+    object_param_dialled_name = 'radii'
+    object_param_dialled_name_singular = 'radius'
 
+if shape_type == 'rectangle':
+    axes = []
+    for i in xrange(0,len(object_radii)):
+        axes.append((object_radii[0],object_radii[i]))
+    object_params = axes  
+    object_param_dialled_name = 'side lengths'
+    object_param_dialled_name_singular = 'side length' 
 
 # make sure output directory exists; if not, create it
 import aux_funcs as aux

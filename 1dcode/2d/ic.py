@@ -18,11 +18,17 @@ def isinsideobject(x,y,obj_params,shape_type):
     
     ret = False
     
-    if shape_type == 'circle' and  abs( x * x + y * y ) < obj_params * obj_params:
-        ret = True
+    if shape_type == 'circle':
+        if abs( x * x + y * y ) < obj_params * obj_params:
+            ret = True
         
-    if shape_type == 'ellipse' and  abs( ( x / obj_params[0] ) * ( x / obj_params[0] ) + ( y / obj_params[1] ) * ( y / obj_params[1] ) ) < 1.0:
-        ret = True
+    if shape_type == 'ellipse':
+        if abs( ( x / obj_params[0] ) * ( x / obj_params[0] ) + ( y / obj_params[1] ) * ( y / obj_params[1] ) ) < 1.0:
+            ret = True
+        
+    if shape_type == 'rectangle':
+        if abs(x) < obj_params[0] and abs(y) < obj_params[1]:
+            ret = True    
         
     return ret
                 
