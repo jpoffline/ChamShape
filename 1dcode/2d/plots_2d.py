@@ -44,20 +44,28 @@ for i in xrange(0,NP):
     if os.path.exists(filename):
         
         (x,y,F) = aux.GetData(filename)    
-        (y,phi_y) = aux.Get_x((x,y,F),0)
+        (yy,phi_y) = aux.Get_x((x,y,F),0)
         Y = []
-        for j in xrange(0,len(y)):
-            Y.append(str(float(y[j]) - object_radii[i]))
-    
+        for j in xrange(0,len(yy)):
+            Y.append(str(float(yy[j]) - object_radii[i]))
             
-    
+        (xx,phi_x) = aux.Get_y((x,y,F),0)
+        X = []
+        for j in xrange(0,len(xx)):
+            X.append(str(float(xx[j]) - object_radii[i]))
+            
     
         filename = fileDIR + fID + '_' + plot_it_2 + '.dat'    
         (x,y,F) = aux.GetData(filename)    
         (y,force_y) = aux.Get_x((x,y,F),0)
         
+        
         plt.subplot(221)    
         plt.plot( Y, phi_y ,label = inf + str(object_radii[i]) )
+        
+        plt.subplot(222)    
+        plt.plot( X, phi_x ,label = inf + str(object_radii[i]) )
+        
         
         plt.subplot(223)    
         plt.plot( Y, force_y ,label = inf + str(object_radii[i]) )
