@@ -1,5 +1,5 @@
 # plot_aux.py
-
+from ast import literal_eval
 
 def GetData(filename):
     f = open(filename,'r')
@@ -37,9 +37,23 @@ def getobjectinfo(outd, fn):
     lines = file.readlines()
     file.close()
     object_radii = []
+    clever = False
     for line in lines:
-        if line.strip() and len(line.split()) > 0:
-            theline = line.split()
-            object_radii.append(float(theline[0]))
+        if not line.startswith('('):
+            object_radii.append(float(line[0]))
+        else:
+            object_radii.append(literal_eval(line.strip())) 
+            clever = True  
+            
+    object_radii = tuple(object_radii)        
     
-    return tuple(object_radii)    
+    if clever:
+        object_radiir = []
+        for row in object_radii:
+            object_radiir.append(row[1])
+    else:
+        object_radiir = object_radii  
+          
+    return object_radiir
+    
+    

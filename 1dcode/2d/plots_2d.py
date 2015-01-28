@@ -2,18 +2,24 @@
 
 
 import matplotlib.pyplot as plt
-import math
+import math, sys
 import plotaux.plot_aux as aux
 import os.path
 
 
 buff = 10000
 
-fileDIR = 'out/'
+if len(sys.argv > 0):
+    fileDIR = sys.argv[1]
+else:    
+    fileDIR = 'out'
+
+fileDIR = fileDIR + '/'
 
 # Read in the 'object properties' file
 # in order to find out what we can plot
 object_radii = aux.getobjectinfo(fileDIR,'object_props.dat')
+
 
 plot_it_1_proto = 'phi'
 plot_it_2_proto = 'force'

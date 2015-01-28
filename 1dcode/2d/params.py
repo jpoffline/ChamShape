@@ -89,9 +89,13 @@ log_file_name = 'log.dat'
 obj_prop_file_name = 'object_props.dat'
 
 
+####---####---####---####---####---####---####---####---####---####---####---####---####---####---
+####---####---####---####---####---####---####---####---####---####---####---####---####---####---
+
 ################################################################################################
 #
 #   Parameter house-keeping
+#       - setup some basics of the shapes
 #       - perform basic sanity checks (existence of output)
 #       - put various items into various arrays to be passed through the code
 #
@@ -104,10 +108,6 @@ if shape_type == 'ellipse':
     axes = []
     for i in xrange(0,len(object_radii)):
         axes.append((object_radii[0],object_radii[i]))
-        
-    print axes
-    for obj in axes:
-        print obj[0],obj[1]
     object_params = axes   
 
 
