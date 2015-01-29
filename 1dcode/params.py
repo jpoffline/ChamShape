@@ -1,7 +1,7 @@
-imax = 300
+imax = 1200
 imin = 0
 bl = 2
-h = 0.04
+h = 0.02
 ht = 0.0001
 rho_obj = 1.0
 rho_bg = 0.001

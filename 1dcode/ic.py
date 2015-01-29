@@ -12,13 +12,18 @@ def get_phi_startvals((rho_bg, rho_obj),( mphi2, lam, beta, Mpl )):
 def setuprho((rho_b, rho_o), (h, imin, imax), (object_size, rho_obj, rho_bg)):
     
     rho = []
+    spacing = 2.5
+    
+    osize = 3.0
     
     for i in xrange(imin,imax):
         
         x = computers.computex(i,imax,h)
 
-        if abs(x) < object_size / 2.0:
-            rho_to_put = rho_o
+        if abs(x-spacing) < 2.0*osize / 2.0:
+            rho_to_put = object_size*rho_o
+        elif abs(x+spacing) < osize / 2.0:
+            rho_to_put =  20*rho_o
         else:
             rho_to_put = rho_b
             
