@@ -2,38 +2,17 @@
 
 import computers
 
-def get_phi_startvals((rho_bg, rho_obj),( mphi2, lam, beta, Mpl )):
+def get_phi_startvals(rhos,( mphi2, lam, beta, Mpl )):
+    
+    phis = []
     
     if mphi2 == 0:
-        phi_bg = ( 6.0 * beta * rho_bg / Mpl / lam )**(1.0/3.0)
-        phi_obj = ( 6.0 * beta * rho_obj / Mpl / lam )**(1.0/3.0)
+        for rho in rhos:
+            phis.append( ( 6.0 * beta * rho / Mpl / lam )**(1.0/3.0) )
     
-    return (phi_bg, phi_obj)    
+    return phis   
 
-
-def isinsideobject(x,y,obj_params,shape_type):
-    
-    # Function to determine whether or not a given spatial location
-    # is within the source object.
-    
-    ret = False
-    
-    if shape_type == 'circle':
-        if abs( x * x + y * y ) < obj_params * obj_params:
-            ret = True
-        
-    if shape_type == 'ellipse':
-        if abs( ( x / obj_params[0] ) * ( x / obj_params[0] ) + ( y / obj_params[1] ) * ( y / obj_params[1] ) ) < 1.0:
-            ret = True
-        
-    if shape_type == 'rectangle':
-        if abs(x) < obj_params[0] and abs(y) < obj_params[1]:
-            ret = True    
-        
-    return ret
-                
-
-def setuprho( (rho_b, rho_o), (h, mins, maxs), (object_size, rho_obj, rho_bg),(runID,outDIR), shape_type ):
+def setuprho( rhos, (h, mins, maxs), (object_size, rho_obj, rho_bg),(runID,outDIR), shape_type ):
     
     # Function to setup the density profile of the source
     # which is doing the screening. 
@@ -50,13 +29,8 @@ def setuprho( (rho_b, rho_o), (h, mins, maxs), (object_size, rho_obj, rho_bg),(r
         for j in xrange( mins[1], maxs[1] ):
             # Get the y-value of the current location on the grid
             y = computers.computex(j,maxs[1],h)        
-            
-            if isinsideobject( x, y, (object_size), shape_type ):
-                rho_to_put = rho_o
-            else:
-                rho_to_put = rho_b
-                
-            rho_dumm.append( rho_to_put )
+            (inside, which) = shape_type.isinsideobject( x, y, (object_size) )
+            rho_dumm.append( rhos[which] )
         rho.append( rho_dumm )    
 
     return rho
@@ -72,10 +46,11 @@ def setupphi(rho, rhovals, (h, mins, maxs),potparams):
     for i in xrange(mins[0],maxs[0]):
         phi_dumm = []
         for j in xrange(mins[1],maxs[1]):
-            if rho[i][j] == rho_ob:
-                phi_to_put = phis[1]
-            else:
-                phi_to_put = phis[0]                    
+            
+            for p in xrange(0, len(phis)):
+                if rho[i][j] == rhovals[p]:
+                    phi_to_put = phis[p]              
+            
             phi_dumm.append(phi_to_put)
         phi.append(phi_dumm)    
         
