@@ -5,6 +5,7 @@ import math
 def computelap( phi, loc, h2 ):
     
     # Function to compute and return the Laplacian
+    # Second order accurate finite differences
     
     i = loc[0]
     j = loc[1]
@@ -37,8 +38,9 @@ def compute_grad(phi, loc, h):
     i = loc[0]
     j = loc[1]
     
-    gx = ( phi[i+1][j] - phi[i-1][j] ) / 2.0 / h
-    gy = ( phi[i][j+1] - phi[i][j-1] ) / 2.0 / h
+    gx = ( phi[i + 1][j] - phi[i - 1][j] ) / 2.0 / h
+    gy = ( phi[i][j + 1] - phi[i][j - 1] ) / 2.0 / h
+    
     return (gx, gy)
     
 def compute_energy_density(gradients, pot):
@@ -79,6 +81,8 @@ def computex(grid_coord,max_n_grid_points,space_step_size):
     # a give location on the grid
     
     return (grid_coord - 0.5 * max_n_grid_points) * space_step_size
+        
+        
         
 def getspacevect(imin,imax,h):
     

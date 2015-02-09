@@ -2,6 +2,9 @@
 
 def setup_params(rho_bg, rho_obj):
     
+    
+    object_radii = (3.0,1.5,0.5,0.15,0.1)
+    
     object_params = []
     for i in xrange(0,len(object_radii)):
         object_params.append((object_radii[0],object_radii[i]))

@@ -53,12 +53,15 @@ def find_solution(gridparams,evparams,potparams,rho,rho_vals,tol,out_infos):
         #   Update phi
         #
         ###### ------- ###### ------- ######
+        
+        # Store the old energy and error
         energy_old = energy
         error_old = error
         
         # Update the value of the scalar, and get a measure of the error on the "solution"
         (phi_new, error, energy) = up.run_update( phi_old, phi_new, rho, evparams, potparams )
         
+        # What's the change in the energy between the new and old solutions
         energy_change = ( energy - energy_old ) / ht
         
         ###### ------- ###### ------- ######

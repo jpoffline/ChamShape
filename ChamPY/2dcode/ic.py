@@ -1,3 +1,4 @@
+
 # ic.py 
 
 import computers
@@ -12,7 +13,7 @@ def get_phi_startvals(rhos,( mphi2, lam, beta, Mpl )):
     
     return phis   
 
-def setuprho( rhos, (h, mins, maxs), (object_size, rho_obj, rho_bg),(runID,outDIR), shape_type ):
+def setuprho( rhos, (h, mins, maxs), (object_size, rho_obj, rho_bg), (runID, outDIR), shape_type ):
     
     # Function to setup the density profile of the source
     # which is doing the screening. 
@@ -23,16 +24,25 @@ def setuprho( rhos, (h, mins, maxs), (object_size, rho_obj, rho_bg),(runID,outDI
     rho = []
     
     for i in xrange( mins[0], maxs[0] ):
+        
         # Get the x-value of the current location on the grid
         x = computers.computex( i , maxs[0] , h )
-        rho_dumm = []
+        
+        # Create a dummy "rho"-array just for the j-axis
+        rho_ = []
+        
         for j in xrange( mins[1], maxs[1] ):
             # Get the y-value of the current location on the grid
             y = computers.computex(j,maxs[1],h)        
+            # decide whether this given location is "inside" or "outside"
+            # the source object. If multiple object, then also find out
+            # which object is currently occupied.
             (inside, which) = shape_type.isinsideobject( x, y, (object_size) )
-            rho_dumm.append( rhos[which] )
-        rho.append( rho_dumm )    
+            # From the list of densities, associate this location with a value.
+            rho_.append( rhos[which] )
+        rho.append( rho_ )    
 
+    # Return the vector of densities    
     return rho
 
 def setupphi(rho, rhovals, (h, mins, maxs),potparams):

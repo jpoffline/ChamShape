@@ -1,11 +1,13 @@
 
+# main.py
+
 from math import *
 import matplotlib.pyplot as plt
 import numpy as np
 import ic,solver,computers,printinfo,aux_funcs,writer
 from params import *
 
-from messages import *
+import messages
 
 def driver(source_type, runsolver = True):
     
@@ -26,15 +28,19 @@ def driver(source_type, runsolver = True):
     info = info + printinfo.print_object_params(dialled_name,object_params)
     writer.dump_info(outDIR, log_filename, info )
     
+    # Buffer for the file names
     buff = 10000
+    
+    # ID of the given run
     runID = buff
     
-    X = computers.getspacevect(imin,imax,h)
-    Y = computers.getspacevect(jmin,jmax,h)
-        
+    # Get (X,Y)-vector
+    (X, Y) = ( computers.getspacevect(imin,imax,h), computers.getspacevect(jmin,jmax,h) )
+
+    # Get a filename for the object properties-file    
     obj_prop_filename = writer.boot_up_objfile(outDIR, obj_prop_file_name)
     
-        
+    # Loop over all the source objects    
     for obj in object_params:
         
         print 'Object ' + dialled_name_singular + ' = ', obj, unit_length_screen, '; runID = ', runID
@@ -61,9 +67,10 @@ def driver(source_type, runsolver = True):
             writer.dump( (X,Y), phi, outDIR + str(runID) + phi_final_filename, mins, maxs )
             writer.dump( (X,Y), force, outDIR + str(runID) + force_final_filename, mins, maxs )
         
+        # Increment the ID of the run
         runID = runID + 1
         
-    print MESSAGE_FINISH   
+    print messages.MESSAGE_FINISH   
    
 
 

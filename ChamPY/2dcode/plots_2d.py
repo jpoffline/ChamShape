@@ -65,12 +65,12 @@ for i in xrange(0,NP):
         plt.subplot(221)    
         plt.plot( Y, phi_y ,label = inf + str(object_radii[i]) )
         plt.xlabel('x')
-        plt.ylabel('\phi')
+        plt.ylabel('$\phi$')
         
         plt.subplot(222)    
         plt.plot( X, phi_x ,label = inf + str(object_radii[i]) )
         plt.xlabel('y')
-        plt.ylabel('\phi')
+        plt.ylabel('$\phi$')
                 
         plt.subplot(223)    
         plt.plot( Y, force_y ,label = inf + str(object_radii[i]) )
