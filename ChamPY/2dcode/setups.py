@@ -17,7 +17,10 @@ def setup_source_class(SOURCE_TYPE):
         FLAG = False    
     elif SOURCE_TYPE == "cyl_plate":
         import sourcetypes.cyl_plate as SOURCE_CLASS    
-        FLAG = False    
+        FLAG = False  
+    elif SOURCE_TYPE == "filled_cyl":
+        import sourcetypes.filled_cyl as SOURCE_CLASS    
+        FLAG = False            
     else:
         FLAG = True
         

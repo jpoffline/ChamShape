@@ -50,7 +50,6 @@ ht = 0.0005
 ## NUMERICAL TOLERANCE ##
 
 tol = 0.01
-
 #tol = 0.001
 
 

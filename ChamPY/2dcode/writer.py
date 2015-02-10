@@ -54,4 +54,11 @@ def write_objfile(filename, prop):
     obj_prop_file_stream.write(str(prop) + '\n')
     obj_prop_file_stream.close()    
     
+def write_tofile(filename, to_write):
+    obj_prop_file_stream = open(filename,'a')
+    string = ''
+    for write in to_write:
+        string = string + str(write) + '\t'
+    obj_prop_file_stream.write(string + '\n')
+    obj_prop_file_stream.close()
     

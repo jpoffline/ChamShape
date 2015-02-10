@@ -40,6 +40,8 @@ def driver(source_type, runsolver = True):
     # Get a filename for the object properties-file    
     obj_prop_filename = writer.boot_up_objfile(outDIR, obj_prop_file_name)
     
+    sol_central_values_filename = writer.boot_up_objfile(outDIR, 'centralvals.dat')
+    
     # Loop over all the source objects    
     for obj in object_params:
         
@@ -64,9 +66,17 @@ def driver(source_type, runsolver = True):
             (phi, force, error, energy) = solver.find_solution( gridparams, evparams, potparams, rho, rho_vals, tol , out_info_params )
         
             # Dump the solution (phi) and force to file
-            writer.dump( (X,Y), phi, outDIR + str(runID) + phi_final_filename, mins, maxs )
-            writer.dump( (X,Y), force, outDIR + str(runID) + force_final_filename, mins, maxs )
+            writer.dump( (X,Y), phi, outDIR + str( runID ) + phi_final_filename, mins, maxs )
+            writer.dump( (X,Y), force, outDIR + str( runID ) + force_final_filename, mins, maxs )
         
+            
+            x_cen = computers.computex( int( imax / 2), imax, h )
+            y_cen = computers.computex( int( jmax / 2), jmax, h )            
+            phi_cen = phi[ int( imax / 2) ][ int( jmax / 2 ) ]
+            for_cen = force[ int( imax / 2)][ int( jmax / 2 ) ]
+            vals_cen = ( obj, x_cen, y_cen, phi_cen, for_cen, rho_obj, rho_bg )
+            writer.write_tofile(sol_central_values_filename,vals_cen)
+            
         # Increment the ID of the run
         runID = runID + 1
         
