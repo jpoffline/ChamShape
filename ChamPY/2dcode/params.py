@@ -19,7 +19,7 @@
 
 ## OUTPUT DIRECTORY ##
 
-outDIR = 'out_test/'
+outDIR = 'ellipse_many/'
 
 # make sure output directory exists; if not, create it
 
@@ -31,9 +31,9 @@ aux.check_dir_exists(outDIR)
 
 ## LATTICE INFO ##
 
-#imax = 300
+imax = 300
 #jmax = 300
-imax = 150
+#imax = 150
 jmax = imax
 
 
@@ -49,8 +49,8 @@ ht = 0.0005
 
 ## NUMERICAL TOLERANCE ##
 
-tol = 0.01
-#tol = 0.001
+#tol = 0.01
+tol = 0.0001
 
 
 ####---####---####---####---####---####---####---####---####---####---####---####---####---####---

@@ -1,6 +1,13 @@
 # plot_aux.py
 from ast import literal_eval
 
+
+def Str2Float(data):
+    for i in xrange(0,len(data)):
+        data[i] = float(data[i])
+
+    return data    
+
 def GetData(filename):
     f = open(filename,'r')
     lines = f.readlines()
@@ -18,6 +25,21 @@ def GetData(filename):
         
     return (x,y,dat)
     
+    
+def GetData_arb(p1, p2, filename):
+    f = open(filename,'r')
+    lines = f.readlines()
+
+    f.close()
+    x = []
+    dat = []
+    for line in lines:
+        if line.strip() and len(line.split()) > 0:
+            theline = line.split()
+            x.append(theline[p1])
+            dat.append(theline[p2])
+        
+    return (x,dat)    
     
 def Get_x((x,y,field),VAL):
     Y = []
