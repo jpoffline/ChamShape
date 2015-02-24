@@ -1,17 +1,36 @@
+#--#
+#
+#   Driver to find the "thin shell" from a chameleon field configuration.
+#       Call as
+#          > python findshell.py circle
+#       where "circle" has been used as an example to denote that this
+#       code will search the "circle" directory for files containing the chameleon fields.
+#
+#
+
+
 import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 import plotaux.plot_aux as aux
 from shell_algorithms import *
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+printopeningstatement()
 
-
+# Array with markers for plotting
 markers = ('o','s','^','d','v','*')
 
 type_dir = GetFileName(sys.argv)
 output_dir = 'output/'
 objs_props_file = 'object_props.dat'
 
+out_fig_name = type_dir + '.pdf'
+pp = PdfPages(out_fig_name)
+fig = plt.figure()
+each_fig_height = 5
+fig.set_size_inches(3 * each_fig_height, each_fig_height)
 # What're the force thresholds to use?
+# These are the *values* of the force above which the "shell" is deemed to exist
 threshs = (0.1, 1.0, 2.0, 5.0, 10.0)
 
 # Numerical buffer used on the file name
@@ -107,5 +126,6 @@ plt.subplot(133)
 plt.plot(shape_aspect_ratio, force_density_in_source, marker = markers[len(markers)-1])    
 plt.xlabel('aspect ratio')
 plt.ylabel('force density inside source')
-
+pp.savefig(fig)
+pp.close()
 plt.show()

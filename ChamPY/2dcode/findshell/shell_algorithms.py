@@ -2,7 +2,12 @@ import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 import plotaux.plot_aux as aux
 
-
+def printopeningstatement():
+    print "---------------------------------------"
+    print "Code to find thin shell"
+    print "J Pearson, Nottingham, Feb 2015"
+    print "---------------------------------------"
+    
 def GetFileName(arg):
     if len(arg) > 1:   
         return arg[1] 

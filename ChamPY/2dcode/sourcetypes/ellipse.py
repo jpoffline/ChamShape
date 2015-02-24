@@ -8,7 +8,7 @@ def setup_params(rho_bg, rho_obj):
     
     if select_via_aspect_ratio:
         object_radii = []
-        for ratio in aspect_ratio:
+        for ratio in aspect_ratios:
             object_radii.append( max_size * ratio )
     else:
         object_radii = (3.0,1.5)
